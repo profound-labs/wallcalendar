@@ -1,0 +1,201 @@
+
+\documentclass[
+  year = 2018,
+  imageFolder = ./photos/,
+]{wallcalendar}
+
+\makeatletter
+
+\usepackage{fontspec}
+\defaultfontfeatures{Ligatures={TeX}}
+\setmainfont{TeX Gyre Pagella}
+\newfontfamily\dejaVuSans{DejaVu Sans}
+
+\newlength\@wall@tmp@a
+\newlength\@wall@tmp@b
+
+\newlength\@wall@thumbWidth
+\newlength\@wall@thumbHeight
+\newlength\@wall@thumbCaptionWidth
+\setlength{\@wall@thumbWidth}{0.1749\calPaperWidth}% 30mm at the 6.75in page width, 0.1749 = 1/5.715
+\setlength{\@wall@thumbHeight}{\@wall@thumbWidth}
+\setlength{\@wall@thumbCaptionWidth}{0.2333\calPaperWidth}% 40mm at 6.75in page width
+
+\newcommand\thumbFmt{}
+\newcommand\thumbMonthFmt{\fontsize{10}{13}\selectfont\bfseries}
+\newcommand\thumbCaptionFmt{\fontsize{10}{13}\selectfont}
+
+\def\@wall@thumbFile{}
+\def\@wall@photoCaption{}
+
+\newcommand\ThumbWithCaptionLeftSide[1]{%
+\pgfkeys{/Photo/#1/thumbFile/.get=\@wall@thumbFile}%
+\ifx\@wall@thumbFile\empty
+  \pgfkeys{/Photo/#1/file/.get=\@wall@thumbFile}%
+\fi
+\pgfkeys{/Photo/#1/caption/.get=\@wall@photoCaption}%
+% Thumbnail caption
+\ifvarnishmask%
+\hspace*{\@wall@thumbWidth}
+\else%
+\begin{minipage}[b][\@wall@thumbHeight][t]{\@wall@thumbCaptionWidth}%
+\raggedleft
+\thumbFmt
+{\thumbMonthFmt \@tr@monthNumName{\monthToNum{#1}}}\par
+{\thumbCaptionFmt \@wall@photoCaption}%
+\end{minipage}%
+\fi%
+\hspace*{3mm}
+% Thumbnail photo
+\begin{minipage}[b][\@wall@thumbHeight]{\@wall@thumbWidth}%
+% FIXME placeholder
+%\placeholder{%
+\includegraphics[ keepaspectratio, height=\@wall@thumbHeight ]{\@wall@thumbFile}%
+%}%
+\end{minipage}%
+}
+
+\newcommand\ThumbWithCaptionRightSide[1]{%
+\pgfkeys{/Photo/#1/thumbFile/.get=\@wall@thumbFile}%
+\ifx\@wall@thumbFile\empty
+  \pgfkeys{/Photo/#1/file/.get=\@wall@thumbFile}%
+\fi
+\pgfkeys{/Photo/#1/caption/.get=\@wall@photoCaption}%
+% Thumbnail photo
+\begin{minipage}[b][\@wall@thumbHeight]{\@wall@thumbWidth}%
+% FIXME placeholder
+%\placeholder{%
+\includegraphics[ keepaspectratio, height=\@wall@thumbHeight ]{\@wall@thumbFile}%
+%}%
+\end{minipage}%
+\hspace*{3mm}
+% Thumbnail caption
+\ifvarnishmask%
+\hspace*{\@wall@thumbWidth}
+\else%
+\begin{minipage}[b][\@wall@thumbHeight][t]{\@wall@thumbCaptionWidth}%
+\raggedright
+\thumbFmt
+{\thumbMonthFmt \@tr@monthNumName{\monthToNum{#1}}}\par
+{\thumbCaptionFmt \@wall@photoCaption}%
+\end{minipage}%
+\fi%
+}
+
+\newlength{\thumbColumnWidth}
+\newlength{\thumbColumnHeight}
+\newlength{\thumbSep}
+\newlength{\@t@a}
+\newlength{\@t@b}
+
+% vertical spacing
+\setlength{\@t@a}{0.2\textheight}
+
+% horizontal spacing
+\setlength{\@t@b}{0.2\@wall@thumbCaptionWidth}% 8mm at 40mm caption width
+
+\ifdimcomp{\@t@a}{<}{\@t@b}{
+  \setlength{\thumbSep}{\@t@a}
+}{
+  \setlength{\thumbSep}{\@t@b}
+}
+
+\setlength{\thumbColumnWidth}{0.5\calPaperWidth - \thumbSep}
+\setlength{\thumbColumnHeight}{\textheight}
+
+\newcommand\ThumbsPage{%
+\clearpage
+
+\hspace*{-\@wall@leftMargin}%
+\hspace*{-1pt}% small correction, space gets in somewhere
+% Wrap
+\begin{minipage}[t][\thumbColumnHeight]{\calPaperWidth}%
+\centering%
+\setlength{\parindent}{0pt}%
+\setlength{\parskip}{0pt}%
+
+% NOTE: multicols will not \vfill
+% Left Column
+\begin{minipage}[t][\thumbColumnHeight]{\thumbColumnWidth}%
+\raggedleft
+
+\ThumbWithCaptionLeftSide{January}
+
+\vspace*{\thumbSep}
+
+\ThumbWithCaptionLeftSide{March}
+
+\vspace*{\thumbSep}
+
+\ThumbWithCaptionLeftSide{May}
+
+\vspace*{\thumbSep}
+
+\ThumbWithCaptionLeftSide{July}
+
+\vspace*{\thumbSep}
+
+\ThumbWithCaptionLeftSide{September}
+
+\vspace*{\thumbSep}
+
+\ThumbWithCaptionLeftSide{November}
+
+% End of left column
+\end{minipage}%
+%
+\hspace*{\thumbSep}%
+%
+% Right column
+\begin{minipage}[t][\thumbColumnHeight]{\thumbColumnWidth}%
+\raggedright
+
+\ThumbWithCaptionRightSide{February}
+
+\vspace*{\thumbSep}
+
+\ThumbWithCaptionRightSide{April}
+
+\vspace*{\thumbSep}
+
+\ThumbWithCaptionRightSide{June}
+
+\vspace*{\thumbSep}
+
+\ThumbWithCaptionRightSide{August}
+
+\vspace*{\thumbSep}
+
+\ThumbWithCaptionRightSide{October}
+
+\vspace*{\thumbSep}
+
+\ThumbWithCaptionRightSide{December}
+
+% End of right column
+\end{minipage}%
+
+% End of wrap
+\end{minipage}%
+}
+
+\SetPhoto[file={frog-crop}, thumbFile={frog-crop-thumb}, caption={Let the frog jump}]{January}
+\SetPhoto[file={frog-crop}, thumbFile={frog-crop-thumb}, caption={Let the frog jump}]{February}
+\SetPhoto[file={frog-crop}, thumbFile={frog-crop-thumb}, caption={Let the frog jump}]{March}
+\SetPhoto[file={frog-crop}, thumbFile={frog-crop-thumb}, caption={Let the frog jump}]{April}
+\SetPhoto[file={frog-crop}, thumbFile={frog-crop-thumb}, caption={Let the frog jump}]{May}
+\SetPhoto[file={frog-crop}, thumbFile={frog-crop-thumb}, caption={Let the frog jump}]{June}
+\SetPhoto[file={frog-crop}, thumbFile={frog-crop-thumb}, caption={Let the frog jump}]{July}
+\SetPhoto[file={frog-crop}, thumbFile={frog-crop-thumb}, caption={Let the frog jump}]{August}
+\SetPhoto[file={frog-crop}, thumbFile={frog-crop-thumb}, caption={Let the frog jump}]{September}
+\SetPhoto[file={frog-crop}, thumbFile={frog-crop-thumb}, caption={Let the frog jump}]{October}
+\SetPhoto[file={frog-crop}, thumbFile={frog-crop-thumb}, caption={Let the frog jump}]{November}
+\SetPhoto[file={frog-crop}, thumbFile={frog-crop-thumb}, caption={Let the frog jump}]{December}
+
+\makeatother
+
+\begin{document}
+
+\ThumbsPage
+
+\end{document}

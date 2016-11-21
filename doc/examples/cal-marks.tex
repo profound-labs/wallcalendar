@@ -1,0 +1,51 @@
+
+\documentclass[
+  year = 2018,
+  eventsCsv = ./data/holidays.csv,
+  markDefaultsCsv = ./data/mark_defaults.csv,
+  imageFolder = ./photos/,
+]{wallcalendar}
+
+\makeatletter
+
+\colorlet{mooncolor}{darkgold}
+
+\usepackage{fontspec}
+\defaultfontfeatures{Ligatures={TeX}}
+\setmainfont{TeX Gyre Pagella}
+\newfontfamily\dejaVuSans{DejaVu Sans}
+
+\SetPhoto[bleed=3mm, file={frog-crop}]{September}
+
+\SetQuote[xOffset=0pt, yOffset=-140mm]{September}{%
+\raggedleft\setlength{\parskip}{10pt}\HUGE\color{white}%
+silent new lake\\
+let the frog jump\\
+not even a sound
+
+\textit{-- Ryokan}%
+}
+
+\SetCalendar[bg/.style={opacity=0.4}]{September}
+
+\SetEvents{September}{%
+\parseMonthMarksDayTextUsing{./data/moonphases.csv}%
+\parseMonthMarksDayText%
+\parseMonthMarksNote%
+}{%
+\raggedright
+\parseMonthEvents[%
+  format cmd = {%
+    \textsuperscript{\eMark}~\eMonthShort~\eDay:\space%
+    \eNote\ifnumless{\eIdx}{\eMaxIdx}{,\space}{.}%
+   },
+]%
+}
+
+\makeatother
+
+\begin{document}
+
+\MonthPage[layout=full page, put photo=full page]{September}
+
+\end{document}

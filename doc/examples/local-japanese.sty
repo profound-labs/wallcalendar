@@ -1,0 +1,24 @@
+
+\ProvidesPackage{local-japanese}
+
+\usepackage{fontspec}
+\defaultfontfeatures{Ligatures={TeX}}
+\setmainfont{TeX Gyre Pagella}
+\newfontfamily\dejaVuSans{DejaVu Sans}
+% Japanese font
+\newfontfamily\mincho{IPAPMincho}
+
+% Renew formatting hooks to use the \mincho font
+\renewcommand\fullPageFmt{%
+  \renewcommand*\monthFmt{\LARGE\mincho}%
+  \renewcommand*\yearFmt{\LARGE\mincho}%
+  \renewcommand*\dayLetterColor{}%
+  \renewcommand*\dayLetterFmt{\tiny\mincho}%
+  \renewcommand*\dayTextFmt{\small}%
+  \renewcommand*\quoteFmt{}%
+  \renewcommand*\headingFmt{\centering}%
+  \renewcommand*\calendarFmt{\centering}%
+  \renewcommand*\eventsFmt{%
+   \setlength{\parindent}{0pt}\raggedleft\footnotesize%
+  }%
+}

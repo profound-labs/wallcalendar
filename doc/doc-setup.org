@@ -1,0 +1,9 @@
+#+LATEX_CLASS: memoir-article
+#+LATEX_HEADER: \usepackage{local}
+#+LATEX_HEADER: \renewcommand{\docVersion}{v1.0}
+#+LATEX_HEADER: \renewcommand{\docUrl}{\href{https://github.com/profound-labs/wallcalendar/}{link}}
+#+LATEX_HEADER: \hypersetup{ pdfauthor={Gambhīro Bhikkhu}, }
+#+OPTIONS: toc:nil tasks:nil ':t H:4
+#+SOURCES_URL: https://github.com/profound-labs/wallcalendar/
+#+AUTHOR: Gambhīro Bhikkhu
+#+EMAIL: gambhiro.bhikkhu.85@gmail.com
