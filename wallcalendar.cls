@@ -827,8 +827,13 @@ monthMarksNote(\luastring{\theMonthName}, nil, \luastring{#1}, \luastring{\@wall
 
 \@wall@photo@setYOffset
 
+\pgfkeys{/Photo/#2/xOffset/.get=\@val}
+\addtolength{\@t@xOffset}{\@val}
+\pgfkeys{/Photo/#2/yOffset/.get=\@val}
+\addtolength{\@t@yOffset}{\@val}
+
 % NOTE: a small whitespace is visible on the left edge of the page when bleed is 0pt, a space must be getting in somewhere.
-\JoinCoffins*\@wall@pageWrap[l,t]\@wall@photo[l,t](-\spinemargin -\@t@bleed, \uppermargin + \@t@bleed + \@t@yOffset)
+\JoinCoffins*\@wall@pageWrap[l,t]\@wall@photo[l,t](-\spinemargin -\@t@bleed + \@t@xOffset, \uppermargin + \@t@bleed + \@t@yOffset)
 
 \pgfkeys{/Quote/#2/xOffset/.get=\@val}
 \setlength{\@t@xOffset}{\@val}

@@ -4,6 +4,7 @@
 #+PROPERTY: header-args:tex :tangle ../wallcalendar.cls :padline yes
 
 * Tasks :noexport:
+** TODO small landscape: move the photo with /Photo/#2/xOffset and yOffset as at the full page layout
 ** option for the photo to be scaled vertically, not horizontally
 ** option for the quote to have a bg with opacity
 * Introduction
@@ -1172,8 +1173,13 @@ Calendar:
 #+begin_src tex
 \@wall@photo@setYOffset
 
+\pgfkeys{/Photo/#2/xOffset/.get=\@val}
+\addtolength{\@t@xOffset}{\@val}
+\pgfkeys{/Photo/#2/yOffset/.get=\@val}
+\addtolength{\@t@yOffset}{\@val}
+
 % NOTE: a small whitespace is visible on the left edge of the page when bleed is 0pt, a space must be getting in somewhere.
-\JoinCoffins*\@wall@pageWrap[l,t]\@wall@photo[l,t](-\spinemargin -\@t@bleed, \uppermargin + \@t@bleed + \@t@yOffset)
+\JoinCoffins*\@wall@pageWrap[l,t]\@wall@photo[l,t](-\spinemargin -\@t@bleed + \@t@xOffset, \uppermargin + \@t@bleed + \@t@yOffset)
 
 \pgfkeys{/Quote/#2/xOffset/.get=\@val}
 \setlength{\@t@xOffset}{\@val}
@@ -1415,8 +1421,10 @@ pageWrap, not relative to other coffins. It prevents accidental shifts when the
 other coffins are empty (when =varnishmask= is on) or have too much content.
 
 #+begin_src tex
-% The quote has to be centered b/w the photo and the calendar with manual tweaking.
+% The quote has to be centered betweeen the photo and the calendar with manual tweaking.
 % The height of the quote is not known, the height of the calendar plus its heading is not known.
+
+% TODO move the photo with /Photo/#2/xOffset and yOffset as at the full page layout
 
 \pgfkeys{/Quote/#2/yOffset/.get=\@val}
 \setlength{\@t@yOffset}{\@val}
