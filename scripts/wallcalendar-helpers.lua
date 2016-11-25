@@ -160,21 +160,21 @@ function formatEvents(events, formatFunc, formatCmd, markDefaultsCsv, minEvents)
 
     else
 
-      tsp("\\def\\eIdx{"..idx                    .."}") -- \def\eIdx{1}
-      tsp("\\def\\eMaxIdx{"..#events             .."}") -- \def\eMaxIdx{8}
-      tsp("\\def\\eMark{"..mark.symbol           .."}") -- \def\eMark{\kiteMark}
-      tsp("\\def\\eIsoDate{"..event.date         .."}") -- \def\eIsoDate{2018-01-12}
-      tsp("\\def\\eYear{"..d:getyear()           .."}") -- \def\eYear{2018}
-      tsp("\\def\\eMonth{\\x"..d:fmt("%B")       .."}") -- \def\eMonth\xJanuary
-      tsp("\\def\\eMonthShort{\\x"..d:fmt("%b")  .."}") -- \def\eMonthShort\xJan
-      tsp("\\def\\eDay{"..d:getday()             .."}") -- \def\eDay{12}
+      tsp("\\def\\eIdx{"..idx                            .."}") -- \def\eIdx{1}
+      tsp("\\def\\eMaxIdx{"..#events                     .."}") -- \def\eMaxIdx{8}
+      tsp("\\def\\eMark{"..mark.symbol                   .."}") -- \def\eMark{\kiteMark}
+      tsp("\\def\\eIsoDate{"..event.date                 .."}") -- \def\eIsoDate{2018-01-12}
+      tsp("\\def\\eYear{"..d:getyear()                   .."}") -- \def\eYear{2018}
+      tsp("\\def\\eMonth{\\x"..d:fmt("%B")               .."}") -- \def\eMonth\xJanuary
+      tsp("\\def\\eMonthShort{\\x"..d:fmt("%b").."Short" .."}") -- \def\eMonthShort\xJanShort
+      tsp("\\def\\eDay{"..d:getday()                     .."}") -- \def\eDay{12}
       if ok(event.day_text) then
-        tsp("\\def\\eDayText{"..event.day_text     .."}") -- \def\eDayText{\dejaVuSans\char"263C}
+        tsp("\\def\\eDayText{"..event.day_text           .."}") -- \def\eDayText{\dejaVuSans\char"263C}
       else
         tsp("\\def\\eDayText{}")
       end
       if ok(event.note) then
-        tsp("\\def\\eNote{"..event.note            .."}") -- \def\eNote{Anniversary Day}
+        tsp("\\def\\eNote{"..event.note                  .."}") -- \def\eNote{Anniversary Day}
       else
         tsp("\\def\\eNote{}")
       end
