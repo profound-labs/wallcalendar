@@ -5,6 +5,7 @@
 
 * Tasks :noexport:
 ** TODO small landscape: move the photo with /Photo/#2/xOffset and yOffset as at the full page layout
+** TODO clip photo beyond the bleed, the photo covers the cropmarks (esp. when when using yOffset)
 ** option for the photo to be scaled vertically, not horizontally
 ** option for the quote to have a bg with opacity
 * Introduction
