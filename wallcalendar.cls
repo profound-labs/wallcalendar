@@ -1,4 +1,3 @@
-
 % wallcalendar.cls; Don't edit this file. Edit wallcalendar-code.org with emacs org-mode and call 'org-babel-tangle'.
 %
 % Wall Calendar
@@ -11,7 +10,7 @@
 % LPPL LaTeX Public Project License
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{wallcalendar}[2016/11/21 v1.0 A wall calendar class with custom layouts and support for internationalization.]
+\ProvidesClass{wallcalendar}[2016/12/05 v1.1 A wall calendar class with custom layouts and support for internationalization.]
 
 \RequirePackage{pgfopts}
 \RequirePackage{calc}
@@ -71,6 +70,8 @@
   bottomMargin/.code = {\setlength{\@wall@bottomMargin}{#1}},
   % Paper sizes
   choralOctavoPaper/.style = {paperWidth = 6.75in, paperHeight = 10.5in},
+  a4Paper/.style = {paperWidth = 210mm, paperHeight = 297mm},
+  a4PaperLandscape/.style = {paperWidth = 297mm, paperHeight = 210mm},
   a5Paper/.style = {paperWidth = 148mm, paperHeight = 210mm},% r = 1.4142 = sqrt(2)
   prevPaper/.style = {paperWidth = 170mm, paperHeight = 250mm},% r = 1.4705
 }
@@ -996,8 +997,10 @@ monthMarksNote(\luastring{\theMonthName}, nil, \luastring{#1}, \luastring{\@wall
 \fi
 }% \SetHorizontalCoffin
 
-% The quote has to be centered b/w the photo and the calendar with manual tweaking.
+% The quote has to be centered betweeen the photo and the calendar with manual tweaking.
 % The height of the quote is not known, the height of the calendar plus its heading is not known.
+
+% TODO move the photo with /Photo/#2/xOffset and yOffset as at the full page layout
 
 \pgfkeys{/Quote/#2/yOffset/.get=\@val}
 \setlength{\@t@yOffset}{\@val}
@@ -1236,6 +1239,54 @@ monthMarksNote(\luastring{\theMonthName}, nil, \luastring{#1}, \luastring{\@wall
   every day/.style={anchor=mid},
 ]
 
+\newcommand\plannerLandscapeMonthFmt{\fontsize{15}{18}\selectfont\color{gold}\bfseries}
+\newcommand\plannerLandscapeDayFmt{\fontsize{10}{12}\selectfont}
+\newcommand*\datedayFormat[1]{\fontsize{8}{11}\selectfont #1}
+
+\newcommand\plannerLandscapeBeginDayScopeHook{%
+  \ifdate{weekend}{\color{black!60}}{}
+}
+
+\newlength\plannerLandscapeDayXShift
+\newlength\plannerLandscapeMonthYShift
+
+% Assuming 25mm to fit 'September'
+\setlength{\@tmp@a}{\calPaperWidth - \@wall@leftMargin - \@wall@rightMargin - 25mm}
+% Max week shift is 6 = Sunday. 31 days + 6 = 37. 1/37 = 0.027
+\setlength{\plannerLandscapeDayXShift}{0.027\@tmp@a}
+
+% Assuming 10mm for day headings (M T W...) and some padding
+\setlength{\@tmp@a}{\calPaperHeight - \@wall@topMargin - \@wall@bottomMargin - 10mm}
+% 1/12 = 0.0833
+\setlength{\plannerLandscapeMonthYShift}{0.0833\@tmp@a}
+
+\tikzstyle{year planner landscape}=[
+  month list,
+  day xshift=\plannerLandscapeDayXShift,
+  month yshift=\plannerLandscapeMonthYShift,
+  every month/.append style={anchor=base, inner xsep=0pt},
+  month text={\plannerLandscapeMonthFmt \%mt},
+  day text={\plannerLandscapeDayFmt \%d-},
+  every day/.append style={anchor=base, inner xsep=0pt},
+  month label left,
+  execute at begin day scope={
+    \plannerLandscapeBeginDayScopeHook
+    % Weekday headers in January
+    \ifdate{between=01-01 and 01-31}{
+      \def\l{\ifcase\pgfcalendarcurrentweekday M\or T\or W\or T\or F\or S\or S\fi}%
+      \ifdate{weekend}{\def\daylabelcolor{gold}}{\def\daylabelcolor{black}}%
+      \node[anchor=south,yshift=5mm,inner sep=0pt]{\color{\daylabelcolor}\datedayFormat{\l}};%
+    }{}
+    % Weekday headers in December
+    \ifdate{between=12-01 and 12-31}{
+      \pgftransformyshift{-3mm}%
+      \def\l{\ifcase\pgfcalendarcurrentweekday M\or T\or W\or T\or F\or S\or S\fi}%
+      \ifdate{weekend}{\def\daylabelcolor{gold}}{\def\daylabelcolor{black}}%
+      \node[anchor=south,yshift=5mm,inner sep=0pt]{\color{\daylabelcolor}\datedayFormat{\l}};%
+    }{}
+  }
+]
+
 \newcommand\plannerMarksDayTextCSV{\@wall@eventsCsv}
 \newcommand\plannerMarksNoteCSV{\@wall@eventsCsv}
 \newcommand\plannerMarkDefaultsCsv{}
@@ -1247,10 +1298,23 @@ monthMarksDayText(\luastring{#1}, nil, \luastring{\plannerMarksDayTextCSV})
 tex.sprint(';')
 }}
 
+\newcommand\@wall@plmYear{%
+\luadirect{
+require("./scripts/wallcalendar-helpers.lua")
+yearMarksDayText(tonumber(\CalendarYear), nil, \luastring{\plannerMarksDayTextCSV})
+tex.sprint(';')
+}}
+
 \newcommand\@wall@plNotes{%
 \luadirect{
 require("./scripts/wallcalendar-helpers.lua")
-yearMarksNote(tonumber(\CalendarYear), nil, \luastring{\plannerMarksNoteCSV}, \luastring{\plannerMarkDefaultsCsv})
+yearMarksNote(tonumber(\CalendarYear), nil, \luastring{\plannerMarksNoteCSV}, \luastring{\plannerMarkDefaultsCsv}, false)
+}}
+
+\newcommand\@wall@plNotesOneCalendar{%
+\luadirect{
+require("./scripts/wallcalendar-helpers.lua")
+yearMarksNote(tonumber(\CalendarYear), nil, \luastring{\plannerMarksNoteCSV}, \luastring{\plannerMarkDefaultsCsv}, true)
 }}
 
 \newcommand\plannerEvents{%
@@ -1274,6 +1338,13 @@ yearMarksNote(tonumber(\CalendarYear), nil, \luastring{\plannerMarksNoteCSV}, \l
     \calendar(cal12)[dates=\CalendarYear-12-01 to \CalendarYear-12-last] \@wall@plm{December};  \\
   };
   \@wall@plNotes
+\end{tikzpicture}%
+}
+
+\newcommand\YearPlannerLandscape{%
+\begin{tikzpicture}[every calendar/.style={year planner landscape}]%
+  \calendar(cal)[dates=\CalendarYear-01-01 to \CalendarYear-12-31] \@wall@plmYear;
+  \@wall@plNotesOneCalendar
 \end{tikzpicture}%
 }
 

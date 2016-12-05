@@ -212,7 +212,17 @@ function monthMarksDayText(monthName, filterPred, eventsCsv)
   end
 end
 
-function formatMarksNote(events, filterPred, markDefaultsCsv)
+function yearMarksDayText(yearNum, filterPred, eventsCsv)
+  local events = eventsInYear(loadCsv(eventsCsv), yearNum, filterPred);
+
+  for idx,event in pairs(events) do
+    if ok(event.day_text) then
+      tsp(string.format(" if (equals=%s) [day text={%s}, xshift=\\dayTextXshift, yshift=\\dayTextYshift] ", event.date, event.day_text))
+    end
+  end
+end
+
+function formatMarksNote(events, filterPred, markDefaultsCsv, isOneCalendar)
   local markDefaults = nil
   if ok(markDefaultsCsv) then
     markDefaults = loadCsv(markDefaultsCsv)
@@ -227,12 +237,20 @@ function formatMarksNote(events, filterPred, markDefaultsCsv)
 
       local mark = getCombinedMark(idx, events, markDefaults)
 
-      tsp(string.format(" \\draw node [above right=%s and %s of cal%s-%s.north east] {\\monthMarkFmt %s}; ",
-                        mark.above_offset,
-                        mark.right_offset,
-                        d:fmt("%m"),
-                        event.date,
-                        mark.symbol))
+      if ok(isOneCalendar) and isOneCalendar == true then
+        tsp(string.format(" \\draw node [above right=%s and %s of cal-%s.north east] {\\monthMarkFmt %s}; ",
+                          mark.above_offset,
+                          mark.right_offset,
+                          event.date,
+                          mark.symbol))
+      else
+        tsp(string.format(" \\draw node [above right=%s and %s of cal%s-%s.north east] {\\monthMarkFmt %s}; ",
+                          mark.above_offset,
+                          mark.right_offset,
+                          d:fmt("%m"),
+                          event.date,
+                          mark.symbol))
+      end
     end
   end
 end
@@ -247,15 +265,15 @@ function monthMarksNote(monthName, filterPred, eventsCsv, markDefaultsCsv)
 
   local events = eventsInMonth(loadCsv(eventsCsv), monthNum, filterPred);
 
-  formatMarksNote(events, filterPred, markDefaultsCsv)
+  formatMarksNote(events, filterPred, markDefaultsCsv, false)
 end
 
-function yearMarksNote(yearNum, filterPred, eventsCsv, markDefaultsCsv)
+function yearMarksNote(yearNum, filterPred, eventsCsv, markDefaultsCsv, isOneCalendar)
   if not ok(filterPred) then
     filterPred = function(e) return ok(e.note) end
   end
 
   local events = eventsInYear(loadCsv(eventsCsv), yearNum, filterPred);
 
-  formatMarksNote(events, filterPred, markDefaultsCsv)
+  formatMarksNote(events, filterPred, markDefaultsCsv, isOneCalendar)
 end
