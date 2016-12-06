@@ -1849,34 +1849,23 @@ yearMarksNote(tonumber(\CalendarYear), nil, \luastring{\plannerMarksNoteCSV}, \l
 \iftranslationsAutoload \LoadTranslations \fi}
 #+end_src
 
+Use =\ifcase= instead of a =\luadirect= array lookup, otherwise Portuguese day
+headings such as =\def\xMondayDayLetter{{2\textsuperscript{a}}}= cause an error.
+
 : #1 : month number, returns the translation
 
 #+begin_src tex
 \newcommand*\@tr@monthNumName[1]{%
-% \ifcase might be just fine here
-\luadirect{
-  local monthName = {
-    '\xJanuary', '\xFebruary', '\xMarch', '\xApril', '\xMay', '\xJune', '\xJuly',
-    '\xAugust', '\xSeptember', '\xOctober', '\xNovember', '\xDecember',
-  }
-  local key = tonumber('#1')
-  tex.sprint(monthName[key])
-}}
+\ifcase#1 \xJanuary\or \xFebruary\or \xMarch\or \xApril\or \xMay\or \xJune\or
+\xJuly\or \xAugust\or \xSeptember\or \xOctober\or \xNovember\or \xDecember\fi}
 #+end_src
 
 : #1 : weekday number, returns the one letter translation 
 
 #+begin_src tex
 \newcommand*\@tr@dayLetter[1]{%
-% \ifcase might be just fine here
-\luadirect{
-  local dayLetter = {
-    '\xMondayDayLetter', '\xTuesdayDayLetter', '\xWednesdayDayLetter',
-    '\xThursdayDayLetter', '\xFridayDayLetter', '\xSaturdayDayLetter', '\xSundayDayLetter',
-  }
-  local key = tonumber('#1')+1
-  tex.sprint(dayLetter[key])
-}}
+\ifcase#1 \xMondayDayLetter\or \xTuesdayDayLetter\or \xWednesdayDayLetter\or
+\xThursdayDayLetter\or \xFridayDayLetter\or \xSaturdayDayLetter\or \xSundayDayLetter\fi}
 #+end_src
 
 * Helper macros

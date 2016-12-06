@@ -1362,26 +1362,12 @@ yearMarksNote(tonumber(\CalendarYear), nil, \luastring{\plannerMarksNoteCSV}, \l
 \iftranslationsAutoload \LoadTranslations \fi}
 
 \newcommand*\@tr@monthNumName[1]{%
-% \ifcase might be just fine here
-\luadirect{
-  local monthName = {
-    '\xJanuary', '\xFebruary', '\xMarch', '\xApril', '\xMay', '\xJune', '\xJuly',
-    '\xAugust', '\xSeptember', '\xOctober', '\xNovember', '\xDecember',
-  }
-  local key = tonumber('#1')
-  tex.sprint(monthName[key])
-}}
+\ifcase#1 \xJanuary\or \xFebruary\or \xMarch\or \xApril\or \xMay\or \xJune\or
+\xJuly\or \xAugust\or \xSeptember\or \xOctober\or \xNovember\or \xDecember\fi}
 
 \newcommand*\@tr@dayLetter[1]{%
-% \ifcase might be just fine here
-\luadirect{
-  local dayLetter = {
-    '\xMondayDayLetter', '\xTuesdayDayLetter', '\xWednesdayDayLetter',
-    '\xThursdayDayLetter', '\xFridayDayLetter', '\xSaturdayDayLetter', '\xSundayDayLetter',
-  }
-  local key = tonumber('#1')+1
-  tex.sprint(dayLetter[key])
-}}
+\ifcase#1 \xMondayDayLetter\or \xTuesdayDayLetter\or \xWednesdayDayLetter\or
+\xThursdayDayLetter\or \xFridayDayLetter\or \xSaturdayDayLetter\or \xSundayDayLetter\fi}
 
 \newcommand*{\monthToNum}[1]{%
 \luadirect{
