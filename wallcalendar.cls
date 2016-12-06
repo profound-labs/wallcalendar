@@ -1362,7 +1362,7 @@ yearMarksNote(tonumber(\CalendarYear), nil, \luastring{\plannerMarksNoteCSV}, \l
 \iftranslationsAutoload \LoadTranslations \fi}
 
 \newcommand*\@tr@monthNumName[1]{%
-\ifcase#1 \xJanuary\or \xFebruary\or \xMarch\or \xApril\or \xMay\or \xJune\or
+\ifcase#1 \relax\or \xJanuary\or \xFebruary\or \xMarch\or \xApril\or \xMay\or \xJune\or
 \xJuly\or \xAugust\or \xSeptember\or \xOctober\or \xNovember\or \xDecember\fi}
 
 \newcommand*\@tr@dayLetter[1]{%

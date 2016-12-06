@@ -1856,7 +1856,7 @@ headings such as =\def\xMondayDayLetter{{2\textsuperscript{a}}}= cause an error.
 
 #+begin_src tex
 \newcommand*\@tr@monthNumName[1]{%
-\ifcase#1 \xJanuary\or \xFebruary\or \xMarch\or \xApril\or \xMay\or \xJune\or
+\ifcase#1 \relax\or \xJanuary\or \xFebruary\or \xMarch\or \xApril\or \xMay\or \xJune\or
 \xJuly\or \xAugust\or \xSeptember\or \xOctober\or \xNovember\or \xDecember\fi}
 #+end_src
 
