@@ -774,7 +774,7 @@ tex.sprint(';')
 
 \vspace*{7mm}
 
-\YearPlanner
+\YearPlannerPortrait
 
 \vspace*{\plannerNotesSep}
 
