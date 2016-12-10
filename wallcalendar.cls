@@ -31,12 +31,14 @@
 \newif\ifvarnishmask
 \newif\ifshowframe
 \newif\iftranslationsAutoload
+\newif\ifloadBabel
 
 \pgfkeys{
   /wall/.is family, /wall,
   defaults/.style = {
     year = \the\year,
     altyear = \empty,
+    loadBabel = false,
     language = english,
     translationsAutoload = true,
     imageFolder = {./src-images},
@@ -50,6 +52,7 @@
   altyear/.store in = \CalendarAltYear,
   altyear/.initial = \empty,
   language/.store in = \@wall@calendarLanguage,
+  loadBabel/.is if = loadBabel,
   translationsInputFile/.store in = \@wall@translationsInputFile,
   translationsInputFile/.initial = {},
   translationsAutoload/.is if = translationsAutoload,
@@ -98,7 +101,10 @@
 \newlength\@tmp@width
 \newlength\@tmp@height
 
+\ifloadBabel
 \RequirePackage[\@wall@calendarLanguage]{babel}
+\fi
+
 \RequirePackage{nag}
 %\RequirePackage{textcomp}
 \RequirePackage[cmyk]{xcolor}
@@ -119,7 +125,11 @@
 %\RequirePackage{xstring}
 %\RequirePackage{stringstrings}
 
+\ifloadBabel
 \RequirePackage[final,babel=true]{microtype}
+\else
+\RequirePackage[final]{microtype}
+\fi
 
 \RequirePackage{tikz}
 \usetikzlibrary{calendar}
