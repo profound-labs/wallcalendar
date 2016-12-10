@@ -10,7 +10,7 @@
 % LPPL LaTeX Public Project License
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{wallcalendar}[2016/12/05 v1.1 A wall calendar class with custom layouts and support for internationalization.]
+\ProvidesClass{wallcalendar}[2016/12/10 v1.2 A wall calendar class with custom layouts and support for internationalization.]
 
 \RequirePackage{pgfopts}
 \RequirePackage{calc}
@@ -70,6 +70,10 @@
   bottomMargin/.code = {\setlength{\@wall@bottomMargin}{#1}},
   % Paper sizes
   choralOctavoPaper/.style = {paperWidth = 6.75in, paperHeight = 10.5in},
+  a2Paper/.style = {paperWidth = 420mm, paperHeight = 594mm},
+  a2PaperLandscape/.style = {paperWidth = 594mm, paperHeight = 420mm},
+  a3Paper/.style = {paperWidth = 297mm, paperHeight = 420mm},
+  a3PaperLandscape/.style = {paperWidth = 420mm, paperHeight = 297mm},
   a4Paper/.style = {paperWidth = 210mm, paperHeight = 297mm},
   a4PaperLandscape/.style = {paperWidth = 297mm, paperHeight = 210mm},
   a5Paper/.style = {paperWidth = 148mm, paperHeight = 210mm},% r = 1.4142 = sqrt(2)
@@ -94,6 +98,7 @@
 \newlength\@tmp@width
 \newlength\@tmp@height
 
+\RequirePackage[\@wall@calendarLanguage]{babel}
 \RequirePackage{nag}
 %\RequirePackage{textcomp}
 \RequirePackage[cmyk]{xcolor}
@@ -104,6 +109,7 @@
 \RequirePackage{eso-pic}
 \RequirePackage{ccicons}
 \RequirePackage{multicol}
+\RequirePackage{wasysym}
 
 \RequirePackage{pdftexcmds}
 \RequirePackage{etoolbox}
@@ -113,11 +119,26 @@
 %\RequirePackage{xstring}
 %\RequirePackage{stringstrings}
 
+\RequirePackage[final,babel=true]{microtype}
+
 \RequirePackage{tikz}
 \usetikzlibrary{calendar}
 \usetikzlibrary{positioning}
 \usetikzlibrary{fit}
 \usetikzlibrary{shapes.geometric}
+
+% http://tex.stackexchange.com/a/20426/831
+\pgfdeclarelayer{one}
+\pgfdeclarelayer{two}
+\pgfsetlayers{main,one,two}
+
+\pgfkeys{%
+  /tikz/on layer/.code={
+    \pgfonlayer{#1}\begingroup
+    \aftergroup\endpgfonlayer
+    \aftergroup\endgroup
+  }
+}
 
 \definecolor{textbody}{gray}{0.15}
 
@@ -137,6 +158,9 @@
 \definecolor{plannerdatenum}{gray}{0.15}
 \definecolor{quote}{gray}{0.3}
 \definecolor{notes}{gray}{0.3}
+
+\definecolor{gridcolor}{gray}{0.5}
+\colorlet{pagebgcolor}{gridcolor!60}
 
 \colorlet{photo-frame}{blue}
 \colorlet{quote-frame}{red}
@@ -421,17 +445,22 @@
 \newlength\@wall@moonRaise
 \setlength{\@wall@moonRaise}{-0.7pt}
 
-\newcommand\NewMoon{%
+\newcommand\NewMoon{}
+\newcommand\FirstQuarter{}
+\newcommand\FullMoon{}
+\newcommand\LastQuarter{}
+
+\newcommand\@wall@NewMoon{%
 \raisebox{\@wall@moonRaise}{%
   \tikz\node[moon circle, fill=mooncolor] {};%
 }}
 
-\newcommand\FullMoon{%
+\newcommand\@wall@FullMoon{%
 \raisebox{\@wall@moonRaise}{%
   \tikz\node[moon circle, draw, mooncolor, line width=0.3pt] {};%
 }}
 
-\newcommand\FirstQuarter{%
+\newcommand\@wall@FirstQuarter{%
 \raisebox{\@wall@moonRaise}{%
 \begin{tikzpicture}
 \node [moon circle, name=waxing] {};
@@ -443,7 +472,7 @@
 \end{tikzpicture}%
 }}
 
-\newcommand\LastQuarter{%
+\newcommand\@wall@LastQuarter{%
 \raisebox{\@wall@moonRaise}{%
 \begin{tikzpicture}
 \node [moon circle, name=waning] {};
@@ -454,6 +483,30 @@
   (waning.north);
 \end{tikzpicture}%
 }}
+
+\newcommand\@wall@useDefaultMoons{%
+\renewcommand\NewMoon{\@wall@NewMoon}%
+\renewcommand\FirstQuarter{\@wall@FirstQuarter}%
+\renewcommand\FullMoon{\@wall@FullMoon}%
+\renewcommand\LastQuarter{\@wall@LastQuarter}%
+}
+
+\newcommand\plannerMoonSize{\@setfontsize\plannerMoonSize{14}{14}}
+\newcommand*\plannerMoonFormat[1]{{\plannerMoonSize #1}}
+
+\newcommand\@wall@planner@NewMoon{\plannerMoonFormat{\CIRCLE}}
+\newcommand\@wall@planner@FirstQuarter{\plannerMoonFormat{\LEFTcircle}}
+\newcommand\@wall@planner@FullMoon{\plannerMoonFormat{\Circle}}
+\newcommand\@wall@planner@LastQuarter{\plannerMoonFormat{\RIGHTcircle}}
+
+\newcommand\@wall@usePlannerMoons{%
+\renewcommand\NewMoon{\@wall@planner@NewMoon}%
+\renewcommand\FirstQuarter{\@wall@planner@FirstQuarter}%
+\renewcommand\FullMoon{\@wall@planner@FullMoon}%
+\renewcommand\LastQuarter{\@wall@planner@LastQuarter}%
+}
+
+\@wall@useDefaultMoons
 
 \newcommand\SetPhoto[2][]{%
   \pgfkeys{%
@@ -1220,13 +1273,13 @@ monthMarksNote(\luastring{\theMonthName}, nil, \luastring{#1}, \luastring{\@wall
   },
 ]
 
-\newcommand\plannerMonthFmt{\fontsize{11}{11}\selectfont\color{darkgold}}
-\newcommand\plannerDayFmt{\fontsize{8}{8}\selectfont\color{plannerdatenum}}
+\newcommand\plannerPortraitMonthFmt{\fontsize{11}{11}\selectfont\color{darkgold}}
+\newcommand\plannerPortraitDayFmt{\fontsize{8}{8}\selectfont\color{plannerdatenum}}
 
-\tikzstyle{year planner}=[
+\tikzstyle{year planner portrait}=[
   week list,
-  month text={\plannerMonthFmt\@tr@monthNumName{\pgfcalendarcurrentmonth}},
-  day text={\plannerDayFmt\%d-},
+  month text={\plannerPortraitMonthFmt\@tr@monthNumName{\pgfcalendarcurrentmonth}},
+  day text={\plannerPortraitDayFmt\%d-},
   every month/.append style={%
     anchor=south,
     inner xsep=0pt,
@@ -1239,9 +1292,26 @@ monthMarksNote(\luastring{\theMonthName}, nil, \luastring{#1}, \luastring{\@wall
   every day/.style={anchor=mid},
 ]
 
-\newcommand\plannerLandscapeMonthFmt{\fontsize{15}{18}\selectfont\color{gold}\bfseries}
-\newcommand\plannerLandscapeDayFmt{\fontsize{10}{12}\selectfont}
-\newcommand*\datedayFormat[1]{\fontsize{8}{11}\selectfont #1}
+\newcommand\plannerLandscapeDateDayFont{}
+\newcommand\plannerLandscapeDayFont{}
+\newcommand\plannerLandscapeMonthFont{}
+
+\newcommand\plannerLandscapeMonthFmt{%
+  \plannerLandscapeMonthFont%
+  \fontsize{15}{18}\selectfont%
+  \color{gold}\bfseries%
+}
+
+\newcommand\plannerLandscapeDayFmt{%
+  \plannerLandscapeDayFont%
+  \fontsize{10}{12}\selectfont%
+}
+
+\newcommand*\plannerLandscapeDateDayFormat[1]{%
+  \plannerLandscapeDateDayFont%
+  \fontsize{8}{11}\selectfont%
+  #1%
+}
 
 \newcommand\plannerLandscapeBeginDayScopeHook{%
   \ifdate{weekend}{\color{black!60}}{}
@@ -1275,16 +1345,117 @@ monthMarksNote(\luastring{\theMonthName}, nil, \luastring{#1}, \luastring{\@wall
     \ifdate{between=01-01 and 01-31}{
       \def\l{\ifcase\pgfcalendarcurrentweekday M\or T\or W\or T\or F\or S\or S\fi}%
       \ifdate{weekend}{\def\daylabelcolor{gold}}{\def\daylabelcolor{black}}%
-      \node[anchor=south,yshift=5mm,inner sep=0pt]{\color{\daylabelcolor}\datedayFormat{\l}};%
+      \node[anchor=south,yshift=5mm,inner sep=0pt]{\color{\daylabelcolor}\plannerLandscapeDateDayFormat{\l}};%
     }{}
     % Weekday headers in December
     \ifdate{between=12-01 and 12-31}{
       \pgftransformyshift{-3mm}%
       \def\l{\ifcase\pgfcalendarcurrentweekday M\or T\or W\or T\or F\or S\or S\fi}%
       \ifdate{weekend}{\def\daylabelcolor{gold}}{\def\daylabelcolor{black}}%
-      \node[anchor=south,yshift=5mm,inner sep=0pt]{\color{\daylabelcolor}\datedayFormat{\l}};%
+      \node[anchor=south,yshift=5mm,inner sep=0pt]{\color{\daylabelcolor}\plannerLandscapeDateDayFormat{\l}};%
     }{}
   }
+]
+
+\newcommand\plannerGridMonthFont{}
+\newcommand\plannerGridDateDayFont{}
+\newcommand\plannerGridNotesFont{}
+\newcommand\plannerGridDayFont{}
+\newcommand\plannerGridYearNumberFont{}
+
+\newcommand\plannerGridYearNumberFmt{%
+  \plannerGridYearNumberFont%
+  \fontsize{11}{11}\selectfont%
+  \color{white}%
+}
+
+\newcommand\plannerGridMonthFmt{%
+  \plannerGridMonthFont%
+  \fontsize{13}{13}\selectfont%
+  \color{white}%
+}
+
+\newcommand\plannerGridDayFmt{%
+  \plannerGridDayFont%
+  \fontsize{11}{11}\selectfont%
+}
+
+\newcommand\plannerGridDateDayFmt{%
+  \plannerGridDateDayFont%
+  \fontsize{9}{9}\selectfont%
+  \color{black!80}%
+}
+
+\newcommand{\plannerGridNotesFmt}{%
+  \plannerGridNotesFont%
+  \fontsize{11}{11}\selectfont%
+}
+
+\newcommand\plannerGridBeginDayScopeHook{%
+  \ifdate{weekend}{\color{black!60}}{}
+}
+
+\newlength\plannerGridColXShift
+\newlength\plannerGridRowYShift
+
+\newlength\plannerGridCalendarWidth
+\newlength\plannerGridCalendarHeight
+
+\newlength\plannerGridDayHeadingsHeight
+\newlength\plannerGridMonthNamesWidth
+
+\newlength\plannerGridNotesHeight
+\setlength{\plannerGridNotesHeight}{10mm}
+
+\setlength{\plannerGridCalendarWidth}{\calPaperWidth - \@wall@leftMargin - \@wall@rightMargin}
+\setlength{\plannerGridCalendarHeight}{\calPaperHeight - \@wall@topMargin - \@wall@bottomMargin - \plannerGridNotesHeight}
+
+\setlength{\plannerGridDayHeadingsHeight}{10mm}
+\setlength{\plannerGridMonthNamesWidth}{10mm}
+
+\setlength{\@tmp@a}{\plannerGridCalendarWidth - \plannerGridMonthNamesWidth}
+% 37 columns. 1/37 = 0.027. Max week shift is 6 = Sunday. 31 days + 6 = 37.
+\setlength{\plannerGridColXShift}{0.027\@tmp@a}
+
+\setlength{\@tmp@a}{\plannerGridCalendarHeight - 2\plannerGridDayHeadingsHeight}
+% 12 rows. 1/12 = 0.0833
+\setlength{\plannerGridRowYShift}{0.0833\@tmp@a}
+
+\newcounter{verticalCount}
+
+\tikzstyle{year planner landscape grid days}=[
+  month list,
+  day xshift=\plannerGridColXShift,
+  month yshift=\plannerGridRowYShift,
+  day text={\plannerGridDayFmt \%d-},
+  every day/.append style={anchor=base, yshift=-12pt, inner xsep=0pt},
+  execute at begin day scope={%
+    % White fill to cover the page background color
+    \node (cell) [
+      rectangle,
+      fill = white,
+      minimum height = \plannerGridRowYShift - 1pt,
+      minimum width = \plannerGridColXShift - 1pt,
+      xshift = -0.5\plannerGridColXShift,
+      yshift = 4.5pt,
+    ] {};%
+    %
+    \ifdate{Monday}{%
+      \node (a) [above left = 15pt and -3.5pt of cell.west] {};
+      \node (b) [below left = 15pt and -3.5pt of cell.west] {};
+      \node (c) [right = 10pt of cell.west] {};
+      \path [on layer = one, fill = pagebgcolor] (a.south) -- (b.north) -- (c.west) -- (a.south);%
+    }{}%
+    %
+    \ifdate{Sunday}{%
+      \node (a) [above left = 15pt and {-3.5pt + 1pt} of cell.east] {};
+      \node (b) [below left = 15pt and {-3.5pt + 1pt} of cell.east] {};
+      \node (c) [right = {10pt - 1pt} of cell.east] {};
+      \path [on layer = two, fill = white] (a.south) -- (b.north) -- (c.west) -- (a.south);%
+    }{}%
+    %
+    \plannerGridBeginDayScopeHook%
+  },
 ]
 
 \newcommand\plannerMarksDayTextCSV{\@wall@eventsCsv}
@@ -1321,8 +1492,9 @@ yearMarksNote(tonumber(\CalendarYear), nil, \luastring{\plannerMarksNoteCSV}, \l
 \parseYearEvents[filter pred = hasNote]%
 }
 
-\newcommand\YearPlanner{%
-\begin{tikzpicture}[every calendar/.style={year planner}]%
+\newcommand\YearPlannerPortrait{%
+\@wall@useDefaultMoons%
+\begin{tikzpicture}[every calendar/.style={year planner portrait}]%
   \matrix[column sep=1.5em, row sep=5mm] {
     \calendar(cal01)[dates=\CalendarYear-01-01 to \CalendarYear-01-last] \@wall@plm{January};   \pgfmatrixnextcell
     \calendar(cal02)[dates=\CalendarYear-02-01 to \CalendarYear-02-last] \@wall@plm{February};  \pgfmatrixnextcell
@@ -1342,11 +1514,140 @@ yearMarksNote(tonumber(\CalendarYear), nil, \luastring{\plannerMarksNoteCSV}, \l
 }
 
 \newcommand\YearPlannerLandscape{%
-\begin{tikzpicture}[every calendar/.style={year planner landscape}]%
-  \calendar(cal)[dates=\CalendarYear-01-01 to \CalendarYear-12-31] \@wall@plmYear;
+\@wall@usePlannerMoons%
+\begin{tikzpicture}%
+  \calendar (cal) [
+    year planner landscape,
+    dates=\CalendarYear-01-01 to \CalendarYear-12-31,
+  ] \@wall@plmYear;
   \@wall@plNotesOneCalendar
 \end{tikzpicture}%
 }
+
+\newcommand\YearPlannerLandscapeGrid{%
+\@wall@usePlannerMoons%
+\begin{tikzpicture}
+
+  % Background frame
+
+  \node (bg) [
+    rectangle,
+    inner sep = 0pt,
+    minimum width = \plannerGridCalendarWidth,
+    minimum height = \plannerGridCalendarHeight,
+  ] {};
+
+  \foreach \x/\m in {1/\xJanShort, 2/\xFebShort, 3/\xMarShort, 4/\xAprShort,
+    5/\xMayShort, 6/\xJunShort, 7/\xJulShort, 8/\xAugShort, 9/\xSepShort,
+    10/\xOctShort, 11/\xNovShort, 12/\xDecShort}
+  {
+    \setlength{\@tmp@a}{\x\plannerGridRowYShift + \plannerGridDayHeadingsHeight}
+
+    % Month labels
+
+    \node [
+      below = \@tmp@a of bg.north west,
+      yshift = 0.5\plannerGridRowYShift,
+      xshift = 0.5\plannerGridColXShift - 2pt,
+      anchor = base,
+      rotate = 90,
+    ] {\plannerGridMonthFmt\MakeUppercase{\textls*{\m}}};
+
+    % Horizontal lines
+
+    \addtolength{\@tmp@a}{-\plannerGridRowYShift}
+
+    \node (h-a-\x) [below = \@tmp@a of bg.north west] {};
+    \node (h-b-\x) [below = \@tmp@a of bg.north east] {};
+    \draw [gridcolor] (h-a-\x) -- (h-b-\x);
+  }
+
+  % 13th line
+  \setlength{\@tmp@a}{12\plannerGridRowYShift + \plannerGridDayHeadingsHeight}
+  \node (h-a-13) [below = \@tmp@a of bg.north west] {};
+  \node (h-b-13) [below = \@tmp@a of bg.north east] {};
+  \draw [gridcolor] (h-a-13) -- (h-b-13);
+
+  % Year number in the corner
+  \node [
+    right = 0pt of bg.north west,
+    xshift = 0.5\plannerGridMonthNamesWidth,
+    yshift = -0.5\plannerGridDayHeadingsHeight - 5pt,
+    anchor = base,
+  ] {\plannerGridYearNumberFmt\CalendarYear};
+
+  \setcounter{verticalCount}{1}
+
+  \foreach \i in {0,1,2,3,4,5} {
+    \foreach \j/\d in {
+      0/\xMondayDayLetter,
+      1/\xTuesdayDayLetter,
+      2/\xWednesdayDayLetter,
+      3/\xThursdayDayLetter,
+      4/\xFridayDayLetter,
+      5/\xSaturdayDayLetter,
+      6/\xSundayDayLetter}
+    {
+      \addtocounter{verticalCount}{1}
+      \ifnumgreater{\value{verticalCount}}{38}{\relax}{
+        \setlength{\@tmp@a}{7\plannerGridColXShift}
+        \setlength{\@tmp@a}{\i\@tmp@a + \j\plannerGridColXShift + \plannerGridMonthNamesWidth}
+
+        % Day headings (top and bottom)
+        
+        \node [
+          right = \@tmp@a of bg.north west,
+          xshift = 0.5\plannerGridColXShift + 4pt,
+          yshift = -0.5\plannerGridDayHeadingsHeight - 5pt,
+          anchor = base,
+        ] {\plannerGridDateDayFmt \d};
+
+        \node [
+          right = \@tmp@a of bg.south west,
+          xshift = 0.5\plannerGridColXShift + 4pt,
+          yshift = 0.5\plannerGridDayHeadingsHeight - 5pt,
+          anchor = base,
+        ] {\plannerGridDateDayFmt \d};
+
+        % % Vertical lines
+
+        % \node (v-a-\i-\j) [right = \@tmp@a of bg.north west] {};
+        % \node (v-b-\i-\j) [right = \@tmp@a of bg.south west] {};
+        % \draw [gridcolor] (v-a-\i-\j) -- (v-b-\i-\j);
+      }
+    }
+  }
+
+  \calendar (cal) [
+    year planner landscape grid days,
+    dates=\CalendarYear-01-01 to \CalendarYear-12-31,
+    below right = 0pt and 0pt of bg.north west,
+    anchor = north west,
+    yshift = -\plannerGridDayHeadingsHeight - 3mm,
+    xshift = \plannerGridMonthNamesWidth + 0.5\plannerGridColXShift + 4pt,
+  ] \@wall@plmYear;
+
+  \@wall@plNotesOneCalendar
+
+\end{tikzpicture}%
+}
+
+\newcommand{\YearPlannerLandscapeGridPage}{%
+\pagecolor{pagebgcolor}%
+\AddToShipoutPictureFG*{\put(\LenToUnit{\@wall@leftMargin},\LenToUnit{\@wall@bottomMargin})%
+{\begin{minipage}[b]{\plannerGridCalendarWidth}%
+\YearPlannerLandscapeGrid
+
+\begin{minipage}[b][10mm][c]{\plannerGridCalendarWidth}%
+\plannerGridNotesFmt
+\hspace*{2mm}%
+\parseYearEvents[%
+  filter pred = hasNote,
+  format cmd = {\textsuperscript{\eIdx}~\eMonthShort~\eDay:~\textit{\eNote}\ifnumless{\eIdx}{\eMaxIdx}{,\space}{.}},
+]%
+\end{minipage}%
+\end{minipage}%
+}}}
 
 % Load internal translations
 \InputIfFileExists{i18n/\@wall@calendarLanguage.tex}{}%
