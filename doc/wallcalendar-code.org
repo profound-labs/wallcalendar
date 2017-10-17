@@ -19,15 +19,6 @@ The \textbf{User Guide} is in \texttt{wallcalendar.pdf}. Clone or download from 
 
 \href{https://github.com/profound-labs/wallcalendar/}{https://github.com/profound-labs/wallcalendar/}
 
-The documentclass depends on lua scripts for some of its features, so it is
-recommended to make a local copy in your working project:
-
-\begin{verbatim}
-i18n/
-scripts/
-wallcalendar.cls
-\end{verbatim}
-
 \bigskip
 
 \tableofcontents*
@@ -44,7 +35,7 @@ wallcalendar.cls
 %
 % A wall calendar document class with custom layouts and support for internationalization.
 %
-% (c) Gambhiro Bhikkhu, 2016
+% (c) Gambhiro Bhikkhu, 2017
 % gambhiro.bhikkhu.85@gmail.com
 %
 % LPPL LaTeX Public Project License
@@ -54,7 +45,7 @@ wallcalendar.cls
 
 #+begin_src tex
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{wallcalendar}[2016/12/10 v1.2 A wall calendar class with custom layouts and support for internationalization.]
+\ProvidesClass{wallcalendar}[2017/10/17 v1.3 A wall calendar class with custom layouts and support for internationalization.]
 #+end_src
 
 * Preliminary Declarations
@@ -846,7 +837,7 @@ For now, just make sure there is a =\SetPhoto{August}= before =\MonthPage{August
   min events/.get=\@t@minEvents,
 }%
 \luadirect{
-require("./scripts/wallcalendar-helpers.lua")
+require("wallcalendar-helpers.lua")
 monthEvents(
   \luastring{\@t@monthName},
   \@t@filterPred,
@@ -875,7 +866,7 @@ monthEvents(
   min events/.get=\@t@minEvents,
 }%
 \luadirect{
-require("./scripts/wallcalendar-helpers.lua")
+require("wallcalendar-helpers.lua")
 yearEvents(
   tonumber(\@t@year),
   \@t@filterPred,
@@ -911,14 +902,14 @@ It will parse the CSV file set with the =eventsCsv= class option.
 
 \newcommand\parseMonthMarksDayText{%
 \luadirect{
-require("./scripts/wallcalendar-helpers.lua")
+require("wallcalendar-helpers.lua")
 monthMarksDayText(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv})
 tex.sprint(';')
 }}
 
 \newcommand\parseMonthMarksDayTextMonth[1]{%
 \luadirect{
-require("./scripts/wallcalendar-helpers.lua")
+require("wallcalendar-helpers.lua")
 monthMarksDayText(\luastring{#1}, nil, \luastring{\@wall@eventsCsv})
 tex.sprint(';')
 }}
@@ -929,13 +920,13 @@ tex.sprint(';')
 #+begin_src tex
 \newcommand*\parseMonthMarksDayTextUsing[1]{%
 \luadirect{
-require("./scripts/wallcalendar-helpers.lua")
+require("wallcalendar-helpers.lua")
 monthMarksDayText(\luastring{\theMonthName}, nil, \luastring{#1})
 }}
 
 \newcommand\parseMonthMarksDayTextMonthUsing[2]{%
 \luadirect{
-require("./scripts/wallcalendar-helpers.lua")
+require("wallcalendar-helpers.lua")
 monthMarksDayText(\luastring{#1}, nil, \luastring{#2})
 }}
 #+end_src
@@ -945,7 +936,7 @@ monthMarksDayText(\luastring{#1}, nil, \luastring{#2})
 #+begin_src tex
 \newcommand*\parseMonthMarksNote{%
 \luadirect{
-require("./scripts/wallcalendar-helpers.lua")
+require("wallcalendar-helpers.lua")
 monthMarksNote(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \luastring{\@wall@markDefaultsCsv})
 }}
 #+end_src
@@ -955,7 +946,7 @@ monthMarksNote(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \lu
 #+begin_src tex
 \newcommand*\parseMonthMarksNoteUsing[1]{%
 \luadirect{
-require("./scripts/wallcalendar-helpers.lua")
+require("wallcalendar-helpers.lua")
 monthMarksNote(\luastring{\theMonthName}, nil, \luastring{#1}, \luastring{\@wall@markDefaultsCsv})
 }}
 #+end_src
@@ -1487,7 +1478,7 @@ pageWrap, not relative to other coffins. It prevents accidental shifts when the
 other coffins are empty (when =varnishmask= is on) or have too much content.
 
 #+begin_src tex
-% The quote has to be centered betweeen the photo and the calendar with manual tweaking.
+% The quote has to be centered between the photo and the calendar with manual tweaking.
 % The height of the quote is not known, the height of the calendar plus its heading is not known.
 
 % TODO move the photo with /Photo/#2/xOffset and yOffset as at the full page layout
@@ -1958,27 +1949,27 @@ other coffins are empty (when =varnishmask= is on) or have too much content.
 
 \newcommand\@wall@plm[1]{%
 \luadirect{
-require("./scripts/wallcalendar-helpers.lua")
+require("wallcalendar-helpers.lua")
 monthMarksDayText(\luastring{#1}, nil, \luastring{\plannerMarksDayTextCSV})
 tex.sprint(';')
 }}
 
 \newcommand\@wall@plmYear{%
 \luadirect{
-require("./scripts/wallcalendar-helpers.lua")
+require("wallcalendar-helpers.lua")
 yearMarksDayText(tonumber(\CalendarYear), nil, \luastring{\plannerMarksDayTextCSV})
 tex.sprint(';')
 }}
 
 \newcommand\@wall@plNotes{%
 \luadirect{
-require("./scripts/wallcalendar-helpers.lua")
+require("wallcalendar-helpers.lua")
 yearMarksNote(tonumber(\CalendarYear), nil, \luastring{\plannerMarksNoteCSV}, \luastring{\plannerMarkDefaultsCsv}, false)
 }}
 
 \newcommand\@wall@plNotesOneCalendar{%
 \luadirect{
-require("./scripts/wallcalendar-helpers.lua")
+require("wallcalendar-helpers.lua")
 yearMarksNote(tonumber(\CalendarYear), nil, \luastring{\plannerMarksNoteCSV}, \luastring{\plannerMarkDefaultsCsv}, true)
 }}
 

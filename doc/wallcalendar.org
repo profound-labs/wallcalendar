@@ -731,7 +731,7 @@ not even a sound
 % Use two CSV files for day text input to include the moon phases
 \renewcommand\@wall@plm[1]{%
 \luadirect{
-require("./scripts/wallcalendar-helpers.lua")
+require("wallcalendar-helpers.lua")
 monthMarksDayText(\luastring{#1}, nil, \luastring{\plannerMarksDayTextCSV})
 monthMarksDayText(\luastring{#1}, nil, \luastring{./data/moonphases.csv})
 tex.sprint(';')

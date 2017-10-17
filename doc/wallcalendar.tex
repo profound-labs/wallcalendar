@@ -1,23 +1,26 @@
-% Created 2016-11-21 Mon 17:52
+% Created 2017-10-17 Tue 15:52
 \documentclass[11pt,oneside]{memoir-article}
 \usepackage{local}
-\renewcommand{\docVersion}{v1.0}
+\renewcommand{\docVersion}{v1.3}
 \renewcommand{\docUrl}{\href{https://github.com/profound-labs/wallcalendar/}{link}}
 \hypersetup{ pdfauthor={Gambhīro Bhikkhu}, }
 \author{Gambhīro Bhikkhu}
 \date{\today}
 \title{Wallcalendar User Manual}
 \hypersetup{
-  pdfkeywords={},
-  pdfsubject={},
-  pdfcreator={Emacs 24.5.1 (Org mode 8.2.10)}}
+ pdfauthor={Gambhīro Bhikkhu},
+ pdftitle={Wallcalendar User Manual},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 25.1.1 (Org mode 9.0.9)}, 
+ pdflang={English}}
 \begin{document}
 
 \maketitle
 \input{frontpage.tex}
 
 \chapter{Tutorial: Forest Calendar}
-\label{sec-1}
+\label{sec:org9e1c3d1}
 
 In this tutorial we will produce the three example pages seen in the summary.
 
@@ -49,7 +52,7 @@ The month page will be typeset with:
 \end{verbatim}
 
 \section{Documentclass}
-\label{sec-1-1}
+\label{sec:orgbba6dea}
 
 To start, load the documentclass and set \texttt{year}, \texttt{language} and the \texttt{imageFolder}:
 
@@ -68,7 +71,7 @@ Let's start the preamble with \texttt{\textbackslash{}makeatletter} to be safe.
 \end{verbatim}
 
 \section{Font settings}
-\label{sec-1-2}
+\label{sec:org30e28c2}
 
 For this example we'll use \TeX{} Gyre Pagella as the main typeface. We also load
 DejaVu Sans to use a particular glyph as a mark in the calendar (\texttt{U+263C} white
@@ -84,7 +87,7 @@ sun with rays).
 \clearpage
 
 \section{June}
-\label{sec-1-3}
+\label{sec:org6815f95}
 
 \twocol{%
   \frame{\includegraphics[width=5cm]{cal-plain-01}}%
@@ -157,7 +160,7 @@ Events for particular days are printed under the calendar.
 \end{verbatim}
 
 \section{July}
-\label{sec-1-4}
+\label{sec:orgda955cc}
 
 \twocol{%
   \frame{\includegraphics[width=5cm]{cal-plain-02}}%
@@ -212,7 +215,7 @@ But I shall be gone.
 \end{verbatim}
 
 \section{August}
-\label{sec-1-5}
+\label{sec:org522c828}
 
 \twocol{%
   \frame{\includegraphics[width=5cm]{cal-plain-03}}%
@@ -259,7 +262,7 @@ End of the preamble.
 \end{verbatim}
 
 \section{The document}
-\label{sec-1-6}
+\label{sec:org80f370d}
 
 Typesetting the month pages in the document is now just this much:
 
@@ -278,7 +281,7 @@ Typesetting the month pages in the document is now just this much:
 \clearpage
 
 \chapter{Tutorial: Translations}
-\label{sec-2}
+\label{sec:org28303a7}
 
 In this tutorial we will produce the same calendar in three languages: Japanese,
 English and Hungarian.
@@ -311,7 +314,7 @@ We are going to use \texttt{IPAPMincho} font for the Japanese.
 \end{extrafullwidth}
 
 \section{Files}
-\label{sec-2-1}
+\label{sec:orga8965a9}
 
 The main document files:
 
@@ -344,7 +347,7 @@ frog.tex
 \end{verbatim}
 
 \section{Translations setup}
-\label{sec-2-2}
+\label{sec:org2adcd24}
 
 Create the \texttt{frog-english.tex} file and use the \texttt{\textbackslash{}SetTxt\{ key \}\{ content \}}
 command to set text content for translation keys.
@@ -444,7 +447,7 @@ Put the calendar marks in a command instead, as above with \texttt{\textbackslas
 \end{verbatim}
 
 \section{Document setup}
-\label{sec-2-3}
+\label{sec:org736afc3}
 
 Load the documentclass. We are setting the \texttt{translations} option to define the
 file where translation keys are set. This file is loaded by the documentclass as
@@ -600,7 +603,7 @@ Calendar settings for the month, using \texttt{\textbackslash{}txt} to access tr
 \clearpage
 
 \chapter{Tutorial: Load Events from CSV}
-\label{sec-3}
+\label{sec:org12d351e}
 
 \begin{fullwidth}
 \begin{minipage}{\linewidth}
@@ -612,7 +615,7 @@ Calendar settings for the month, using \texttt{\textbackslash{}txt} to access tr
 \end{fullwidth}
 
 \section{CSV files}
-\label{sec-3-1}
+\label{sec:orgba9e3f8}
 
 Events in the CSV should be already sorted by date.
 
@@ -630,7 +633,7 @@ We're going to use the following csv files, see in the \texttt{./doc/examples/da
 \texttt{mark\_defaults.csv}
 
 \section{Event formatting}
-\label{sec-3-2}
+\label{sec:orgbf5aa37}
 
 You can format the event output by setting the \texttt{format cmd} key:
 
@@ -662,7 +665,7 @@ end
 \end{verbatim}
 
 \section{Document setup}
-\label{sec-3-3}
+\label{sec:orgb56123b}
 
 \texttt{cal-marks.tex}
 
@@ -722,7 +725,7 @@ not even a sound
 \clearpage
 
 \chapter{Example: Year Planner Page}
-\label{sec-4}
+\label{sec:org24663e1}
 
 \begin{fullwidth}
 \begin{minipage}{0.31\linewidth}
@@ -734,7 +737,7 @@ not even a sound
 \end{fullwidth}
 
 \section{Document setup}
-\label{sec-4-1}
+\label{sec:org85fac7e}
 
 \texttt{cal-year-planner.tex}
 
@@ -756,7 +759,7 @@ not even a sound
 % Use two CSV files for day text input to include the moon phases
 \renewcommand\@wall@plm[1]{%
 \luadirect{
-require("./scripts/wallcalendar-helpers.lua")
+require("wallcalendar-helpers.lua")
 monthMarksDayText(\luastring{#1}, nil, \luastring{\plannerMarksDayTextCSV})
 monthMarksDayText(\luastring{#1}, nil, \luastring{./data/moonphases.csv})
 tex.sprint(';')
@@ -764,7 +767,7 @@ tex.sprint(';')
 \end{verbatim}
 
 \section{\textbackslash YearPlannerPage}
-\label{sec-4-2}
+\label{sec:org0124cf4}
 
 \begin{verbatim}
 \newcommand\plannerYearFmt{\fontsize{26}{26}\selectfont\color{orangegold}}
@@ -800,7 +803,7 @@ tex.sprint(';')
 
 \vspace*{7mm}
 
-\YearPlanner
+\YearPlannerPortrait
 
 \vspace*{\plannerNotesSep}
 
@@ -816,7 +819,7 @@ tex.sprint(';')
 \end{verbatim}
 
 \section{Use it}
-\label{sec-4-3}
+\label{sec:org70f504f}
 
 \begin{verbatim}
 \begin{document}
@@ -829,7 +832,7 @@ tex.sprint(';')
 \clearpage
 
 \chapter{Example: Photo Thumbnails Page}
-\label{sec-5}
+\label{sec:org0431559}
 
 \begin{fullwidth}
 \begin{minipage}{0.31\linewidth}
@@ -841,7 +844,7 @@ tex.sprint(';')
 \end{fullwidth}
 
 \section{Document setup}
-\label{sec-5-1}
+\label{sec:orgc4970c9}
 
 \texttt{cal-thumbnails.tex}
 
@@ -863,7 +866,7 @@ tex.sprint(';')
 \end{verbatim}
 
 \section{\textbackslash ThumbWithCaptionLeftSide}
-\label{sec-5-2}
+\label{sec:orge74d943}
 
 Typesets the photo thumb image with its caption text on the left side.
 
@@ -915,7 +918,7 @@ Typesets the photo thumb image with its caption text on the left side.
 \end{verbatim}
 
 \section{\textbackslash ThumbWithCaptionRightSide}
-\label{sec-5-3}
+\label{sec:org7af4bd6}
 
 Typesets the photo thumb image with its caption text on the right side.
 
@@ -953,7 +956,7 @@ Typesets the photo thumb image with its caption text on the right side.
 \end{verbatim}
 
 \section{\textbackslash ThumbsPage}
-\label{sec-5-4}
+\label{sec:org9571a13}
 
 \begin{verbatim}
 \newlength{\thumbColumnWidth}
@@ -1055,7 +1058,7 @@ Typesets the photo thumb image with its caption text on the right side.
 \end{verbatim}
 
 \section{Setup the photo keys}
-\label{sec-5-5}
+\label{sec:org1bdd209}
 
 \begin{verbatim}
 \SetPhoto[file={frog-crop}, thumbFile={frog-crop-thumb}, caption={Let the frog jump}]{January}
@@ -1075,7 +1078,7 @@ Typesets the photo thumb image with its caption text on the right side.
 \end{verbatim}
 
 \section{Use it}
-\label{sec-5-6}
+\label{sec:org23c0fca}
 
 \begin{verbatim}
 \begin{document}
@@ -1086,7 +1089,7 @@ Typesets the photo thumb image with its caption text on the right side.
 \end{verbatim}
 
 \chapter{Documentclass Options}
-\label{sec-6}
+\label{sec:org5024f18}
 
 \begin{verbatim}
 year
@@ -1113,7 +1116,7 @@ varnishmask
 \end{verbatim}
 
 \chapter{User Commands}
-\label{sec-7}
+\label{sec:org02a2f80}
 
 \begin{verbatim}
 \SetPhoto[ options ]{ month }
@@ -1138,7 +1141,7 @@ varnishmask
 \clearpage
 
 \chapter{Page Layout}
-\label{sec-8}
+\label{sec:org2801ae6}
 
 We will review how the page layout happens when we call \texttt{\textbackslash{}MonthPage}.
 
@@ -1180,10 +1183,9 @@ landscape} layout is for landscape photos which can be scaled horizontally,
 possibly bleeding into the side margins.
 
 \chapter{Contact}
-\label{sec-9}
+\label{sec:orgc9e6d1d}
 
 Github: \url{https://github.com/profound-labs/wallcalendar/}
 
 Email: \texttt{Gambhīro Bhikkhu <gambhiro.bhikkhu.85@gmail.com>}
-% Emacs 24.5.1 (Org mode 8.2.10)
 \end{document}
