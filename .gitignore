@@ -4,6 +4,7 @@ auto/
 *.log
 *.swp
 mwe.*
+wallcalendar.zip
 doc/wallcalendar.pdf
 doc/wallcalendar-code.pdf
 doc/_minted-wallcalendar/

@@ -16,7 +16,7 @@ commented code documentation.
 
 The manual includes examples and tutorials, but you may also want to see the [doc/examples][examples] folder on Github.
 
-![layouts](./layouts.png)
+![wallcalendar layouts](./wallcalendar-layouts.png)
 
 Github: https://github.com/profound-labs/wallcalendar
 

@@ -1,6 +1,6 @@
 -- paths are relative to wallcalendar.cls
-local csv = require("./scripts/csv.lua")
-local date = require("./scripts/date.lua")
+local csv = require("wallcalendar-csv.lua")
+local date = require("wallcalendar-date.lua")
 local tp = tex.print
 local tsp = tex.sprint
 
