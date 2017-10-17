@@ -1,5 +1,7 @@
 # Wallcalendar LaTeX documentclass
 
+A wall calendar class with custom layouts and support for internationalization.
+
 The documentclass comes with the following layouts:
 
 - Full page photo, the calendar days overlaid with opacity
