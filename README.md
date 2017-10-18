@@ -23,3 +23,7 @@ The manual includes examples and tutorials, but you may also want to see the [do
 Github: https://github.com/profound-labs/wallcalendar
 
 [examples]: https://github.com/profound-labs/wallcalendar/tree/master/doc/examples
+
+Contact: Gambhiro Bhikkhu <gambhiro.bhikkhu.85@gmail.com>
+
+LPPL LaTeX Public Project License

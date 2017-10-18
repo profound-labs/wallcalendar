@@ -10,13 +10,17 @@ PACKAGE_NAME=wallcalendar
 
 SRC_ZIP="$1"
 
-DIST_DIR=$(kpsewhich -var-value TEXMFHOME)"/tex/$PACKAGE_NAME"
+DIST_DIR=$(kpsewhich -var-value TEXMFHOME)"/tex"
 
-if [ ! -z "$DIST_DIR" ]; then
+if [ ! -e "$DIST_DIR" ]; then
    mkdir -p "$DIST_DIR"
 fi
 
-rm -r "$DIST_DIR"/*
+if [ ! -e "$DIST_DIR/$PACKAGE_NAME" ]; then
+    rm -r "$DIST_DIR/$PACKAGE_NAME"
+fi
+
+# The .zip file should contain a top-level directory.
 
 unzip "$SRC_ZIP" -d "$DIST_DIR"
 
