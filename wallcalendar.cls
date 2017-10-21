@@ -10,7 +10,7 @@
 % LPPL LaTeX Public Project License
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{wallcalendar}[2017/10/17 v1.3 A wall calendar class with custom layouts and support for internationalization.]
+\ProvidesClass{wallcalendar}[2017/10/21 v1.3.1 A wall calendar class with custom layouts and support for internationalization.]
 
 \RequirePackage{pgfopts}
 \RequirePackage{calc}
@@ -1660,8 +1660,8 @@ yearMarksNote(tonumber(\CalendarYear), nil, \luastring{\plannerMarksNoteCSV}, \l
 }}}
 
 % Load internal translations
-\InputIfFileExists{i18n/\@wall@calendarLanguage.tex}{}%
-{\ClassError{wallcalendar}{File Not Found: i18n/\@wall@calendarLanguage.tex}{}}
+\InputIfFileExists{i18n/wallcalendar-\@wall@calendarLanguage.tex}{}%
+{\ClassError{wallcalendar}{File Not Found: i18n/wallcalendar-\@wall@calendarLanguage.tex}{}}
 
 % Load user translations if the option was set and translationsAutoload is true
 

@@ -3,13 +3,15 @@ auto/
 *.aux
 *.log
 *.swp
-mwe.*
+*.fdb_latexmk
+*.fls
 wallcalendar.zip
 doc/wallcalendar.pdf
 doc/wallcalendar-code.pdf
 doc/_minted-wallcalendar/
 doc/_minted-wallcalendar-code/
 doc/examples/i18n/
+doc/examples/mwe.*
 doc/examples/wallcalendar.cls
 doc/examples/cal-burst/doc_data.txt
 doc/examples/diff-old/*.pdf
