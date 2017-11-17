@@ -45,7 +45,7 @@ The \textbf{User Guide} is in \texttt{wallcalendar.pdf}. Clone or download from 
 
 #+begin_src tex
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{wallcalendar}[2017/10/21 v1.3.1 A wall calendar class with custom layouts and support for internationalization.]
+\ProvidesClass{wallcalendar}[2017/10/21 v1.3.2 A wall calendar class with custom layouts and support for internationalization.]
 #+end_src
 
 * Preliminary Declarations
@@ -1536,7 +1536,8 @@ other coffins are empty (when =varnishmask= is on) or have too much content.
         \pgf@xa=\d\pgf@xa%
         \pgftransformxshift{\pgf@xa}%
         \pgftransformyshift{\pgf@ya}%
-        \node (d\d) [anchor=south, day heading] {\dayLetterFmt\@tr@dayLetter{\d}};%
+        \pgftransformyshift{4pt}%
+        \node (d\d) [anchor=base, day heading] {\dayLetterFmt\@tr@dayLetter{\d}};%
       };%
     }{}%
   },%
@@ -1735,7 +1736,7 @@ other coffins are empty (when =varnishmask= is on) or have too much content.
     % === Weekday letter above the day ===
     %
     \ifdate{weekend}{\def\dayLetterColor{\color{weekend}}}{\def\dayLetterColor{\color{weekday}}}%
-    \node[anchor=south,yshift=5mm,inner sep=0pt]{%
+    \node[anchor=base,yshift=5.5mm,inner sep=0pt]{%
       \dayLetterColor\dayLetterFmt\@tr@dayLetter{\pgfcalendarcurrentweekday}%
     };%
   },

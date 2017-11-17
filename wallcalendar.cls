@@ -10,7 +10,7 @@
 % LPPL LaTeX Public Project License
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{wallcalendar}[2017/10/21 v1.3.1 A wall calendar class with custom layouts and support for internationalization.]
+\ProvidesClass{wallcalendar}[2017/10/21 v1.3.2 A wall calendar class with custom layouts and support for internationalization.]
 
 \RequirePackage{pgfopts}
 \RequirePackage{calc}
@@ -1060,7 +1060,7 @@ monthMarksNote(\luastring{\theMonthName}, nil, \luastring{#1}, \luastring{\@wall
 \fi
 }% \SetHorizontalCoffin
 
-% The quote has to be centered betweeen the photo and the calendar with manual tweaking.
+% The quote has to be centered between the photo and the calendar with manual tweaking.
 % The height of the quote is not known, the height of the calendar plus its heading is not known.
 
 % TODO move the photo with /Photo/#2/xOffset and yOffset as at the full page layout
@@ -1103,7 +1103,8 @@ monthMarksNote(\luastring{\theMonthName}, nil, \luastring{#1}, \luastring{\@wall
         \pgf@xa=\d\pgf@xa%
         \pgftransformxshift{\pgf@xa}%
         \pgftransformyshift{\pgf@ya}%
-        \node (d\d) [anchor=south, day heading] {\dayLetterFmt\@tr@dayLetter{\d}};%
+        \pgftransformyshift{4pt}%
+        \node (d\d) [anchor=base, day heading] {\dayLetterFmt\@tr@dayLetter{\d}};%
       };%
     }{}%
   },%
@@ -1277,7 +1278,7 @@ monthMarksNote(\luastring{\theMonthName}, nil, \luastring{#1}, \luastring{\@wall
     % === Weekday letter above the day ===
     %
     \ifdate{weekend}{\def\dayLetterColor{\color{weekend}}}{\def\dayLetterColor{\color{weekday}}}%
-    \node[anchor=south,yshift=5mm,inner sep=0pt]{%
+    \node[anchor=base,yshift=5.5mm,inner sep=0pt]{%
       \dayLetterColor\dayLetterFmt\@tr@dayLetter{\pgfcalendarcurrentweekday}%
     };%
   },
