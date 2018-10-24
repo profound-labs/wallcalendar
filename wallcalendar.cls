@@ -4,13 +4,13 @@
 %
 % A wall calendar document class with custom layouts and support for internationalization.
 %
-% (c) Gambhiro Bhikkhu, 2017
+% (c) Gambhiro Bhikkhu, 2018
 % gambhiro.bhikkhu.85@gmail.com
 %
 % LPPL LaTeX Public Project License
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{wallcalendar}[2017/10/21 v1.3.2 A wall calendar class with custom layouts and support for internationalization.]
+\ProvidesClass{wallcalendar}[2018/10/24 v1.4.0 A wall calendar class with custom layouts and support for internationalization.]
 
 \RequirePackage{pgfopts}
 \RequirePackage{calc}
@@ -106,8 +106,8 @@
 \fi
 
 \RequirePackage{nag}
-%\RequirePackage{textcomp}
-\RequirePackage[cmyk]{xcolor}
+% Don't use [cmyk] option on xcolor. Declare text colors either in gray or cmyk (for color).
+\RequirePackage{xcolor}
 \RequirePackage{graphicx}
 \DeclareGraphicsExtensions{.pdf,.png,.jpg}
 \graphicspath{{\@wall@imageFolder}}
@@ -713,8 +713,10 @@ monthMarksNote(\luastring{\theMonthName}, nil, \luastring{#1}, \luastring{\@wall
 \newlength\@t@bleed
 \newlength\@t@rightOffset
 \newlength\@t@minipageWidth
+\newlength\@t@calendar@minimumHeight
 \newlength\@t@calendar@height
 \newlength\@t@calendar@hmargin
+\newlength\@t@calendar@verticalSpacing
 \newlength\@t@calendar@dayYshift
 \newlength\@t@calendar@dayXshift
 \newlength\@t@calendar@gridHeight
@@ -929,6 +931,12 @@ monthMarksNote(\luastring{\theMonthName}, nil, \luastring{#1}, \luastring{\@wall
   \renewcommand*\headingFmt{\centering}%
   \renewcommand*\calendarFmt{\centering}%
   \renewcommand*\eventsFmt{\setlength{\parindent}{0pt}\raggedright\footnotesize}%
+  \setlength{\@t@calendar@minimumHeight}{85mm}%
+  \setlength{\@t@calendar@hmargin}{20pt}%
+  % 5mm: day headings
+  % 20mm: events
+  % 6.5mm: white space
+  \setlength{\@t@calendar@verticalSpacing}{20mm + 5mm + 6.5mm}%
 }
 
 \newcommand\@wall@smallLandscapeLayout[2][]{%
@@ -945,7 +953,7 @@ monthMarksNote(\luastring{\theMonthName}, nil, \luastring{#1}, \luastring{\@wall
 
 \def\@t@monthnum{\monthToNum{#2}}
 
-\setlength{\@t@calendar@height}{85mm + \@t@bleed}
+\setlength{\@t@calendar@height}{\@t@calendar@minimumHeight + \@t@bleed}
 
 % See if there was a height given in the options
 \pgfkeys{/Calendar/#2/minimum height/.get=\@val}
@@ -954,12 +962,7 @@ monthMarksNote(\luastring{\theMonthName}, nil, \luastring{#1}, \luastring{\@wall
   \setlength{\@t@calendar@height}{\@val + \@t@bleed}
 \fi
 
-\setlength{\@t@calendar@hmargin}{20pt}
-
-% 5mm: day headings
-% 20mm: events
-% 6.5mm: vertical spacing
-\setlength{\@tmp@a}{20mm + 5mm + 6.5mm}
+\setlength{\@tmp@a}{\@t@calendar@verticalSpacing}
 \setlength{\@tmp@b}{\@t@calendar@height -\@tmp@a}
 \setlength{\@t@calendar@dayYshift}{0.1666\@tmp@b}% 1/6 = 0.1666
 
