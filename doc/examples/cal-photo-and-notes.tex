@@ -1,0 +1,107 @@
+\documentclass[
+  year = 2018,
+  language = english,
+  eventsCsv = ./data/holidays.csv,
+  markDefaultsCsv = ./data/mark_defaults.csv,
+  imageFolder = ./photos/,
+  a4PaperLandscape,
+  %preview,
+]{wallcalendar}
+
+\makeatletter
+
+\colorlet{mooncolor}{darkgold}
+
+\usepackage{fontspec}
+\defaultfontfeatures{Ligatures={TeX}}
+\setmainfont{TeX Gyre Pagella}
+\newfontfamily\dejaVuSans{DejaVu Sans}
+
+% === September ========================================================
+
+\SetPhoto[bleed=3mm, file={green-mountains-crop}]{September}
+
+\SetQuote[xOffset=0pt, yOffset=-15mm]{September}{%
+\raggedleft\setlength{\parskip}{10pt}\fontsize{20}{27}\selectfont\color{black!85}%
+going deeper\\
+and still deeper --\\
+the green mountains
+
+{\large \textit{Taneda Santōka}}%
+}
+
+\SetCalendar[]{September}
+
+\SetEvents{September}{%
+\semicolonEndTikzCalendar%
+\parseMonthMarksDayTextInlineUsing{./data/moonphases.csv}%
+\parseMonthInlineNotes%
+}{}
+
+% === October ==========================================================
+
+\SetPhoto[bleed=3mm, file={green-mountains-crop}]{October}
+
+\SetQuote[xOffset=0pt, yOffset=-15mm]{October}{%
+\raggedleft\setlength{\parskip}{10pt}\fontsize{20}{27}\selectfont\color{black!85}%
+going deeper\\
+and still deeper --\\
+the green mountains
+
+{\large \textit{Taneda Santōka}}%
+}
+
+\SetCalendar[]{October}
+
+\SetEvents{October}{%
+\semicolonEndTikzCalendar%
+\parseMonthMarksDayTextInlineUsing{./data/moonphases.csv}%
+\parseMonthInlineNotes%
+}{}
+
+% === November =========================================================
+
+\SetPhoto[bleed=3mm, file={green-mountains-crop}]{November}
+
+\SetQuote[xOffset=0pt, yOffset=-15mm]{November}{%
+\raggedleft\setlength{\parskip}{10pt}\fontsize{20}{27}\selectfont\color{black!85}%
+going deeper\\
+and still deeper --\\
+the green mountains
+
+{\large \textit{Taneda Santōka}}%
+}
+
+\SetCalendar[]{November}
+
+\SetEvents{November}{%
+\semicolonEndTikzCalendar%
+\parseMonthMarksDayTextInlineUsing{./data/moonphases.csv}%
+\parseMonthInlineNotes%
+}{}
+
+\makeatother
+
+\begin{document}
+
+% === Titlepage ========================================================
+
+\mbox{}\vfill
+
+{\centering
+  \HUGE \CalendarYear
+  \par
+}
+
+\vfill
+\mbox{}
+
+% === Months ===========================================================
+
+\MonthPage[layout=photo and notes, put photo=full page]{September}
+
+\MonthPage[layout=photo and notes, put photo=full page]{October}
+
+\MonthPage[layout=photo and notes, put photo=full page]{November}
+
+\end{document}
