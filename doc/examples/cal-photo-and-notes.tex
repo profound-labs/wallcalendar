@@ -13,25 +13,59 @@
 
 \makeatletter
 
+% eso-pic is already loaded by wallcalendar
+% \usepackage{eso-pic}
+
 \colorlet{mooncolor}{darkgold}
 \colorlet{sunday}{red}
 
+% === Custom fonts =====================================================
+
 \usepackage{fontspec}
 \defaultfontfeatures{Ligatures={TeX}}
+
 \setmainfont{TeX Gyre Pagella}
+
 \newfontfamily\dejaVuSans{DejaVu Sans}
+
+\newfontfamily\josefinSans[Path = {./fonts/}]{JosefinSans-Regular.ttf}
+
+% === Renew formatting hooks ===========================================
+
+\renewcommand*\dayLetterTextFmt[1]{#1}
+
+\renewcommand\photoAndNotesFmt{%
+  \renewcommand*\monthFmt{\josefinSans\LARGE}%
+  \renewcommand*\yearFmt{\josefinSans\LARGE}%
+  \renewcommand*\dayLetterColor{}%
+  \renewcommand*\dayLetterFmt{\small}%
+  \renewcommand*\dayLetterTextFmt[1]{\josefinSans\tiny\textls*{\MakeUppercase{##1}}}%
+  \renewcommand*\dayTextFmt{\josefinSans\small}%
+  \renewcommand*\quoteFmt{\centering}%
+  \renewcommand*\headingFmt{\centering}%
+  \renewcommand*\calendarFmt{\centering}%
+  \renewcommand*\eventsFmt{\setlength{\parindent}{0pt}\raggedright\josefinSans\fontsize{6}{8}\selectfont}%
+  \setlength{\@t@calendar@minimumHeight}{\calPaperHeight - 30mm}%
+  \setlength{\@t@calendar@hmargin}{20pt}%
+  % white space to allow:
+  % - month and year label
+  % - notepad area
+  % - extra white space
+  \setlength{\@t@calendar@verticalSpacing}{30mm}%
+}
 
 % === September ========================================================
 
 \SetPhoto[bleed=3mm, file={green-mountains-crop}]{September}
 
 \SetQuote[xOffset=0pt, yOffset=-15mm]{September}{%
-\raggedleft\setlength{\parskip}{10pt}\fontsize{20}{27}\selectfont\color{black!85}%
-going deeper\\
-and still deeper --\\
-the green mountains
+\raggedleft\setlength{\parskip}{10pt}\fontsize{15}{22}\selectfont\color{black!85}%
+The Road goes ever on and on\\
+Out from the door where it began.\\
+Now far ahead the Road has gone,\\
+Let others follow it who can!
 
-{\large \textit{Taneda Santōka}}%
+{\large \textit{Bilbo Baggins}}%
 }
 
 \SetCalendar[]{September}
@@ -55,7 +89,7 @@ the green mountains
 %
 % the photo is dark, add a white background for the day number
 \node (top-whitecircle) [
-  below right=0.5pt and 0.5pt of cal09-2018-09-18-daynumber.center,
+  below right=0.3pt and 0.1pt of cal09-2018-09-18-daynumber.center,
   anchor=center,
   circle,
   minimum width=15pt,
@@ -76,7 +110,7 @@ the green mountains
 ] {};%
 %
 % repeat the day number (the photo has covered it)
-\calDayNumberNode{cal09-2018-09-18}{-redo}{18}%
+\calDayNumberNode{cal09-2018-09-18}{-redo}{\dayTextFmt 18}%
 %
 % print the day's marks (moon phases in this case) next to the day number
 \parseMonthMarksDayTextInlineUsing{./data/moonphases.csv}%
@@ -90,12 +124,13 @@ the green mountains
 \SetPhoto[bleed=3mm, file={green-mountains-crop}]{October}
 
 \SetQuote[xOffset=0pt, yOffset=-15mm]{October}{%
-\raggedleft\setlength{\parskip}{10pt}\fontsize{20}{27}\selectfont\color{black!85}%
-going deeper\\
-and still deeper --\\
-the green mountains
+\raggedleft\setlength{\parskip}{10pt}\fontsize{15}{22}\selectfont\color{black!85}%
+The Road goes ever on and on\\
+Out from the door where it began.\\
+Now far ahead the Road has gone,\\
+Let others follow it who can!
 
-{\large \textit{Taneda Santōka}}%
+{\large \textit{Bilbo Baggins}}%
 }
 
 \SetCalendar[]{October}
@@ -111,12 +146,13 @@ the green mountains
 \SetPhoto[bleed=3mm, file={green-mountains-crop}]{November}
 
 \SetQuote[xOffset=0pt, yOffset=-15mm]{November}{%
-\raggedleft\setlength{\parskip}{10pt}\fontsize{20}{27}\selectfont\color{black!85}%
-going deeper\\
-and still deeper --\\
-the green mountains
+\raggedleft\setlength{\parskip}{10pt}\fontsize{15}{22}\selectfont\color{black!85}%
+The Road goes ever on and on\\
+Out from the door where it began.\\
+Now far ahead the Road has gone,\\
+Let others follow it who can!
 
-{\large \textit{Taneda Santōka}}%
+{\large \textit{Bilbo Baggins}}%
 }
 
 \SetCalendar[]{November}
@@ -132,12 +168,13 @@ the green mountains
 \SetPhoto[bleed=3mm, file={green-mountains-crop}]{December}
 
 \SetQuote[xOffset=0pt, yOffset=-15mm]{December}{%
-\raggedleft\setlength{\parskip}{10pt}\fontsize{20}{27}\selectfont\color{black!85}%
-going deeper\\
-and still deeper --\\
-the green mountains
+\raggedleft\setlength{\parskip}{10pt}\fontsize{15}{22}\selectfont\color{black!85}%
+The Road goes ever on and on\\
+Out from the door where it began.\\
+Now far ahead the Road has gone,\\
+Let others follow it who can!
 
-{\large \textit{Taneda Santōka}}%
+{\large \textit{Bilbo Baggins}}%
 }
 
 \SetCalendar[]{December}
@@ -154,15 +191,42 @@ the green mountains
 
 % === Titlepage ========================================================
 
-\mbox{}\vfill
-
-{\centering
-  \HUGE \CalendarYear
-  \par
-}
-
-\vfill
 \mbox{}
+
+\AddToShipoutPictureFG*{%
+  \put(\LenToUnit{-3mm},\LenToUnit{-3mm}){%
+    \begin{tikzpicture}
+      \node (bg) [
+        minimum width=\calPaperWidth + 6mm,
+        minimum height=\calPaperHeight + 6mm,
+      ] {%
+        \includegraphics[height={\calPaperHeight + 6mm}]{mountains-crop}%
+      };
+
+      \node (title-bg) [
+        minimum width=\calPaperWidth + 6mm,
+        minimum height=60mm,
+        above left=0pt and 0pt of bg.center,
+        anchor=center,
+        fill=white,
+        opacity=0.4,
+      ] {};
+
+      \node (title-text) [
+        above left=0pt and 0pt of bg.center,
+        anchor=center,
+      ] {%
+        \begin{minipage}{\calPaperWidth + 6mm}%
+          \centering
+          \josefinSans\fontsize{30}{50}\selectfont
+          \CalendarYear\par
+          photo and notes calendar\par
+          in \LaTeX\par
+        \end{minipage}%
+      };
+    \end{tikzpicture}%
+  }%
+}%
 
 % === Months ===========================================================
 

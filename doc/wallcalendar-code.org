@@ -2122,8 +2122,7 @@ Command to print day number, so that it can be reused outside the day code block
       minimum height=\@t@calendar@dayYshift,
       name=\pgfcalendarsuggestedname,
       every day,
-    ] {%
-    };%
+    ] {};%
     \calDayNumberNode{\pgfcalendarsuggestedname}{-daynumber}{\tikzdaytext}%
   },
 ]

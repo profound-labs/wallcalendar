@@ -1576,8 +1576,7 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
       minimum height=\@t@calendar@dayYshift,
       name=\pgfcalendarsuggestedname,
       every day,
-    ] {%
-    };%
+    ] {};%
     \calDayNumberNode{\pgfcalendarsuggestedname}{-daynumber}{\tikzdaytext}%
   },
 ]
