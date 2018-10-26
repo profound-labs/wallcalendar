@@ -21,6 +21,7 @@
 \newlength\@wall@rightMargin
 \newlength\@wall@topMargin
 \newlength\@wall@bottomMargin
+\newlength\@wall@trimSpace
 
 \def\@wall@eventsCsv{}
 \def\@wall@markDefaultsCsv{}
@@ -32,7 +33,6 @@
 \newif\ifshowframe
 \newif\iftranslationsAutoload
 \newif\ifloadBabel
-\newif\ifpreview
 
 \pgfkeys{
   /wall/.is family, /wall,
@@ -47,6 +47,7 @@
     hMargin = 17mm,
     topMargin = 20.5mm,
     bottomMargin = 10mm,
+    trimSpace = 35mm,
   },
   year/.store in = \CalendarYear,
   year/.initial = \the\year,
@@ -63,7 +64,6 @@
   markDefaultsCsv/.initial = {},
   varnishmask/.is if = varnishmask,
   showframe/.is if = showframe,
-  preview/.is if = preview,
   imageFolder/.store in = \@wall@imageFolder,
   paperWidth/.code = {\setlength{\calPaperWidth}{#1}},
   paperHeight/.code = {\setlength{\calPaperHeight}{#1}},
@@ -73,6 +73,7 @@
   rightMargin/.code = {\setlength{\@wall@rightMargin}{#1}},
   topMargin/.code = {\setlength{\@wall@topMargin}{#1}},
   bottomMargin/.code = {\setlength{\@wall@bottomMargin}{#1}},
+  trimSpace/.code = {\setlength{\@wall@trimSpace}{#1}},
   % Paper sizes
   choralOctavoPaper/.style = {paperWidth = 6.75in, paperHeight = 10.5in},
   a2Paper/.style = {paperWidth = 420mm, paperHeight = 594mm},
@@ -100,6 +101,7 @@
 \newlength\@tmp@a
 \newlength\@tmp@b
 \newlength\@tmp@c
+\newlength\@tmp@z
 \newlength\@tmp@width
 \newlength\@tmp@height
 
@@ -165,6 +167,8 @@
 \colorlet{weekday}{black}
 \colorlet{weekend}{black!50}
 \colorlet{mooncolor}{textbody}
+  
+\definecolor{sunday}{RGB}{255,0,0}
 
 \definecolor{datenum}{gray}{0.3}
 \definecolor{plannerdatenum}{gray}{0.15}
@@ -187,7 +191,7 @@
 \fi
 
 \ifshowtrims
-  \setstocksize{\calPaperHeight + 35mm}{\calPaperWidth + 35mm}
+  \setstocksize{\calPaperHeight + \@wall@trimSpace}{\calPaperWidth + \@wall@trimSpace}
   \setlength{\paperheight}{\calPaperHeight}
   \setlength{\paperwidth}{\calPaperWidth}
   \trimXmarks
@@ -262,6 +266,33 @@
     \fi%
   \fi%
 }
+
+\newif\ifsixrowsmonth  
+\sixrowsmonthfalse
+
+\pgfkeys{/pgf/calendar/six rows month/.code={%
+  \ifnum\pgfcalendarifdateday=30\relax
+    % Monday
+    \ifnum\pgfcalendarifdateweekday=0\relax
+      \pgfcalendarmatchestrue
+    \fi
+    % Tuesday
+    \ifnum\pgfcalendarifdateweekday=1\relax
+      \pgfcalendarmatchestrue
+    \fi
+  \else
+    \ifnum\pgfcalendarifdateday=31\relax
+      % Monday
+      \ifnum\pgfcalendarifdateweekday=0\relax
+        \pgfcalendarmatchestrue
+      \fi
+      % Tuesday
+      \ifnum\pgfcalendarifdateweekday=1\relax
+        \pgfcalendarmatchestrue
+      \fi
+    \fi
+  \fi%
+}}
 
 \def\@wall@photo@putPhoto#1{#1}
 \def\@wall@photo@setYOffset{}
@@ -1127,18 +1158,19 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
   \renewcommand*\yearFmt{\LARGE}%
   \renewcommand*\dayLetterColor{}%
   \renewcommand*\dayLetterFmt{\small}%
-  \renewcommand*\dayLetterTextFmt[1]{\small\MakeUppercase{##1}}%
+  \renewcommand*\dayLetterTextFmt[1]{\tiny\textls*{\MakeUppercase{##1}}}%
   \renewcommand*\dayTextFmt{\small}%
   \renewcommand*\quoteFmt{\centering}%
   \renewcommand*\headingFmt{\centering}%
   \renewcommand*\calendarFmt{\centering}%
-  \renewcommand*\eventsFmt{\setlength{\parindent}{0pt}\raggedright\footnotesize}%
+  \renewcommand*\eventsFmt{\setlength{\parindent}{0pt}\raggedright\fontsize{6}{8}\selectfont}%
   \setlength{\@t@calendar@minimumHeight}{\calPaperHeight - 30mm}%
   \setlength{\@t@calendar@hmargin}{20pt}%
-  % 5mm: day headings
-  % 20mm: events
-  % 6.5mm: white space
-  \setlength{\@t@calendar@verticalSpacing}{20mm + 5mm + 6.5mm}%
+  % white space to allow:
+  % - month and year label
+  % - notepad area
+  % - extra white space
+  \setlength{\@t@calendar@verticalSpacing}{30mm}%
 }
 
 \newcommand\@wall@photoAndNotesLayout[2][]{%
@@ -1147,13 +1179,21 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
 \@wall@layout@reset
 \photoAndNotesFmt
 
-\colorlet{weekday}{black}
-\colorlet{weekend}{black!70}
-
 \pgfkeys{/Photo/#2/bleed/.get=\@val}
 \setlength{\@t@bleed}{\@val}
 
 \def\@t@monthnum{\monthToNum{#2}}
+
+\settowidth{\@tmp@z}{%
+\begin{tikzpicture}
+  \calendar [
+    dates=\CalendarYear-\@t@monthnum-01 to \CalendarYear-\@t@monthnum-last,
+    execute at begin day scope={
+      \ifdate{six rows month}{\global\sixrowsmonthtrue}{\global\sixrowsmonthfalse}
+    },
+  ];
+\end{tikzpicture}
+}
 
 \setlength{\@t@calendar@height}{\@t@calendar@minimumHeight + \@t@bleed}
 
@@ -1215,9 +1255,15 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
       \setlength\parskip{10pt}%
       \color{black!40}%
       
-      {\normalsize\color{black!40}\textls*{\MakeUppercase{\xNotes}}} \dotfill\par
-      \dotfill\par
-      \dotfill\par
+      \ifsixrowsmonth
+        \dotfill\par
+        \dotfill\par
+      \else
+        \dotfill\par
+        \dotfill\par
+        \dotfill\par
+        \dotfill\par
+      \fi
       
     \end{minipage}%
   }%
@@ -1315,11 +1361,7 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
 \clearpage
 \TypesetCoffin\@wall@photoPageWrap%
 \clearpage
-\ifpreview%
-  \TypesetCoffin\@wall@notesPageWrap%
-\else%
-  \rotatebox[origin = c]{180}{\TypesetCoffin\@wall@notesPageWrap}%
-\fi%
+\TypesetCoffin\@wall@notesPageWrap%
 }% \@wall@photoAndNotesLayout
 
 \newcommand*{\tikzMonthCalendar@photoAndNotes}[1]{%
@@ -1504,6 +1546,17 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
   day text={\dayTextFmt\%d-},
 ]
 
+% #1 : day node name to position at, \pgfcalendarsuggestedname in the day code block
+% #2 : this node name postfix, -daynumber in the day code block
+% #3 : day number, use \tikzdaytext in the day code block
+\newcommand*\calDayNumberNode[3]{%
+    \node (#1#2) [
+      below right=3.5pt and 8pt of #1.north west,
+      anchor=north west,
+      inner sep=0pt,
+    ] {#3};
+}
+
 \tikzstyle{rigel}=[
   no grid surround,
   days grid,
@@ -1513,7 +1566,10 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
   day fullday headings,
   day heading/.style={black!90, yshift={-0.3\@t@calendar@dayYshift}},
   every day/.append style={anchor=base, inner xsep=0pt, yshift={-0.25\baselineskip}},
-  day text={\dayTextFmt\%d-},
+  execute at begin day scope={
+    \ifdate{Sunday}{\def\dayLetterColor{\color{sunday}}}{\def\dayLetterColor{\color{weekday}}}%
+  },
+  day text={\dayTextFmt\dayLetterColor\%d-},
   day code={%
     \node [
       minimum width=\@t@calendar@dayXshift,
@@ -1522,11 +1578,7 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
       every day,
     ] {%
     };%
-    \node [
-      below right=0pt and 10pt of \pgfcalendarsuggestedname.north west,
-      anchor=north west,
-      inner xsep=0pt,
-    ] {\tikzdaytext};
+    \calDayNumberNode{\pgfcalendarsuggestedname}{-daynumber}{\tikzdaytext}%
   },
 ]
 
@@ -1959,8 +2011,8 @@ yearMarksNote(tonumber(\CalendarYear), nil, \luastring{\plannerMarksNoteCSV}, \l
 \xThursdayDayLetter\or \xFridayDayLetter\or \xSaturdayDayLetter\or \xSundayDayLetter\fi}
 
 \newcommand*\@tr@dayName[1]{%
-\ifcase#1 \xMondayDayName\or \xTuesdayDayName\or \xWednesdayDayName\or
-\xThursdayDayName\or \xFridayDayName\or \xSaturdayDayName\or \xSundayDayName\fi}
+\ifcase#1 \xMonday\or \xTuesday\or \xWednesday\or
+\xThursday\or \xFriday\or \xSaturday\or \xSunday\fi}
 
 \newcommand*{\monthToNum}[1]{%
 \luadirect{

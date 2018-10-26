@@ -288,7 +288,7 @@ function formatInlineNotes(events, filterPred, markDefaultsCsv)
       alreadyMarkedDates[event.date] = true
       local d = date(event.date)
 
-      tsp(string.format(" \\draw node [above right=2pt and 0pt of cal%s-%s.south west, anchor=south west] {\\begin{minipage}{\\@t@calendar@dayXshift - 8pt}\\raggedright\\footnotesize %s\\end{minipage}}; ",
+      tsp(string.format(" \\draw node [above right=0pt and 0pt of cal%s-%s.north west, anchor=north west] {\\begin{minipage}[t][\\@t@calendar@dayYshift - 10pt][b]{\\@t@calendar@dayXshift - 8pt}\\eventsFmt %s\\end{minipage}}; ",
                         d:fmt("%m"),
                         event.date,
                         event.note))

@@ -4,13 +4,17 @@
   eventsCsv = ./data/holidays.csv,
   markDefaultsCsv = ./data/mark_defaults.csv,
   imageFolder = ./photos/,
-  a4PaperLandscape,
-  %preview,
+  paperWidth = 282mm,% 297mm - 15mm
+  paperHeight = 195mm,% 210mm - 15mm
+  topMargin = 12mm,
+  trimSpace = 15mm,
+  %showtrims,
 ]{wallcalendar}
 
 \makeatletter
 
 \colorlet{mooncolor}{darkgold}
+\colorlet{sunday}{red}
 
 \usepackage{fontspec}
 \defaultfontfeatures{Ligatures={TeX}}
@@ -33,8 +37,51 @@ the green mountains
 \SetCalendar[]{September}
 
 \SetEvents{September}{%
+% All this will be in tikzpicture environment, after drawing the calendar.
+%
+% This adds a semicolon to end the \calendar command so we can start adding nodes.
 \semicolonEndTikzCalendar%
+%
+% Overlaying a photo with text on a specific date in this month
+%
+% photo node
+\node (day-photo) [
+  above right=3.2pt and 0.1pt of cal09-2018-09-18.north west,
+  inner sep=0pt,
+  anchor=north west,
+] {%
+  \includegraphics[width={\@t@calendar@dayXshift - 0.25pt}]{TomBombadil-crop}%
+};%
+%
+% the photo is dark, add a white background for the day number
+\node (top-whitecircle) [
+  below right=0.5pt and 0.5pt of cal09-2018-09-18-daynumber.center,
+  anchor=center,
+  circle,
+  minimum width=15pt,
+  inner sep=0pt,
+  fill=white,
+  opacity=0.6,
+] {};%
+%
+% the photo is dark, add a white background for the day's event text
+\node (bottom-whitebox) [
+  above left=0pt and 0pt of day-photo.south west,
+  anchor=south west,
+  minimum width={\@t@calendar@dayXshift - 0.25pt},
+  minimum height=18pt,
+  inner sep=0pt,
+  fill=white,
+  opacity=0.6,
+] {};%
+%
+% repeat the day number (the photo has covered it)
+\calDayNumberNode{cal09-2018-09-18}{-redo}{18}%
+%
+% print the day's marks (moon phases in this case) next to the day number
 \parseMonthMarksDayTextInlineUsing{./data/moonphases.csv}%
+%
+% print the day's event text
 \parseMonthInlineNotes%
 }{}
 
@@ -80,6 +127,27 @@ the green mountains
 \parseMonthInlineNotes%
 }{}
 
+% === December =========================================================
+
+\SetPhoto[bleed=3mm, file={green-mountains-crop}]{December}
+
+\SetQuote[xOffset=0pt, yOffset=-15mm]{December}{%
+\raggedleft\setlength{\parskip}{10pt}\fontsize{20}{27}\selectfont\color{black!85}%
+going deeper\\
+and still deeper --\\
+the green mountains
+
+{\large \textit{Taneda Santōka}}%
+}
+
+\SetCalendar[]{December}
+
+\SetEvents{December}{%
+\semicolonEndTikzCalendar%
+\parseMonthMarksDayTextInlineUsing{./data/moonphases.csv}%
+\parseMonthInlineNotes%
+}{}
+
 \makeatother
 
 \begin{document}
@@ -103,5 +171,7 @@ the green mountains
 \MonthPage[layout=photo and notes, put photo=full page]{October}
 
 \MonthPage[layout=photo and notes, put photo=full page]{November}
+
+\MonthPage[layout=photo and notes, put photo=full page]{December}
 
 \end{document}
