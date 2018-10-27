@@ -1151,6 +1151,25 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
 \calendar (cal#1) [betelgeuse, dates=\CalendarYear-#1-01 to \CalendarYear-#1-last] \@eventmarks;%
 }
 
+\newcommand\notepadContent{%
+  \begin{minipage}{\@t@minipageWidth}%
+    \setlength\parindent{0pt}%
+    \setlength\parskip{10pt}%
+    \color{black!40}%
+
+    \ifsixrowsmonth
+      \dotfill\par
+      \dotfill\par
+    \else
+      \dotfill\par
+      \dotfill\par
+      \dotfill\par
+      \dotfill\par
+    \fi
+
+  \end{minipage}%
+}
+  
 \newcommand*\dayLetterTextFmt[1]{#1}
 
 \newcommand\photoAndNotesFmt{%
@@ -1250,22 +1269,7 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
 
 \SetHorizontalCoffin\@wall@notepad{%
   \placeholder[fill=quote-frame]{}{%
-    \begin{minipage}{\@t@minipageWidth}%
-      \setlength\parindent{0pt}%
-      \setlength\parskip{10pt}%
-      \color{black!40}%
-      
-      \ifsixrowsmonth
-        \dotfill\par
-        \dotfill\par
-      \else
-        \dotfill\par
-        \dotfill\par
-        \dotfill\par
-        \dotfill\par
-      \fi
-      
-    \end{minipage}%
+    \notepadContent%
   }%
 }
 

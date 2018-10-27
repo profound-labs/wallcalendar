@@ -4,12 +4,18 @@
   eventsCsv = ./data/holidays.csv,
   markDefaultsCsv = ./data/mark_defaults.csv,
   imageFolder = ./photos/,
-  paperWidth = 282mm,% 297mm - 15mm
-  paperHeight = 195mm,% 210mm - 15mm
-  topMargin = 12mm,
+  paperWidth = 11in - 15mm,
+  paperHeight = 8.5in - 15mm,
   trimSpace = 15mm,
+  topMargin = 15mm,
   %showtrims,
 ]{wallcalendar}
+
+% |           | Width    | Height   | Width    | Height  |   Aspect |
+% |-----------+----------+----------+----------+---------+----------|
+% | A4        | 297.0 mm | 210.0 mm | 11.69 in | 8.27 in | 1:1.4142 |
+% | US Letter | 279.4 mm | 215.9 mm | 11.0 in  | 8.5 in  | 1:1.2941 |
+% | US Legal  | 355.6 mm | 215.9 mm | 14.0 in  | 8.5 In  | 1:1.6470 |
 
 \makeatletter
 
@@ -53,11 +59,17 @@
   % - notepad area
   % - extra white space
   \setlength{\@t@calendar@verticalSpacing}{30mm}%
+  %
+  % Optionally, disable the notepad area, and then the calendar can be taller.
+  % Test the calendar size on a month with six rows.
+  %
+  %\renewcommand\notepadContent{}%
+  %\setlength{\@t@calendar@minimumHeight}{\calPaperHeight - 20mm}%
 }
 
 % === September ========================================================
 
-\SetPhoto[bleed=3mm, file={green-mountains-crop}]{September}
+\SetPhoto[bleed=3mm, file={green-mountains-crop-us-letter}]{September}
 
 \SetQuote[xOffset=0pt, yOffset=-15mm]{September}{%
 \raggedleft\setlength{\parskip}{10pt}\fontsize{15}{22}\selectfont\color{black!85}%
@@ -114,7 +126,7 @@ Let others follow it who can!
 \calDayNumberNode{cal09-2018-09-18}{-redo}{\dayTextFmt 18}%
 %
 % print the day's marks (moon phases in this case) next to the day number
-\parseMonthMarksDayTextInlineUsing{./data/moonphases.csv}%
+\parseMonthMarksDayTextInlineUsing{./data/moonphases-2018.csv}%
 %
 % print the day's event text
 \parseMonthInlineNotes%
@@ -122,7 +134,7 @@ Let others follow it who can!
 
 % === October ==========================================================
 
-\SetPhoto[bleed=3mm, file={green-mountains-crop}]{October}
+\SetPhoto[bleed=3mm, file={green-mountains-crop-us-letter}]{October}
 
 \SetQuote[xOffset=0pt, yOffset=-15mm]{October}{%
 \raggedleft\setlength{\parskip}{10pt}\fontsize{15}{22}\selectfont\color{black!85}%
@@ -138,13 +150,13 @@ Let others follow it who can!
 
 \SetEvents{October}{%
 \semicolonEndTikzCalendar%
-\parseMonthMarksDayTextInlineUsing{./data/moonphases.csv}%
+\parseMonthMarksDayTextInlineUsing{./data/moonphases-2018.csv}%
 \parseMonthInlineNotes%
 }{}
 
 % === November =========================================================
 
-\SetPhoto[bleed=3mm, file={green-mountains-crop}]{November}
+\SetPhoto[bleed=3mm, file={green-mountains-crop-us-letter}]{November}
 
 \SetQuote[xOffset=0pt, yOffset=-15mm]{November}{%
 \raggedleft\setlength{\parskip}{10pt}\fontsize{15}{22}\selectfont\color{black!85}%
@@ -160,13 +172,13 @@ Let others follow it who can!
 
 \SetEvents{November}{%
 \semicolonEndTikzCalendar%
-\parseMonthMarksDayTextInlineUsing{./data/moonphases.csv}%
+\parseMonthMarksDayTextInlineUsing{./data/moonphases-2018.csv}%
 \parseMonthInlineNotes%
 }{}
 
 % === December =========================================================
 
-\SetPhoto[bleed=3mm, file={green-mountains-crop}]{December}
+\SetPhoto[bleed=3mm, file={green-mountains-crop-us-letter}]{December}
 
 \SetQuote[xOffset=0pt, yOffset=-15mm]{December}{%
 \raggedleft\setlength{\parskip}{10pt}\fontsize{15}{22}\selectfont\color{black!85}%
@@ -182,7 +194,7 @@ Let others follow it who can!
 
 \SetEvents{December}{%
 \semicolonEndTikzCalendar%
-\parseMonthMarksDayTextInlineUsing{./data/moonphases.csv}%
+\parseMonthMarksDayTextInlineUsing{./data/moonphases-2018.csv}%
 \parseMonthInlineNotes%
 }{}
 
@@ -201,7 +213,7 @@ Let others follow it who can!
         minimum width=\calPaperWidth + 6mm,
         minimum height=\calPaperHeight + 6mm,
       ] {%
-        \includegraphics[height={\calPaperHeight + 6mm}]{mountains-crop}%
+        \includegraphics[height={\calPaperHeight + 6mm}]{green-mountains-crop-us-letter}%
       };
 
       \node (title-bg) [
@@ -222,7 +234,7 @@ Let others follow it who can!
           \josefinSans\fontsize{30}{50}\selectfont
           \CalendarYear\par
           photo and notes calendar\par
-          in \LaTeX\par
+          with \LaTeX\par
         \end{minipage}%
       };
     \end{tikzpicture}%

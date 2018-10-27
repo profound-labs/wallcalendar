@@ -1588,6 +1588,25 @@ other coffins are empty (when =varnishmask= is on) or have too much content.
 *** Setup formatting hooks
 
 #+begin_src tex
+\newcommand\notepadContent{%
+  \begin{minipage}{\@t@minipageWidth}%
+    \setlength\parindent{0pt}%
+    \setlength\parskip{10pt}%
+    \color{black!40}%
+
+    \ifsixrowsmonth
+      \dotfill\par
+      \dotfill\par
+    \else
+      \dotfill\par
+      \dotfill\par
+      \dotfill\par
+      \dotfill\par
+    \fi
+
+  \end{minipage}%
+}
+  
 \newcommand*\dayLetterTextFmt[1]{#1}
 
 \newcommand\photoAndNotesFmt{%
@@ -1740,22 +1759,7 @@ Notepad:
 #+begin_src tex
 \SetHorizontalCoffin\@wall@notepad{%
   \placeholder[fill=quote-frame]{}{%
-    \begin{minipage}{\@t@minipageWidth}%
-      \setlength\parindent{0pt}%
-      \setlength\parskip{10pt}%
-      \color{black!40}%
-      
-      \ifsixrowsmonth
-        \dotfill\par
-        \dotfill\par
-      \else
-        \dotfill\par
-        \dotfill\par
-        \dotfill\par
-        \dotfill\par
-      \fi
-      
-    \end{minipage}%
+    \notepadContent%
   }%
 }
 #+end_src
