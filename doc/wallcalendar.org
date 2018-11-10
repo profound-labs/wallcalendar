@@ -69,7 +69,7 @@ sun with rays).
 
 ** June
 
-#+begin_latex
+#+begin_export latex
 \twocol{%
   \frame{\includegraphics[width=5cm]{cal-plain-01}}%
 }{%
@@ -82,7 +82,7 @@ sun with rays).
 }
 
 \bigskip
-#+end_latex
+#+end_export
 
 It will be a full page photo, with 3mm bleed on all four sides. You can see the
 bleed if you enable the =showtrims= class option. We also specify the file name
@@ -143,13 +143,13 @@ Events for particular days are printed under the calendar.
 
 ** July
 
-#+begin_latex
+#+begin_export latex
 \twocol{%
   \frame{\includegraphics[width=5cm]{cal-plain-02}}%
 }{%
   \includegraphics[width=6.12cm]{cal-showframe-02}%
 }
-#+end_latex
+#+end_export
 
 Same as June, but we will set the image to be placed above the calendar, and we
 add a transparent background for the quote.
@@ -199,13 +199,13 @@ But I shall be gone.
 
 ** August
 
-#+begin_latex
+#+begin_export latex
 \twocol{%
   \frame{\includegraphics[width=5cm]{cal-plain-03}}%
 }{%
   \includegraphics[width=6.12cm]{cal-showframe-03}%
 }
-#+end_latex
+#+end_export
 
 This layout works for photos that are horizontal (landscape orientation), scaled
 into the bleed margin on three sides.
@@ -270,7 +270,7 @@ English and Hungarian.
 
 We are going to use =IPAPMincho= font for the Japanese.
 
-#+begin_latex
+#+begin_export latex
 \begin{extrafullwidth}
 
 \hfill
@@ -295,7 +295,7 @@ We are going to use =IPAPMincho= font for the Japanese.
 \hfill\mbox{}
 
 \end{extrafullwidth}
-#+end_latex
+#+end_export
 
 ** Files
 
@@ -578,7 +578,7 @@ Calendar settings for the month, using =\txt= to access translated parts.
 
 * Tutorial: Load Events from CSV
 
-#+begin_latex
+#+begin_export latex
 \begin{fullwidth}
 \begin{minipage}{\linewidth}
 \centering
@@ -587,7 +587,7 @@ Calendar settings for the month, using =\txt= to access translated parts.
 
 \end{minipage}%
 \end{fullwidth}
-#+end_latex
+#+end_export
 
 ** CSV files
 
@@ -696,9 +696,146 @@ not even a sound
 
 #+latex: \clearpage
 
+* Example: Photo and Notes with Title page
+ 
+#+begin_export latex
+\begin{extrafullwidth}
+
+\hfill
+\begin{minipage}[b][36mm][t]{0.31\linewidth}
+\centering
+
+\frame{\includegraphics[width=\exampleWidth]{./examples/cal-photo-and-notes-titlepage.pdf}}
+
+\end{minipage}%
+\begin{minipage}{0.31\linewidth}
+\centering
+
+\frame{\includegraphics[width=\exampleWidth]{./examples/cal-photo-and-notes-photo.pdf}}
+
+\smallskip
+
+\frame{\includegraphics[width=\exampleWidth]{./examples/cal-photo-and-notes-calendar.pdf}}
+
+\end{minipage}%
+\hfill\mbox{}
+
+\end{extrafullwidth}
+#+end_export
+
+See =doc/examples/cal-photo-and-notes.tex=.
+
+** Title page
+
+A title page with a full page photo can be produced with:
+
+=\TitlePage{photo path}{overlay height}{title text}=
+
+Crop the photo to the aspect ratio of the trimmed paper size.
+
+Open the image in GIMP, and set "Fixed aspect ratio" on the Rectangle Select
+tool. It takes integers, so you can use the page dimensions multiplied up. For
+US Letter (11 x 8.5 inch), this would be =110:85=. Then select the area and
+crop.
+
+It also helps to put guides on the edges by selecting all (Ctrl + A) and using
+Image > Guides > New Guides from Selection.
+
+** Adding background photos to the calendar days
+
+This can be done by positioning a =\node= over the day.
+
+The background photo has to be cropped to the aspect ratio of a grid cell in the
+calendar.
+
+You can determine the aspect by first creating a calendar PDF with the intended
+page size, then open the PDF in GIMP. Import the calendar page at 300dpi, and
+use the selection tool to draw a rectangle over a grid cell.
+
+The pixel width and height of this cell can be used directly to crop the photo
+with the Rectangle Select tool. Use the cell width and height to set a fixed
+aspect ratio of the selection area (the aspect matters, not the specific pixel
+dimensions).
+
+The spacing has to be adjusted for precise positioning, see below.
+
+#+BEGIN_SRC tex
+\SetEvents{September}{%
+% All this will be in tikzpicture environment, after drawing the calendar.
+%
+% This adds a semicolon to end the \calendar command so we can start adding nodes.
+\semicolonEndTikzCalendar%
+%
+% Overlaying a photo with text on a specific date in this month
+%
+% photo node
+\node (day-photo) [
+  above right=3.2pt and 0.1pt of cal09-2018-09-18.north west,
+  inner sep=0pt,
+  anchor=north west,
+] {%
+  \includegraphics[width={\@t@calendar@dayXshift - 0.25pt}]{TomBombadil-crop}%
+};%
+%
+% the photo is dark, add a white background for the day number
+\node (top-whitecircle) [
+  below right=0.3pt and 0.1pt of cal09-2018-09-18-daynumber.center,
+  anchor=center,
+  circle,
+  minimum width=15pt,
+  inner sep=0pt,
+  fill=white,
+  opacity=0.6,
+] {};%
+%
+% the photo is dark, add a white background for the day's event text
+\node (bottom-whitebox) [
+  above left=0pt and 0pt of day-photo.south west,
+  anchor=south west,
+  minimum width={\@t@calendar@dayXshift - 0.25pt},
+  minimum height=18pt,
+  inner sep=0pt,
+  fill=white,
+  opacity=0.6,
+] {};%
+%
+% repeat the day number (the photo has covered it)
+\calDayNumberNode{cal09-2018-09-18}{-redo}{\dayTextFmt 18}%
+%
+% print the day's marks (moon phases in this case) next to the day number
+\parseMonthMarksDayTextInlineUsing{./data/moonphases-2018.csv}%
+%
+% print the day's event text
+\parseMonthInlineNotes%
+}{}
+#+END_SRC
+
+** Disabling the notepad area
+
+Formatting commands and sizes have to renewed in =\photoAndNotesFmt= (add it to
+the preamble), because every month page first runs a command which resets them
+to default values, and then runs the above formatting command to change the
+defaults.
+
+Disable the notepad area by renewing =\notepadContent= to empty.
+
+In this case the calendar can be taller. Find a month with six rows to
+experiment by changing =\@t@calendar@minimumHeight= and
+=\@t@calendar@verticalSpacing=.
+
+#+BEGIN_SRC tex
+\renewcommand\photoAndNotesFmt{%
+  \renewcommand\notepadContent{}%
+  \setlength{\@t@calendar@minimumHeight}{\calPaperHeight - 20mm}%
+  \setlength{\@t@calendar@verticalSpacing}{30mm}%
+}
+#+END_SRC
+
+#+latex: \clearpage
+
 * Example: Year Planner Page
 
-#+begin_latex
+#+begin_export latex
 \begin{fullwidth}
 \begin{minipage}{0.31\linewidth}
 \centering
@@ -707,7 +844,7 @@ not even a sound
 
 \end{minipage}%
 \end{fullwidth}
-#+end_latex
+#+end_export
 
 ** Document setup
 
@@ -803,7 +940,7 @@ tex.sprint(';')
 
 * Example: Photo Thumbnails Page
 
-#+begin_latex
+#+begin_export latex
 \begin{fullwidth}
 \begin{minipage}{0.31\linewidth}
 \centering
@@ -812,7 +949,7 @@ tex.sprint(';')
 
 \end{minipage}%
 \end{fullwidth}
-#+end_latex
+#+end_export
 
 ** Document setup
 
@@ -1092,13 +1229,13 @@ Then we can typeset that month, for example:
 This will be a full page portrait month with the photo scaled to cover the
 entire page with additional bleed on all four sides.
 
-#+begin_latex
+#+begin_export latex
 \twocol{%
   \frame{\includegraphics[width=5cm]{cal-plain-01}}%
 }{%
   \includegraphics[width=6.12cm]{cal-showframe-01}%
 }
-#+end_latex
+#+end_export
 
 The above =showframe= figure shows the structural elements of the page.
 

@@ -1,4 +1,7 @@
-% wallcalendar.cls; Don't edit this file. Edit wallcalendar-code.org with emacs org-mode and call 'org-babel-tangle'.
+% wallcalendar.cls
+%
+% NOTE Don't edit this file directly. Edit doc/wallcalendar-code.org with emacs
+% org-mode and run 'make wallcalendar.cls'.
 %
 % Wall Calendar
 %
@@ -10,7 +13,7 @@
 % LPPL LaTeX Public Project License
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{wallcalendar}[2018/10/24 v1.4.0 A wall calendar class with custom layouts and support for internationalization.]
+\ProvidesClass{wallcalendar}[2018/11/10 v1.4.0 A wall calendar document class with custom layouts and support for internationalization.]
 
 \RequirePackage{pgfopts}
 \RequirePackage{calc}
@@ -1991,6 +1994,48 @@ yearMarksNote(tonumber(\CalendarYear), nil, \luastring{\plannerMarksNoteCSV}, \l
 \end{minipage}%
 \end{minipage}%
 }}}
+
+% #1 : image path
+% #3 : background overlay height
+% #3 : title text
+\newcommand{\TitlePage}[3]{%
+\mbox{}
+\thispagestyle{empty}
+
+\AddToShipoutPictureFG*{%
+  \put(\LenToUnit{-3mm},\LenToUnit{-3mm}){%
+    \begin{tikzpicture}
+      \node (bg) [
+        minimum width=\calPaperWidth + 6mm,
+        minimum height=\calPaperHeight + 6mm,
+      ] {%
+        \includegraphics[height={\calPaperHeight + 6mm}]{#1}%
+      };
+
+      \node (title-bg) [
+        minimum width=\calPaperWidth + 6mm,
+        minimum height=#2,
+        above left=0pt and 0pt of bg.center,
+        anchor=center,
+        fill=white,
+        opacity=0.4,
+      ] {};
+
+      \node (title-text) [
+        above left=0pt and 0pt of bg.center,
+        anchor=center,
+      ] {%
+        \begin{minipage}{\calPaperWidth + 6mm}%
+          \centering
+          #3%
+          \par
+        \end{minipage}%
+      };
+    \end{tikzpicture}%
+  }%
+}%
+
+}
 
 % Load internal translations
 \InputIfFileExists{i18n/wallcalendar-\@wall@calendarLanguage.tex}{}%

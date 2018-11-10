@@ -1,6 +1,8 @@
+% Created 2018-11-10 Sat 15:57
+% Intended LaTeX compiler: pdflatex
 \documentclass[11pt,oneside]{memoir-article}
 \usepackage{local}
-\renewcommand{\docVersion}{v1.3.1}
+\renewcommand{\docVersion}{v1.4.0}
 \renewcommand{\docUrl}{\href{https://github.com/profound-labs/wallcalendar/}{link}}
 \hypersetup{ pdfauthor={Gambhīro Bhikkhu}, }
 \author{Gambhīro Bhikkhu}
@@ -11,7 +13,7 @@
  pdftitle={Wallcalendar User Manual},
  pdfkeywords={},
  pdfsubject={},
- pdfcreator={Emacs 25.1.1 (Org mode 9.0.9)}, 
+ pdfcreator={Emacs 27.0.50 (Org mode 9.1.9)}, 
  pdflang={English}}
 \begin{document}
 
@@ -19,7 +21,7 @@
 \input{frontpage.tex}
 
 \chapter{Tutorial: Forest Calendar}
-\label{sec:org9e1c3d1}
+\label{sec:org4313cce}
 
 In this tutorial we will produce the three example pages seen in the summary.
 
@@ -51,7 +53,7 @@ The month page will be typeset with:
 \end{verbatim}
 
 \section{Documentclass}
-\label{sec:orgbba6dea}
+\label{sec:orgf8baa73}
 
 To start, load the documentclass and set \texttt{year}, \texttt{language} and the \texttt{imageFolder}:
 
@@ -70,7 +72,7 @@ Let's start the preamble with \texttt{\textbackslash{}makeatletter} to be safe.
 \end{verbatim}
 
 \section{Font settings}
-\label{sec:org30e28c2}
+\label{sec:orgdab9730}
 
 For this example we'll use \TeX{} Gyre Pagella as the main typeface. We also load
 DejaVu Sans to use a particular glyph as a mark in the calendar (\texttt{U+263C} white
@@ -86,7 +88,7 @@ sun with rays).
 \clearpage
 
 \section{June}
-\label{sec:org6815f95}
+\label{sec:org351e862}
 
 \twocol{%
   \frame{\includegraphics[width=5cm]{cal-plain-01}}%
@@ -159,7 +161,7 @@ Events for particular days are printed under the calendar.
 \end{verbatim}
 
 \section{July}
-\label{sec:orgda955cc}
+\label{sec:org48a479f}
 
 \twocol{%
   \frame{\includegraphics[width=5cm]{cal-plain-02}}%
@@ -214,7 +216,7 @@ But I shall be gone.
 \end{verbatim}
 
 \section{August}
-\label{sec:org522c828}
+\label{sec:orgf336c8b}
 
 \twocol{%
   \frame{\includegraphics[width=5cm]{cal-plain-03}}%
@@ -261,7 +263,7 @@ End of the preamble.
 \end{verbatim}
 
 \section{The document}
-\label{sec:org80f370d}
+\label{sec:orgf69329b}
 
 Typesetting the month pages in the document is now just this much:
 
@@ -280,7 +282,7 @@ Typesetting the month pages in the document is now just this much:
 \clearpage
 
 \chapter{Tutorial: Translations}
-\label{sec:org28303a7}
+\label{sec:org65880ba}
 
 In this tutorial we will produce the same calendar in three languages: Japanese,
 English and Hungarian.
@@ -313,7 +315,7 @@ We are going to use \texttt{IPAPMincho} font for the Japanese.
 \end{extrafullwidth}
 
 \section{Files}
-\label{sec:orga8965a9}
+\label{sec:orgb246540}
 
 The main document files:
 
@@ -346,7 +348,7 @@ frog.tex
 \end{verbatim}
 
 \section{Translations setup}
-\label{sec:org2adcd24}
+\label{sec:orgd60fdd4}
 
 Create the \texttt{frog-english.tex} file and use the \texttt{\textbackslash{}SetTxt\{ key \}\{ content \}}
 command to set text content for translation keys.
@@ -446,7 +448,7 @@ Put the calendar marks in a command instead, as above with \texttt{\textbackslas
 \end{verbatim}
 
 \section{Document setup}
-\label{sec:org736afc3}
+\label{sec:org86a65d9}
 
 Load the documentclass. We are setting the \texttt{translations} option to define the
 file where translation keys are set. This file is loaded by the documentclass as
@@ -578,6 +580,7 @@ an \texttt{\textbackslash{}input}.
 Use the \texttt{\textbackslash{}txt\{ key \}} command to load text from translation keys:
 
 \begin{verbatim}
+
 \SetQuote[xOffset=0pt, yOffset=-140mm]{September}{%
 \raggedleft\setlength{\parskip}{10pt}\HUGE\color{white}%
 \txt{September Quote}%
@@ -602,7 +605,7 @@ Calendar settings for the month, using \texttt{\textbackslash{}txt} to access tr
 \clearpage
 
 \chapter{Tutorial: Load Events from CSV}
-\label{sec:org12d351e}
+\label{sec:org625e50a}
 
 \begin{fullwidth}
 \begin{minipage}{\linewidth}
@@ -614,7 +617,7 @@ Calendar settings for the month, using \texttt{\textbackslash{}txt} to access tr
 \end{fullwidth}
 
 \section{CSV files}
-\label{sec:orgba9e3f8}
+\label{sec:orgf70a6e8}
 
 Events in the CSV should be already sorted by date.
 
@@ -632,7 +635,7 @@ We're going to use the following csv files, see in the \texttt{./doc/examples/da
 \texttt{mark\_defaults.csv}
 
 \section{Event formatting}
-\label{sec:orgbf5aa37}
+\label{sec:org808434a}
 
 You can format the event output by setting the \texttt{format cmd} key:
 
@@ -664,7 +667,7 @@ end
 \end{verbatim}
 
 \section{Document setup}
-\label{sec:orgb56123b}
+\label{sec:org35dca09}
 
 \texttt{cal-marks.tex}
 
@@ -723,8 +726,147 @@ not even a sound
 
 \clearpage
 
+\chapter{Example: Photo and Notes with Title page}
+\label{sec:orgbb7915a}
+
+\begin{extrafullwidth}
+
+\hfill
+\begin{minipage}[b][36mm][t]{0.31\linewidth}
+\centering
+
+\frame{\includegraphics[width=\exampleWidth]{./examples/cal-photo-and-notes-titlepage.pdf}}
+
+\end{minipage}%
+\begin{minipage}{0.31\linewidth}
+\centering
+
+\frame{\includegraphics[width=\exampleWidth]{./examples/cal-photo-and-notes-photo.pdf}}
+
+\smallskip
+
+\frame{\includegraphics[width=\exampleWidth]{./examples/cal-photo-and-notes-calendar.pdf}}
+
+\end{minipage}%
+\hfill\mbox{}
+
+\end{extrafullwidth}
+
+See \texttt{doc/examples/cal-photo-and-notes.tex}.
+
+\section{Title page}
+\label{sec:org3669992}
+
+A title page with a full page photo can be produced with:
+
+\texttt{\textbackslash{}TitlePage\{photo path\}\{overlay height\}\{title text\}}
+
+Crop the photo to the aspect ratio of the trimmed paper size.
+
+Open the image in GIMP, and set ``Fixed aspect ratio'' on the Rectangle Select
+tool. It takes integers, so you can use the page dimensions multiplied up. For
+US Letter (11 x 8.5 inch), this would be \texttt{110:85}. Then select the area and
+crop.
+
+It also helps to put guides on the edges by selecting all (Ctrl + A) and using
+Image > Guides > New Guides from Selection.
+
+\section{Adding background photos to the calendar days}
+\label{sec:org331bb8b}
+
+This can be done by positioning a \texttt{\textbackslash{}node} over the day.
+
+The background photo has to be cropped to the aspect ratio of a grid cell in the
+calendar.
+
+You can determine the aspect by first creating a calendar PDF with the intended
+page size, then open the PDF in GIMP. Import the calendar page at 300dpi, and
+use the selection tool to draw a rectangle over a grid cell.
+
+The pixel width and height of this cell can be used directly to crop the photo
+with the Rectangle Select tool. Use the cell width and height to set a fixed
+aspect ratio of the selection area (the aspect matters, not the specific pixel
+dimensions).
+
+The spacing has to be adjusted for precise positioning, see below.
+
+\begin{verbatim}
+\SetEvents{September}{%
+% All this will be in tikzpicture environment, after drawing the calendar.
+%
+% This adds a semicolon to end the \calendar command so we can start adding nodes.
+\semicolonEndTikzCalendar%
+%
+% Overlaying a photo with text on a specific date in this month
+%
+% photo node
+\node (day-photo) [
+  above right=3.2pt and 0.1pt of cal09-2018-09-18.north west,
+  inner sep=0pt,
+  anchor=north west,
+] {%
+  \includegraphics[width={\@t@calendar@dayXshift - 0.25pt}]{TomBombadil-crop}%
+};%
+%
+% the photo is dark, add a white background for the day number
+\node (top-whitecircle) [
+  below right=0.3pt and 0.1pt of cal09-2018-09-18-daynumber.center,
+  anchor=center,
+  circle,
+  minimum width=15pt,
+  inner sep=0pt,
+  fill=white,
+  opacity=0.6,
+] {};%
+%
+% the photo is dark, add a white background for the day's event text
+\node (bottom-whitebox) [
+  above left=0pt and 0pt of day-photo.south west,
+  anchor=south west,
+  minimum width={\@t@calendar@dayXshift - 0.25pt},
+  minimum height=18pt,
+  inner sep=0pt,
+  fill=white,
+  opacity=0.6,
+] {};%
+%
+% repeat the day number (the photo has covered it)
+\calDayNumberNode{cal09-2018-09-18}{-redo}{\dayTextFmt 18}%
+%
+% print the day's marks (moon phases in this case) next to the day number
+\parseMonthMarksDayTextInlineUsing{./data/moonphases-2018.csv}%
+%
+% print the day's event text
+\parseMonthInlineNotes%
+}{}
+\end{verbatim}
+
+\section{Disabling the notepad area}
+\label{sec:orgefa167c}
+
+Formatting commands and sizes have to renewed in \texttt{\textbackslash{}photoAndNotesFmt} (add it to
+the preamble), because every month page first runs a command which resets them
+to default values, and then runs the above formatting command to change the
+defaults.
+
+Disable the notepad area by renewing \texttt{\textbackslash{}notepadContent} to empty.
+
+In this case the calendar can be taller. Find a month with six rows to
+experiment by changing \texttt{\textbackslash{}@t@calendar@minimumHeight} and
+\texttt{\textbackslash{}@t@calendar@verticalSpacing}.
+
+\begin{verbatim}
+\renewcommand\photoAndNotesFmt{%
+  \renewcommand\notepadContent{}%
+  \setlength{\@t@calendar@minimumHeight}{\calPaperHeight - 20mm}%
+  \setlength{\@t@calendar@verticalSpacing}{30mm}%
+}
+\end{verbatim}
+
+\clearpage
+
 \chapter{Example: Year Planner Page}
-\label{sec:org24663e1}
+\label{sec:org649c9da}
 
 \begin{fullwidth}
 \begin{minipage}{0.31\linewidth}
@@ -736,7 +878,7 @@ not even a sound
 \end{fullwidth}
 
 \section{Document setup}
-\label{sec:org85fac7e}
+\label{sec:orgaca293f}
 
 \texttt{cal-year-planner.tex}
 
@@ -766,7 +908,7 @@ tex.sprint(';')
 \end{verbatim}
 
 \section{\textbackslash YearPlannerPage}
-\label{sec:org0124cf4}
+\label{sec:orgfb72dd1}
 
 \begin{verbatim}
 \newcommand\plannerYearFmt{\fontsize{26}{26}\selectfont\color{orangegold}}
@@ -818,7 +960,7 @@ tex.sprint(';')
 \end{verbatim}
 
 \section{Use it}
-\label{sec:org70f504f}
+\label{sec:org34d4cc8}
 
 \begin{verbatim}
 \begin{document}
@@ -831,7 +973,7 @@ tex.sprint(';')
 \clearpage
 
 \chapter{Example: Photo Thumbnails Page}
-\label{sec:org0431559}
+\label{sec:org609d7bd}
 
 \begin{fullwidth}
 \begin{minipage}{0.31\linewidth}
@@ -843,7 +985,7 @@ tex.sprint(';')
 \end{fullwidth}
 
 \section{Document setup}
-\label{sec:orgc4970c9}
+\label{sec:orgfea3927}
 
 \texttt{cal-thumbnails.tex}
 
@@ -865,7 +1007,7 @@ tex.sprint(';')
 \end{verbatim}
 
 \section{\textbackslash ThumbWithCaptionLeftSide}
-\label{sec:orge74d943}
+\label{sec:org01897ac}
 
 Typesets the photo thumb image with its caption text on the left side.
 
@@ -917,7 +1059,7 @@ Typesets the photo thumb image with its caption text on the left side.
 \end{verbatim}
 
 \section{\textbackslash ThumbWithCaptionRightSide}
-\label{sec:org7af4bd6}
+\label{sec:org158930f}
 
 Typesets the photo thumb image with its caption text on the right side.
 
@@ -955,7 +1097,7 @@ Typesets the photo thumb image with its caption text on the right side.
 \end{verbatim}
 
 \section{\textbackslash ThumbsPage}
-\label{sec:org9571a13}
+\label{sec:org896cc89}
 
 \begin{verbatim}
 \newlength{\thumbColumnWidth}
@@ -1057,7 +1199,7 @@ Typesets the photo thumb image with its caption text on the right side.
 \end{verbatim}
 
 \section{Setup the photo keys}
-\label{sec:org1bdd209}
+\label{sec:org02a133d}
 
 \begin{verbatim}
 \SetPhoto[file={frog-crop}, thumbFile={frog-crop-thumb}, caption={Let the frog jump}]{January}
@@ -1077,7 +1219,7 @@ Typesets the photo thumb image with its caption text on the right side.
 \end{verbatim}
 
 \section{Use it}
-\label{sec:org23c0fca}
+\label{sec:org1c21365}
 
 \begin{verbatim}
 \begin{document}
@@ -1088,7 +1230,7 @@ Typesets the photo thumb image with its caption text on the right side.
 \end{verbatim}
 
 \chapter{Documentclass Options}
-\label{sec:org5024f18}
+\label{sec:org42bf8a1}
 
 \begin{verbatim}
 year
@@ -1115,7 +1257,7 @@ varnishmask
 \end{verbatim}
 
 \chapter{User Commands}
-\label{sec:org02a2f80}
+\label{sec:orgb842379}
 
 \begin{verbatim}
 \SetPhoto[ options ]{ month }
@@ -1140,7 +1282,7 @@ varnishmask
 \clearpage
 
 \chapter{Page Layout}
-\label{sec:org2801ae6}
+\label{sec:orge277350}
 
 We will review how the page layout happens when we call \texttt{\textbackslash{}MonthPage}.
 
@@ -1182,7 +1324,7 @@ landscape} layout is for landscape photos which can be scaled horizontally,
 possibly bleeding into the side margins.
 
 \chapter{Contact}
-\label{sec:orgc9e6d1d}
+\label{sec:orgf0d6b0d}
 
 Github: \url{https://github.com/profound-labs/wallcalendar/}
 

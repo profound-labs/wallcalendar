@@ -1,6 +1,6 @@
 #+LATEX_CLASS: memoir-article
 #+LATEX_HEADER: \usepackage{local}
-#+LATEX_HEADER: \renewcommand{\docVersion}{v1.3.1}
+#+LATEX_HEADER: \renewcommand{\docVersion}{v1.4.0}
 #+LATEX_HEADER: \renewcommand{\docUrl}{\href{https://github.com/profound-labs/wallcalendar/}{link}}
 #+LATEX_HEADER: \hypersetup{ pdfauthor={Gambhīro Bhikkhu}, }
 #+OPTIONS: toc:nil tasks:nil ':t H:4

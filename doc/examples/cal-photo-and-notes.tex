@@ -19,10 +19,6 @@
 
 \makeatletter
 
-% eso-pic is already loaded by wallcalendar
-% using \AddToShipoutPictureFG* to position a full-bleed title page
-% \usepackage{eso-pic}
-
 \colorlet{mooncolor}{darkgold}
 \colorlet{sunday}{red}
 
@@ -202,46 +198,12 @@ Let others follow it who can!
 
 \begin{document}
 
-% === Titlepage ========================================================
-
-\mbox{}
-
-\AddToShipoutPictureFG*{%
-  \put(\LenToUnit{-3mm},\LenToUnit{-3mm}){%
-    \begin{tikzpicture}
-      \node (bg) [
-        minimum width=\calPaperWidth + 6mm,
-        minimum height=\calPaperHeight + 6mm,
-      ] {%
-        \includegraphics[height={\calPaperHeight + 6mm}]{green-mountains-crop-us-letter}%
-      };
-
-      \node (title-bg) [
-        minimum width=\calPaperWidth + 6mm,
-        minimum height=60mm,
-        above left=0pt and 0pt of bg.center,
-        anchor=center,
-        fill=white,
-        opacity=0.4,
-      ] {};
-
-      \node (title-text) [
-        above left=0pt and 0pt of bg.center,
-        anchor=center,
-      ] {%
-        \begin{minipage}{\calPaperWidth + 6mm}%
-          \centering
-          \josefinSans\fontsize{30}{50}\selectfont
-          \CalendarYear\par
-          photo and notes calendar\par
-          with \LaTeX\par
-        \end{minipage}%
-      };
-    \end{tikzpicture}%
-  }%
-}%
-
-% === Months ===========================================================
+\TitlePage{green-mountains-crop-us-letter}{60mm}{%
+  \josefinSans\fontsize{30}{50}\selectfont
+  \CalendarYear\par
+  photo and notes calendar\par
+  with \LaTeX%
+}
 
 \MonthPage[layout=photo and notes, put photo=full page]{September}
 
