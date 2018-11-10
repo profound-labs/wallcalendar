@@ -1,0 +1,216 @@
+\documentclass[
+  year = 2018,
+  language = english,
+  eventsCsv = ./data/holidays.csv,
+  markDefaultsCsv = ./data/mark_defaults.csv,
+  imageFolder = ./photos/,
+  paperWidth = 11in - 15mm,
+  paperHeight = 8.5in - 15mm,
+  trimSpace = 15mm,
+  topMargin = 15mm,
+  %showtrims,
+]{wallcalendar}
+
+% |           | Width    | Height   | Width    | Height  |   Aspect |
+% |-----------+----------+----------+----------+---------+----------|
+% | A4        | 297.0 mm | 210.0 mm | 11.69 in | 8.27 in | 1:1.4142 |
+% | US Letter | 279.4 mm | 215.9 mm | 11.0 in  | 8.5 in  | 1:1.2941 |
+% | US Legal  | 355.6 mm | 215.9 mm | 14.0 in  | 8.5 In  | 1:1.6470 |
+
+\makeatletter
+
+\colorlet{mooncolor}{darkgold}
+\colorlet{sunday}{red}
+
+% === Custom fonts =====================================================
+
+\usepackage{fontspec}
+\defaultfontfeatures{Ligatures={TeX}}
+
+\setmainfont{TeX Gyre Pagella}
+
+\newfontfamily\dejaVuSans{DejaVu Sans}
+
+\newfontfamily\josefinSans[Path = {./fonts/}]{JosefinSans-Regular.ttf}
+
+% === Renew formatting hooks ===========================================
+
+\renewcommand*\dayLetterTextFmt[1]{#1}
+
+\renewcommand\photoAndNotesFmt{%
+  \renewcommand*\monthFmt{\josefinSans\LARGE}%
+  \renewcommand*\yearFmt{\josefinSans\LARGE}%
+  \renewcommand*\dayLetterColor{}%
+  \renewcommand*\dayLetterFmt{\small}%
+  \renewcommand*\dayLetterTextFmt[1]{\josefinSans\tiny\textls*{\MakeUppercase{##1}}}%
+  \renewcommand*\dayTextFmt{\josefinSans\small}%
+  \renewcommand*\quoteFmt{\centering}%
+  \renewcommand*\headingFmt{\centering}%
+  \renewcommand*\calendarFmt{\centering}%
+  \renewcommand*\eventsFmt{\setlength{\parindent}{0pt}\raggedright\josefinSans\fontsize{6}{8}\selectfont}%
+  \setlength{\@t@calendar@minimumHeight}{\calPaperHeight - 30mm}%
+  \setlength{\@t@calendar@hmargin}{20pt}%
+  % white space to allow:
+  % - month and year label
+  % - notepad area
+  % - extra white space
+  \setlength{\@t@calendar@verticalSpacing}{30mm}%
+  %
+  % Optionally, disable the notepad area, and then the calendar can be taller.
+  % Test the calendar size on a month with six rows.
+  %
+  %\renewcommand\notepadContent{}%
+  %\setlength{\@t@calendar@minimumHeight}{\calPaperHeight - 20mm}%
+}
+
+% === September ========================================================
+
+\SetPhoto[bleed=3mm, file={green-mountains-crop-us-letter}]{September}
+
+\SetQuote[xOffset=0pt, yOffset=-15mm]{September}{%
+\raggedleft\setlength{\parskip}{10pt}\fontsize{15}{22}\selectfont\color{black!85}%
+The Road goes ever on and on\\
+Out from the door where it began.\\
+Now far ahead the Road has gone,\\
+Let others follow it who can!
+
+{\large \textit{Bilbo Baggins}}%
+}
+
+\SetCalendar[]{September}
+
+\SetEvents{September}{%
+% All this will be in tikzpicture environment, after drawing the calendar.
+%
+% This adds a semicolon to end the \calendar command so we can start adding nodes.
+\semicolonEndTikzCalendar%
+%
+% Overlaying a photo with text on a specific date in this month
+%
+% photo node
+\node (day-photo) [
+  above right=3.2pt and 0.1pt of cal09-2018-09-18.north west,
+  inner sep=0pt,
+  anchor=north west,
+] {%
+  \includegraphics[width={\@t@calendar@dayXshift - 0.25pt}]{TomBombadil-crop}%
+};%
+%
+% the photo is dark, add a white background for the day number
+\node (top-whitecircle) [
+  below right=0.3pt and 0.1pt of cal09-2018-09-18-daynumber.center,
+  anchor=center,
+  circle,
+  minimum width=15pt,
+  inner sep=0pt,
+  fill=white,
+  opacity=0.6,
+] {};%
+%
+% the photo is dark, add a white background for the day's event text
+\node (bottom-whitebox) [
+  above left=0pt and 0pt of day-photo.south west,
+  anchor=south west,
+  minimum width={\@t@calendar@dayXshift - 0.25pt},
+  minimum height=18pt,
+  inner sep=0pt,
+  fill=white,
+  opacity=0.6,
+] {};%
+%
+% repeat the day number (the photo has covered it)
+\calDayNumberNode{cal09-2018-09-18}{-redo}{\dayTextFmt 18}%
+%
+% print the day's marks (moon phases in this case) next to the day number
+\parseMonthMarksDayTextInlineUsing{./data/moonphases-2018.csv}%
+%
+% print the day's event text
+\parseMonthInlineNotes%
+}{}
+
+% === October ==========================================================
+
+\SetPhoto[bleed=3mm, file={green-mountains-crop-us-letter}]{October}
+
+\SetQuote[xOffset=0pt, yOffset=-15mm]{October}{%
+\raggedleft\setlength{\parskip}{10pt}\fontsize{15}{22}\selectfont\color{black!85}%
+The Road goes ever on and on\\
+Out from the door where it began.\\
+Now far ahead the Road has gone,\\
+Let others follow it who can!
+
+{\large \textit{Bilbo Baggins}}%
+}
+
+\SetCalendar[]{October}
+
+\SetEvents{October}{%
+\semicolonEndTikzCalendar%
+\parseMonthMarksDayTextInlineUsing{./data/moonphases-2018.csv}%
+\parseMonthInlineNotes%
+}{}
+
+% === November =========================================================
+
+\SetPhoto[bleed=3mm, file={green-mountains-crop-us-letter}]{November}
+
+\SetQuote[xOffset=0pt, yOffset=-15mm]{November}{%
+\raggedleft\setlength{\parskip}{10pt}\fontsize{15}{22}\selectfont\color{black!85}%
+The Road goes ever on and on\\
+Out from the door where it began.\\
+Now far ahead the Road has gone,\\
+Let others follow it who can!
+
+{\large \textit{Bilbo Baggins}}%
+}
+
+\SetCalendar[]{November}
+
+\SetEvents{November}{%
+\semicolonEndTikzCalendar%
+\parseMonthMarksDayTextInlineUsing{./data/moonphases-2018.csv}%
+\parseMonthInlineNotes%
+}{}
+
+% === December =========================================================
+
+\SetPhoto[bleed=3mm, file={green-mountains-crop-us-letter}]{December}
+
+\SetQuote[xOffset=0pt, yOffset=-15mm]{December}{%
+\raggedleft\setlength{\parskip}{10pt}\fontsize{15}{22}\selectfont\color{black!85}%
+The Road goes ever on and on\\
+Out from the door where it began.\\
+Now far ahead the Road has gone,\\
+Let others follow it who can!
+
+{\large \textit{Bilbo Baggins}}%
+}
+
+\SetCalendar[]{December}
+
+\SetEvents{December}{%
+\semicolonEndTikzCalendar%
+\parseMonthMarksDayTextInlineUsing{./data/moonphases-2018.csv}%
+\parseMonthInlineNotes%
+}{}
+
+\makeatother
+
+\begin{document}
+
+\TitlePage{green-mountains-crop-us-letter}{60mm}{%
+  \josefinSans\fontsize{30}{50}\selectfont
+  \CalendarYear\par
+  photo and notes calendar\par
+  with \LaTeX%
+}
+
+\MonthPage[layout=photo and notes, put photo=full page]{September}
+
+\MonthPage[layout=photo and notes, put photo=full page]{October}
+
+\MonthPage[layout=photo and notes, put photo=full page]{November}
+
+\MonthPage[layout=photo and notes, put photo=full page]{December}
+
+\end{document}

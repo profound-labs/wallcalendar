@@ -1,6 +1,6 @@
 Wallcalendar Document Class
 
-(c) Gambhiro Bhikkhu, 2017
+(c) Gambhiro Bhikkhu, 2018
 gambhiro.bhikkhu.85@gmail.com
 
 LPPL LaTeX Public Project License

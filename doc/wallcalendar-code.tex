@@ -1,6 +1,8 @@
+% Created 2018-11-10 Sat 15:57
+% Intended LaTeX compiler: pdflatex
 \documentclass[11pt,oneside]{memoir-article}
 \usepackage{local}
-\renewcommand{\docVersion}{v1.3.1}
+\renewcommand{\docVersion}{v1.4.0}
 \renewcommand{\docUrl}{\href{https://github.com/profound-labs/wallcalendar/}{link}}
 \hypersetup{ pdfauthor={Gambhīro Bhikkhu}, }
 \maxtocdepth{section}
@@ -12,14 +14,14 @@
  pdftitle={Wallcalendar Code Documentation},
  pdfkeywords={},
  pdfsubject={},
- pdfcreator={Emacs 25.1.1 (Org mode 9.0.9)}, 
+ pdfcreator={Emacs 27.0.50 (Org mode 9.1.9)}, 
  pdflang={English}}
 \begin{document}
 
 \maketitle
 
 \chapter{Introduction}
-\label{sec:org96389a7}
+\label{sec:org4933eec}
 
 \bigskip
 
@@ -36,31 +38,34 @@ The \textbf{User Guide} is in \texttt{wallcalendar.pdf}. Clone or download from 
 \clearpage
 
 \chapter{Header}
-\label{sec:org45bc02b}
+\label{sec:org0a40dcd}
 
 \begin{verbatim}
-% wallcalendar.cls; Don't edit this file. Edit wallcalendar-code.org with emacs org-mode and call 'org-babel-tangle'.
+% wallcalendar.cls
+%
+% NOTE Don't edit this file directly. Edit doc/wallcalendar-code.org with emacs
+% org-mode and run 'make wallcalendar.cls'.
 %
 % Wall Calendar
 %
 % A wall calendar document class with custom layouts and support for internationalization.
 %
-% (c) Gambhiro Bhikkhu, 2017
+% (c) Gambhiro Bhikkhu, 2018
 % gambhiro.bhikkhu.85@gmail.com
 %
 % LPPL LaTeX Public Project License
 \end{verbatim}
 
 \chapter{Identification}
-\label{sec:org29781fd}
+\label{sec:orgf19a199}
 
 \begin{verbatim}
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{wallcalendar}[2017/10/21 v1.3.1 A wall calendar class with custom layouts and support for internationalization.]
+\ProvidesClass{wallcalendar}[2018/11/10 v1.4.0 A wall calendar document class with custom layouts and support for internationalization.]
 \end{verbatim}
 
 \chapter{Preliminary Declarations}
-\label{sec:org2ebd68a}
+\label{sec:orgd09dd24}
 
 \begin{verbatim}
 \RequirePackage{pgfopts}
@@ -72,6 +77,7 @@ The \textbf{User Guide} is in \texttt{wallcalendar.pdf}. Clone or download from 
 \newlength\@wall@rightMargin
 \newlength\@wall@topMargin
 \newlength\@wall@bottomMargin
+\newlength\@wall@trimSpace
 
 \def\@wall@eventsCsv{}
 \def\@wall@markDefaultsCsv{}
@@ -81,7 +87,7 @@ The \textbf{User Guide} is in \texttt{wallcalendar.pdf}. Clone or download from 
 \end{verbatim}
 
 \chapter{Options}
-\label{sec:orgf63949e}
+\label{sec:org3c6825c}
 
 Paper sizes and ratios.
 
@@ -117,6 +123,7 @@ So aspect ratio:
     hMargin = 17mm,
     topMargin = 20.5mm,
     bottomMargin = 10mm,
+    trimSpace = 35mm,
   },
   year/.store in = \CalendarYear,
   year/.initial = \the\year,
@@ -137,11 +144,12 @@ So aspect ratio:
   paperWidth/.code = {\setlength{\calPaperWidth}{#1}},
   paperHeight/.code = {\setlength{\calPaperHeight}{#1}},
   hMargin/.code = {\setlength{\@wall@leftMargin}{#1}%
-                   \setlength{\@wall@rightMargin}{#1}},
+		   \setlength{\@wall@rightMargin}{#1}},
   leftMargin/.code = {\setlength{\@wall@leftMargin}{#1}},
   rightMargin/.code = {\setlength{\@wall@rightMargin}{#1}},
   topMargin/.code = {\setlength{\@wall@topMargin}{#1}},
   bottomMargin/.code = {\setlength{\@wall@bottomMargin}{#1}},
+  trimSpace/.code = {\setlength{\@wall@trimSpace}{#1}},
   % Paper sizes
   choralOctavoPaper/.style = {paperWidth = 6.75in, paperHeight = 10.5in},
   a2Paper/.style = {paperWidth = 420mm, paperHeight = 594mm},
@@ -166,27 +174,28 @@ So aspect ratio:
 \end{verbatim}
 
 \chapter{More Declarations}
-\label{sec:org1544dc5}
+\label{sec:org08145ba}
 \section{Load memoir}
-\label{sec:org2d3abb2}
+\label{sec:org61d0f47}
 
 \begin{verbatim}
 \LoadClass[11pt,oneside]{memoir}
 \end{verbatim}
 
 \section{Temp variables}
-\label{sec:orge07ee5a}
+\label{sec:org039c47a}
 
 \begin{verbatim}
 \newlength\@tmp@a
 \newlength\@tmp@b
 \newlength\@tmp@c
+\newlength\@tmp@z
 \newlength\@tmp@width
 \newlength\@tmp@height
 \end{verbatim}
 
 \section{Require packages}
-\label{sec:orgd636a69}
+\label{sec:org11475bf}
 
 \begin{verbatim}
 \ifloadBabel
@@ -194,8 +203,8 @@ So aspect ratio:
 \fi
 
 \RequirePackage{nag}
-%\RequirePackage{textcomp}
-\RequirePackage[cmyk]{xcolor}
+% Don't use [cmyk] option on xcolor. Declare text colors either in gray or cmyk (for color).
+\RequirePackage{xcolor}
 \RequirePackage{graphicx}
 \DeclareGraphicsExtensions{.pdf,.png,.jpg}
 \graphicspath{{\@wall@imageFolder}}
@@ -240,7 +249,7 @@ So aspect ratio:
 \end{verbatim}
 
 \section{Colors}
-\label{sec:org281ee7a}
+\label{sec:orgf0949c8}
 
 \begin{verbatim}
 \definecolor{textbody}{gray}{0.15}
@@ -256,6 +265,8 @@ So aspect ratio:
 \colorlet{weekday}{black}
 \colorlet{weekend}{black!50}
 \colorlet{mooncolor}{textbody}
+
+\definecolor{sunday}{RGB}{255,0,0}
 
 \definecolor{datenum}{gray}{0.3}
 \definecolor{plannerdatenum}{gray}{0.15}
@@ -283,11 +294,11 @@ So aspect ratio:
 \end{verbatim}
 
 \section{Page Size and Trim Marks}
-\label{sec:orgf70f7fe}
+\label{sec:orgb8c3577}
 
 \begin{verbatim}
 \ifshowtrims
-  \setstocksize{\calPaperHeight + 35mm}{\calPaperWidth + 35mm}
+  \setstocksize{\calPaperHeight + \@wall@trimSpace}{\calPaperWidth + \@wall@trimSpace}
   \setlength{\paperheight}{\calPaperHeight}
   \setlength{\paperwidth}{\calPaperWidth}
   \trimXmarks
@@ -314,7 +325,7 @@ So aspect ratio:
 \end{verbatim}
 
 \section{Base font sizes and indents}
-\label{sec:org215fe38}
+\label{sec:org8e11363}
 
 \begin{verbatim}
 \def\@wall@fontSize{11}
@@ -341,7 +352,7 @@ So aspect ratio:
 \end{verbatim}
 
 \section{Helpers}
-\label{sec:org4c3f5ae}
+\label{sec:orgc657823}
 
 \begin{verbatim}
 #1 -- [fill=red, opacity=0.2], additional options used for showframe
@@ -382,12 +393,39 @@ argument.
     \fi%
   \fi%
 }
+
+\newif\ifsixrowsmonth  
+\sixrowsmonthfalse
+
+\pgfkeys{/pgf/calendar/six rows month/.code={%
+  \ifnum\pgfcalendarifdateday=30\relax
+    % Monday
+    \ifnum\pgfcalendarifdateweekday=0\relax
+      \pgfcalendarmatchestrue
+    \fi
+    % Tuesday
+    \ifnum\pgfcalendarifdateweekday=1\relax
+      \pgfcalendarmatchestrue
+    \fi
+  \else
+    \ifnum\pgfcalendarifdateday=31\relax
+      % Monday
+      \ifnum\pgfcalendarifdateweekday=0\relax
+	\pgfcalendarmatchestrue
+      \fi
+      % Tuesday
+      \ifnum\pgfcalendarifdateweekday=1\relax
+	\pgfcalendarmatchestrue
+      \fi
+    \fi
+  \fi%
+}}
 \end{verbatim}
 
 \chapter{Keys setup}
-\label{sec:orge5d42f4}
+\label{sec:org9c11372}
 \section{/put photo}
-\label{sec:org198eca9}
+\label{sec:orge73f38c}
 
 \begin{verbatim}
 \def\@wall@photo@putPhoto#1{#1}
@@ -404,8 +442,8 @@ argument.
   full page/.code = {%
     \def\@wall@photo@putPhoto##1{%
       \includegraphics[%
-        keepaspectratio,%
-        width={\calPaperWidth + 2\@t@bleed},%
+	keepaspectratio,%
+	width={\calPaperWidth + 2\@t@bleed},%
       ]{##1}%
     }%
     \def\@wall@photo@setYOffset{}%
@@ -413,8 +451,8 @@ argument.
   full width above calendar/.code = {%
     \def\@wall@photo@putPhoto##1{%
       \includegraphics[%
-        keepaspectratio,%
-        width={\calPaperWidth + 2\@t@bleed},%
+	keepaspectratio,%
+	width={\calPaperWidth + 2\@t@bleed},%
       ]{##1}%
     }%
     \def\@wall@photo@setYOffset{%
@@ -424,8 +462,8 @@ argument.
   full width/.code = {%
     \def\@wall@photo@putPhoto##1{%
       \includegraphics[%
-        keepaspectratio,%
-        width={\calPaperWidth + 2\@t@bleed},%
+	keepaspectratio,%
+	width={\calPaperWidth + 2\@t@bleed},%
       ]{##1}%
     }%
     \def\@wall@photo@setYOffset{%
@@ -436,7 +474,7 @@ argument.
 \end{verbatim}
 
 \section{/Photo}
-\label{sec:orgbfbfe40}
+\label{sec:org1803ada}
 
 \begin{verbatim}
 \pgfkeys{
@@ -454,7 +492,7 @@ argument.
 \end{verbatim}
 
 \section{/Quote}
-\label{sec:orgfc6858a}
+\label{sec:org8ee070b}
 
 \begin{verbatim}
 \pgfkeys{
@@ -470,7 +508,7 @@ argument.
 \end{verbatim}
 
 \section{/Calendar}
-\label{sec:orgd6a2f68}
+\label{sec:org9f52d99}
 
 \begin{verbatim}
 \pgfkeys{
@@ -484,7 +522,7 @@ argument.
 \end{verbatim}
 
 \section{/Events}
-\label{sec:org9996966}
+\label{sec:org7c5239a}
 
 \begin{verbatim}
 \pgfkeys{
@@ -499,7 +537,7 @@ argument.
 \end{verbatim}
 
 \section{/Txt}
-\label{sec:org412e39a}
+\label{sec:org1d9595e}
 
 \begin{verbatim}
 \pgfkeys{
@@ -512,7 +550,7 @@ argument.
 \end{verbatim}
 
 \section{/parseMonthEvents}
-\label{sec:orgab06397}
+\label{sec:orgd004f9b}
 
 \begin{verbatim}
 \def\eIdx{}
@@ -548,7 +586,7 @@ argument.
 \end{verbatim}
 
 \section{/parseYearEvents}
-\label{sec:org3b4e036}
+\label{sec:org4c5afb8}
 
 \begin{verbatim}
 \pgfkeys{
@@ -573,9 +611,9 @@ argument.
 \end{verbatim}
 
 \chapter{Event Marks}
-\label{sec:org9c1a6a1}
+\label{sec:org60fda90}
 \section{Kite}
-\label{sec:orgb28c6c4}
+\label{sec:orgfca0369}
 
 \begin{verbatim}
 \newcommand\StarMark{*}
@@ -626,7 +664,7 @@ center of its glyph box (i.e. not at the center of the character x):
 \end{verbatim}
 
 \section{Moons}
-\label{sec:org711444c}
+\label{sec:orge43381e}
 
 \begin{verbatim}
 \tikzstyle{moon circle}=[
@@ -704,9 +742,9 @@ center of its glyph box (i.e. not at the center of the character x):
 \end{verbatim}
 
 \chapter{User Commands}
-\label{sec:orgcb9bf42}
+\label{sec:org1222768}
 \section{\textbackslash SetPhoto}
-\label{sec:org8981ab6}
+\label{sec:orgdd86c06}
 
 \begin{verbatim}
 \SetPhoto[bleed=3mm]{June}
@@ -724,7 +762,7 @@ center of its glyph box (i.e. not at the center of the character x):
 \end{verbatim}
 
 \section{\textbackslash SetCalendar}
-\label{sec:org4aef638}
+\label{sec:org6c75df6}
 
 \begin{verbatim}
 \SetCalendar[bg={opacity=0.8}]{June}
@@ -742,7 +780,7 @@ center of its glyph box (i.e. not at the center of the character x):
 \end{verbatim}
 
 \section{\textbackslash SetQuote}
-\label{sec:org6c9c7a1}
+\label{sec:org4afad48}
 
 \begin{verbatim}
 \SetQuote[position=top right, text align=right]{June}{%
@@ -765,7 +803,7 @@ fourth line
 \end{verbatim}
 
 \section{\textbackslash SetEvents}
-\label{sec:orgde29618}
+\label{sec:org393f173}
 
 FIXME: Needs at least a \texttt{\textbackslash{}SetEvents\{\#2\}} to set defaults.
 
@@ -796,7 +834,7 @@ text
 \end{verbatim}
 
 \section{\textbackslash MonthPage}
-\label{sec:org6cd54c1}
+\label{sec:org9768eb2}
 
 The \texttt{/MonthPage} key is set in-place for each page, not collecting options per month.
 
@@ -809,6 +847,7 @@ The \texttt{/MonthPage} key is set in-place for each page, not collecting option
   layout handlers/.cd,
     full page/.initial = \@wall@fullPageLayout,
     small landscape/.initial = \@wall@smallLandscapeLayout,
+    photo and notes/.initial = \@wall@photoAndNotesLayout,
 }
 \end{verbatim}
 
@@ -837,7 +876,7 @@ For now, just make sure there is a \texttt{\textbackslash{}SetPhoto\{August\}} b
 \end{verbatim}
 
 \section{\textbackslash SetTxt}
-\label{sec:org5f9e367}
+\label{sec:org39e78f0}
 
 \begin{verbatim}
 \SetTxt{August Quote}{%
@@ -861,7 +900,7 @@ The text of the quote.
 \end{verbatim}
 
 \section{\textbackslash txt}
-\label{sec:org396a316}
+\label{sec:org2018789}
 
 \begin{verbatim}
 \txt{August Quote}
@@ -879,7 +918,7 @@ The text of the quote.
 \end{verbatim}
 
 \section{\textbackslash parseMonthEvents}
-\label{sec:org3b370cc}
+\label{sec:orgaae8f87}
 
 \begin{verbatim}
 \def\@t@monthName{}
@@ -894,6 +933,12 @@ The text of the quote.
 
 \newcommand\symbolSpace{\thinspace}
 \newcommand\symbolSeparator{,\symbolSpace}
+
+% Semicolon to close the tikz calendar. Necessary before starting to use \node
+% or \draw commands.
+\newcommand\semicolonEndTikzCalendar{%
+  ;%
+}
 
 % #1 = option keys
 \newcommand*\parseMonthEvents[1][]{%
@@ -920,7 +965,7 @@ monthEvents(
 \end{verbatim}
 
 \section{\textbackslash parseYearEvents}
-\label{sec:orgb89e36b}
+\label{sec:orge5a5f7a}
 
 \begin{verbatim}
 \def\@t@yearNum{}
@@ -950,7 +995,7 @@ yearEvents(
 \end{verbatim}
 
 \section{\textbackslash parseMonthMarksDayText}
-\label{sec:org24e0024}
+\label{sec:orgf8f32b8}
 
 NOTE: Tikz will not work with parsing options as with \texttt{\textbackslash{}parseMonthEvents}.
 
@@ -988,7 +1033,7 @@ tex.sprint(';')
 \end{verbatim}
 
 \section{\textbackslash parseMonthMarksDayTextUsing}
-\label{sec:orgcf04e30}
+\label{sec:org5678f4b}
 
 \begin{verbatim}
 \newcommand*\parseMonthMarksDayTextUsing[1]{%
@@ -1004,8 +1049,19 @@ monthMarksDayText(\luastring{#1}, nil, \luastring{#2})
 }}
 \end{verbatim}
 
+\section{\textbackslash parseMonthMarksDayTextInlineUsing}
+\label{sec:orge406db3}
+
+\begin{verbatim}
+\newcommand*\parseMonthMarksDayTextInlineUsing[1]{%
+\luadirect{
+require("wallcalendar-helpers.lua")
+monthMarksDayTextInline(\luastring{\theMonthName}, nil, \luastring{#1})
+}}
+\end{verbatim}
+
 \section{\textbackslash parseMonthMarksNote}
-\label{sec:orga2e07dc}
+\label{sec:org0e418a2}
 
 \begin{verbatim}
 \newcommand*\parseMonthMarksNote{%
@@ -1016,7 +1072,7 @@ monthMarksNote(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \lu
 \end{verbatim}
 
 \section{\textbackslash parseMonthMarksNoteUsing}
-\label{sec:org2e41aed}
+\label{sec:org3748de7}
 
 \begin{verbatim}
 \newcommand*\parseMonthMarksNoteUsing[1]{%
@@ -1026,10 +1082,21 @@ monthMarksNote(\luastring{\theMonthName}, nil, \luastring{#1}, \luastring{\@wall
 }}
 \end{verbatim}
 
+\section{\textbackslash parseMonthInlineNotes}
+\label{sec:orgf453ccf}
+
+\begin{verbatim}
+\newcommand*\parseMonthInlineNotes{%
+\luadirect{
+require("wallcalendar-helpers.lua")
+monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \luastring{\@wall@markDefaultsCsv})
+}}
+\end{verbatim}
+
 \chapter{Page Layouts}
-\label{sec:orga58446b}
+\label{sec:org0f79934}
 \section{Initial setup}
-\label{sec:orgbe4e6d6}
+\label{sec:org1a36c23}
 
 Applying a blank, bare pagestyle, the layout macro should position the parts of
 the page.
@@ -1060,17 +1127,22 @@ page:
 \NewCoffin\@wall@quote
 \NewCoffin\@wall@calendar
 \NewCoffin\@wall@events
+\NewCoffin\@wall@notepad
+\NewCoffin\@wall@photoPageWrap
+\NewCoffin\@wall@notesPageWrap
 \end{verbatim}
 
 \section{Formatting hooks and temp vars}
-\label{sec:orgab25392}
+\label{sec:org1d0e47d}
 
 \begin{verbatim}
 \newlength\@t@bleed
 \newlength\@t@rightOffset
 \newlength\@t@minipageWidth
+\newlength\@t@calendar@minimumHeight
 \newlength\@t@calendar@height
 \newlength\@t@calendar@hmargin
+\newlength\@t@calendar@verticalSpacing
 \newlength\@t@calendar@dayYshift
 \newlength\@t@calendar@dayXshift
 \newlength\@t@calendar@gridHeight
@@ -1092,7 +1164,7 @@ page:
 \end{verbatim}
 
 \section{Layout Reset, \textbackslash @wall@layout@reset}
-\label{sec:org7522fd9}
+\label{sec:orgb350048}
 
 A reset macro for the beginning of a layout, to make sure parameters are not
 carried from one layout to the next.
@@ -1125,9 +1197,9 @@ carried from one layout to the next.
 \end{verbatim}
 
 \section{Full Page, \textbackslash @wall@fullPageLayout}
-\label{sec:orge4db85d}
+\label{sec:org7f4668b}
 \subsection{Setup formatting hooks}
-\label{sec:orge713968}
+\label{sec:orgad7ee7e}
 
 Renew this in your document when customizing the variables for this layout.
 
@@ -1149,7 +1221,7 @@ everything with \texttt{\%}.
 \end{verbatim}
 
 \subsection{Init}
-\label{sec:org28b2a27}
+\label{sec:orgc1d7389}
 
 \begin{verbatim}
 \newcommand\@wall@fullPageLayout[2][]{%
@@ -1163,7 +1235,7 @@ everything with \texttt{\%}.
 \end{verbatim}
 
 \subsection{Lengths and sizes}
-\label{sec:orge5a9400}
+\label{sec:org52e2afd}
 
 Bleed:
 
@@ -1207,7 +1279,7 @@ Calculate offsets:
 \end{verbatim}
 
 \subsection{Set the coffin contents}
-\label{sec:orgf5b7748}
+\label{sec:org1a530b7}
 
 Page wrap:
 
@@ -1312,7 +1384,7 @@ Calendar:
 \end{verbatim}
 
 \subsection{Join the coffins}
-\label{sec:orgf57fc27}
+\label{sec:orgd6fae30}
 
 \begin{verbatim}
 \@wall@photo@setYOffset
@@ -1338,7 +1410,7 @@ Calendar:
 \end{verbatim}
 
 \subsection{Typeset}
-\label{sec:org4335a91}
+\label{sec:org8ecab35}
 
 \begin{verbatim}
 \clearpage
@@ -1347,7 +1419,7 @@ Calendar:
 \end{verbatim}
 
 \subsection{Tikz calendar}
-\label{sec:org66a8015}
+\label{sec:org9d8ff59}
 
 \begin{verbatim}
 #1 = number of month with leading zero
@@ -1361,9 +1433,9 @@ Calendar:
 \end{verbatim}
 
 \section{Small Landscape, \textbackslash @wall@smallLandscapeLayout}
-\label{sec:orgec90d96}
+\label{sec:orgffb1874}
 \subsection{Setup formatting hooks}
-\label{sec:org19590f3}
+\label{sec:orgbe29f2c}
 
 Renew this in your document when customizing the variables for this layout.
 
@@ -1381,11 +1453,17 @@ everything with \texttt{\%}.
   \renewcommand*\headingFmt{\centering}%
   \renewcommand*\calendarFmt{\centering}%
   \renewcommand*\eventsFmt{\setlength{\parindent}{0pt}\raggedright\footnotesize}%
+  \setlength{\@t@calendar@minimumHeight}{85mm}%
+  \setlength{\@t@calendar@hmargin}{20pt}%
+  % 5mm: day headings
+  % 20mm: events
+  % 6.5mm: white space
+  \setlength{\@t@calendar@verticalSpacing}{20mm + 5mm + 6.5mm}%
 }
 \end{verbatim}
 
 \subsection{Init}
-\label{sec:org11161c1}
+\label{sec:org00f6cb7}
 
 \begin{verbatim}
 \newcommand\@wall@smallLandscapeLayout[2][]{%
@@ -1399,7 +1477,7 @@ everything with \texttt{\%}.
 \end{verbatim}
 
 \subsection{Lengths and sizes}
-\label{sec:orgcdfd5b1}
+\label{sec:orgc9577e9}
 
 Bleed:
 
@@ -1424,7 +1502,7 @@ Default height to fit:
 \end{itemize}
 
 \begin{verbatim}
-\setlength{\@t@calendar@height}{85mm + \@t@bleed}
+\setlength{\@t@calendar@height}{\@t@calendar@minimumHeight + \@t@bleed}
 
 % See if there was a height given in the options
 \pgfkeys{/Calendar/#2/minimum height/.get=\@val}
@@ -1434,19 +1512,10 @@ Default height to fit:
 \fi
 \end{verbatim}
 
-Calendar horizontal margin:
-
-\begin{verbatim}
-\setlength{\@t@calendar@hmargin}{20pt}
-\end{verbatim}
-
 Calculate offsets:
 
 \begin{verbatim}
-% 5mm: day headings
-% 20mm: events
-% 6.5mm: vertical spacing
-\setlength{\@tmp@a}{20mm + 5mm + 6.5mm}
+\setlength{\@tmp@a}{\@t@calendar@verticalSpacing}
 \setlength{\@tmp@b}{\@t@calendar@height -\@tmp@a}
 \setlength{\@t@calendar@dayYshift}{0.1666\@tmp@b}% 1/6 = 0.1666
 
@@ -1462,7 +1531,7 @@ Calculate offsets:
 \end{verbatim}
 
 \subsection{Set the coffin contents}
-\label{sec:orgfa049f6}
+\label{sec:orga9c5466}
 
 Page wrap:
 
@@ -1568,7 +1637,7 @@ Calendar:
 \end{verbatim}
 
 \subsection{Join the coffins}
-\label{sec:orgd581032}
+\label{sec:org85d53fc}
 
 Only using \texttt{yOffset}. The quote should be centered on the x axis.
 
@@ -1603,7 +1672,7 @@ other coffins are empty (when \texttt{varnishmask} is on) or have too much conte
 \end{verbatim}
 
 \subsection{Typeset}
-\label{sec:orgcdcedfd}
+\label{sec:org99a6714}
 
 \begin{verbatim}
 \clearpage
@@ -1612,7 +1681,7 @@ other coffins are empty (when \texttt{varnishmask} is on) or have too much conte
 \end{verbatim}
 
 \subsection{Tikz calendar}
-\label{sec:orgf62996c}
+\label{sec:org86b7136}
 
 \begin{verbatim}
 #1 = number of month with leading zero
@@ -1625,10 +1694,320 @@ other coffins are empty (when \texttt{varnishmask} is on) or have too much conte
 }
 \end{verbatim}
 
+\section{Photo And Notes, \textbackslash @wall@photoAndNotesLayout}
+\label{sec:org5e49ed5}
+\subsection{Setup formatting hooks}
+\label{sec:org3659b1f}
+
+\begin{verbatim}
+\newcommand\notepadContent{%
+  \begin{minipage}{\@t@minipageWidth}%
+    \setlength\parindent{0pt}%
+    \setlength\parskip{10pt}%
+    \color{black!40}%
+
+    \ifsixrowsmonth
+      \dotfill\par
+      \dotfill\par
+    \else
+      \dotfill\par
+      \dotfill\par
+      \dotfill\par
+      \dotfill\par
+    \fi
+
+  \end{minipage}%
+}
+
+\newcommand*\dayLetterTextFmt[1]{#1}
+
+\newcommand\photoAndNotesFmt{%
+  \renewcommand*\monthFmt{\LARGE}%
+  \renewcommand*\yearFmt{\LARGE}%
+  \renewcommand*\dayLetterColor{}%
+  \renewcommand*\dayLetterFmt{\small}%
+  \renewcommand*\dayLetterTextFmt[1]{\tiny\textls*{\MakeUppercase{##1}}}%
+  \renewcommand*\dayTextFmt{\small}%
+  \renewcommand*\quoteFmt{\centering}%
+  \renewcommand*\headingFmt{\centering}%
+  \renewcommand*\calendarFmt{\centering}%
+  \renewcommand*\eventsFmt{\setlength{\parindent}{0pt}\raggedright\fontsize{6}{8}\selectfont}%
+  \setlength{\@t@calendar@minimumHeight}{\calPaperHeight - 30mm}%
+  \setlength{\@t@calendar@hmargin}{20pt}%
+  % white space to allow:
+  % - month and year label
+  % - notepad area
+  % - extra white space
+  \setlength{\@t@calendar@verticalSpacing}{30mm}%
+}
+\end{verbatim}
+
+\subsection{Init}
+\label{sec:org704cc8b}
+
+\begin{verbatim}
+\newcommand\@wall@photoAndNotesLayout[2][]{%
+\makeatletter
+\renewcommand*\theMonthName{#2}
+\@wall@layout@reset
+\photoAndNotesFmt
+\end{verbatim}
+
+\subsection{Lengths and sizes}
+\label{sec:org0c06ba2}
+
+Bleed:
+
+\begin{verbatim}
+\pgfkeys{/Photo/#2/bleed/.get=\@val}
+\setlength{\@t@bleed}{\@val}
+\end{verbatim}
+
+\begin{verbatim}
+\def\@t@monthnum{\monthToNum{#2}}
+\end{verbatim}
+
+Determine if this month needs six rows:
+
+\begin{verbatim}
+\settowidth{\@tmp@z}{%
+\begin{tikzpicture}
+  \calendar [
+    dates=\CalendarYear-\@t@monthnum-01 to \CalendarYear-\@t@monthnum-last,
+    execute at begin day scope={
+      \ifdate{six rows month}{\global\sixrowsmonthtrue}{\global\sixrowsmonthfalse}
+    },
+  ];
+\end{tikzpicture}
+}
+\end{verbatim}
+
+Calendar height:
+
+Default height to fit:
+
+\begin{itemize}
+\item day headings
+\item days in a grid, 6 rows
+\item events
+\item bottom bleed
+\end{itemize}
+
+\begin{verbatim}
+\setlength{\@t@calendar@height}{\@t@calendar@minimumHeight + \@t@bleed}
+
+% See if there was a height given in the options
+\pgfkeys{/Calendar/#2/minimum height/.get=\@val}
+\ifx\@val\empty \relax
+\else
+  \setlength{\@t@calendar@height}{\@val + \@t@bleed}
+\fi
+\end{verbatim}
+
+Calculate offsets:
+
+\begin{verbatim}
+\setlength{\@tmp@a}{\@t@calendar@verticalSpacing}
+\setlength{\@tmp@b}{\@t@calendar@height -\@tmp@a}
+\setlength{\@t@calendar@dayYshift}{0.1666\@tmp@b}% 1/6 = 0.1666
+
+\setlength{\@t@calendar@gridHeightSixRows}{\@tmp@b}
+\setlength{\@t@calendar@gridHeightFiveRows}{\@tmp@b -0.1666\@tmp@b}
+
+% NOTE: the -4pt and -2pt offset is somehow necessary for the sides to align
+% with the edges
+\setlength{\@t@rightOffset}{\@t@bleed +\@t@calendar@hmargin -4pt}
+\setlength{\@t@minipageWidth}{\calPaperWidth -2\@t@calendar@hmargin -2pt}
+
+\setlength{\@t@calendar@dayXshift}{0.1428\@t@minipageWidth}% 1/7 = 0.1428
+\end{verbatim}
+
+\subsection{Set the coffin contents}
+\label{sec:org1896949}
+
+Photo page wrap:
+
+\begin{verbatim}
+\SetHorizontalCoffin\@wall@photoPageWrap{%
+  \color{white}%
+  \rule{\textwidth}{0pt}%
+  \rule{0pt}{\textheight}%
+}
+\end{verbatim}
+
+Notes page wrap:
+
+\begin{verbatim}
+\SetHorizontalCoffin\@wall@notesPageWrap{%
+  \color{white}%
+  \rule{\textwidth}{0pt}%
+  \rule{0pt}{\textheight}%
+}
+\end{verbatim}
+
+Photo:
+
+\begin{verbatim}
+\pgfkeys{/Photo/#2/file/.get=\@t@file}
+
+\SetHorizontalCoffin\@wall@photo{%
+  \placeholder[fill=photo-frame]{hasvarnish}{%
+    \@wall@photo@putPhoto{\@t@file}%
+  }%
+}
+\end{verbatim}
+
+Quote:
+
+\begin{verbatim}
+\SetHorizontalCoffin\@wall@quote{%
+  \placeholder[fill=quote-frame]{}{%
+    \begin{minipage}{\linewidth}%
+      \quoteFmt
+      \pgfkeys{/Quote/#2/text/.get=\@val}%
+      \@val%
+    \end{minipage}%
+  }%
+}
+\end{verbatim}
+
+Notepad:
+
+\begin{verbatim}
+\SetHorizontalCoffin\@wall@notepad{%
+  \placeholder[fill=quote-frame]{}{%
+    \notepadContent%
+  }%
+}
+\end{verbatim}
+
+Calendar:
+
+\begin{verbatim}
+\SetHorizontalCoffin\@wall@calendar{%
+\ifvarnishmask\relax
+\else
+\begin{tikzpicture}
+
+\node (bg) [
+  fill = calendarbg,
+  opacity = 1,
+  minimum width = {\calPaperWidth + 2\@t@bleed},
+  anchor=north west,
+  /Calendar/#2/bg,
+  % override the style, in case bleed was set above
+  minimum height = {\@t@calendar@height},
+] at (0,0) {};
+
+\node (heading) [
+  below right=10pt and {\@t@rightOffset} of bg.north west,
+  anchor=north west,
+] {%
+\placeholder[fill=heading-frame]{}{%
+\begin{minipage}{\@t@minipageWidth}%
+\headingFmt
+{\monthFmt\@tr@monthNumName{\@t@monthnum}}
+\hfill
+\strcmpblank{\CalendarAltYear}{%
+   {\yearFmt\CalendarYear}%
+}{%
+  {\yearFmt\CalendarYear/\CalendarAltYear}%
+}%
+\end{minipage}%
+}%
+};
+
+\node (calendar) [
+  below right=35pt and {\@t@rightOffset} of bg.north west,
+  anchor=north west,
+] {%
+\placeholder[fill=calendar-frame]{}{%
+\begin{minipage}{\@t@minipageWidth}%
+\calendarFmt
+\hspace*{-5pt}% FIXME
+\tikz{\tikzMonthCalendar@photoAndNotes{\@t@monthnum};}%
+\end{minipage}%
+}%
+};
+
+\node (events) [
+  above right=10mm and {\@t@rightOffset} of bg.south west,
+  anchor=south west,
+] {%
+\placeholder[fill=events-frame]{}{%
+\begin{minipage}{\@t@minipageWidth}%
+\eventsFmt
+\pgfkeys{/Events/#2/text/.get=\@val}%
+\@val%
+\end{minipage}%
+}%
+};
+
+\end{tikzpicture}%
+\fi
+}% \SetHorizontalCoffin
+\end{verbatim}
+
+\subsection{Join the coffins}
+\label{sec:org07343d5}
+
+\begin{verbatim}
+\@wall@photo@setYOffset
+
+\pgfkeys{/Photo/#2/xOffset/.get=\@val}
+\addtolength{\@t@xOffset}{\@val}
+\pgfkeys{/Photo/#2/yOffset/.get=\@val}
+\addtolength{\@t@yOffset}{\@val}
+
+\JoinCoffins*\@wall@photoPageWrap[l,t]\@wall@photo[l,t](-\spinemargin -\@t@bleed + \@t@xOffset, \uppermargin + \@t@bleed + \@t@yOffset)
+
+\pgfkeys{/Quote/#2/xOffset/.get=\@val}
+\setlength{\@t@xOffset}{\@val}
+\pgfkeys{/Quote/#2/yOffset/.get=\@val}
+\setlength{\@t@yOffset}{\@val}
+
+\JoinCoffins*\@wall@photoPageWrap[l,t]\@wall@quote[l,t](\@t@xOffset, \@t@yOffset)
+
+% Calendar is aligned to the top of the notes page.
+
+\JoinCoffins*\@wall@notesPageWrap[hc,t]\@wall@calendar[hc,t](0pt, 0pt)
+
+% Notepad is aligned to the bottom of the notes page.
+
+\JoinCoffins*\@wall@notesPageWrap[hc,b]\@wall@notepad[hc,b](0pt, 0pt)
+
+\makeatother
+\end{verbatim}
+
+\subsection{Typeset}
+\label{sec:org01a080b}
+
+\begin{verbatim}
+\clearpage
+\TypesetCoffin\@wall@photoPageWrap%
+\clearpage
+\TypesetCoffin\@wall@notesPageWrap%
+}% \@wall@photoAndNotesLayout
+\end{verbatim}
+
+\subsection{Tikz calendar}
+\label{sec:org462f1f9}
+
+\begin{verbatim}
+#1 = number of month with leading zero
+\end{verbatim}
+
+\begin{verbatim}
+\newcommand*{\tikzMonthCalendar@photoAndNotes}[1]{%
+\pgfkeys{/Events/\monthName{#1}/marks/.get=\@eventmarks}%
+\calendar (cal#1) [rigel, dates=\CalendarYear-#1-01 to \CalendarYear-#1-last] \@eventmarks;%
+}
+\end{verbatim}
+
 \section{Tikz styles}
-\label{sec:orga66f8a7}
+\label{sec:org7e04f26}
 \subsection{day letter headings}
-\label{sec:org8b1a47f}
+\label{sec:org31e5dbf}
 
 \begin{verbatim}
 \tikzstyle{day letter headings}=[%
@@ -1638,10 +2017,33 @@ other coffins are empty (when \texttt{varnishmask} is on) or have too much conte
       \pgfmathsetlength\pgf@xa{\tikz@lib@cal@xshift}%
       \pgfmathsetlength\pgf@ya{\tikz@lib@cal@yshift}%
       \foreach \d in {0,1,2,3,4,5,6} {%
-        \pgf@xa=\d\pgf@xa%
-        \pgftransformxshift{\pgf@xa}%
-        \pgftransformyshift{\pgf@ya}%
-        \node (d\d) [anchor=south, day heading] {\dayLetterFmt\@tr@dayLetter{\d}};%
+	\pgf@xa=\d\pgf@xa%
+	\pgftransformxshift{\pgf@xa}%
+	\pgftransformyshift{\pgf@ya}%
+	\pgftransformyshift{4pt}%
+	\node (d\d) [anchor=base, day heading] {\dayLetterFmt\@tr@dayLetter{\d}};%
+      };%
+    }{}%
+  },%
+]
+\end{verbatim}
+
+\subsection{day fullday headings}
+\label{sec:orgd52ff06}
+
+\begin{verbatim}
+\tikzstyle{day fullday headings}=[%
+  day heading/.style={black!90},
+  execute before day scope={%
+    \ifdate{day of month=1}{%
+      \pgfmathsetlength\pgf@xa{\tikz@lib@cal@xshift}%
+      \pgfmathsetlength\pgf@ya{\tikz@lib@cal@yshift}%
+      \foreach \d in {0,1,2,3,4,5,6} {%
+	\pgf@xa=\d\pgf@xa%
+	\pgftransformxshift{\pgf@xa}%
+	\pgftransformyshift{\pgf@ya}%
+	\pgftransformyshift{4pt}%
+	\node (d\d) [anchor=base, day heading] {\dayLetterTextFmt{\@tr@dayName{\d}}};%
       };%
     }{}%
   },%
@@ -1649,7 +2051,7 @@ other coffins are empty (when \texttt{varnishmask} is on) or have too much conte
 \end{verbatim}
 
 \subsection{days grid}
-\label{sec:orgfa12564}
+\label{sec:orgebe4156}
 
 \begin{verbatim}
 \newcount\gridRows
@@ -1670,27 +2072,27 @@ other coffins are empty (when \texttt{varnishmask} is on) or have too much conte
       %
       % 31 day months
       \ifdate{between=01-01 and 01-31, between=03-01 and 03-31, between=05-01 and 05-31, between=07-01 and 07-31, between=08-01 and 08-31, between=10-01 and 10-31, between=12-01 and 12-31}{%
-        \ifdate{Saturday,Sunday}{%
-          \gridRows=6%
-          \setlength\@t@calendar@gridHeight{\@t@calendar@gridHeightSixRows}%
-        }{%
-          \gridRows=5%
-          \setlength\@t@calendar@gridHeight{\@t@calendar@gridHeightFiveRows}%
-        }
+	\ifdate{Saturday,Sunday}{%
+	  \gridRows=6%
+	  \setlength\@t@calendar@gridHeight{\@t@calendar@gridHeightSixRows}%
+	}{%
+	  \gridRows=5%
+	  \setlength\@t@calendar@gridHeight{\@t@calendar@gridHeightFiveRows}%
+	}
       }{
       % 30 day months and February
-        \ifdate{between=02-01 and 02-last}{%
-          \gridRows=5%
-          \setlength\@t@calendar@gridHeight{\@t@calendar@gridHeightFiveRows}%
-        }{%
-          \ifdate{Sunday}{%
-            \gridRows=6%
-            \setlength\@t@calendar@gridHeight{\@t@calendar@gridHeightSixRows}%
-          }{%
-            \gridRows=5%
-            \setlength\@t@calendar@gridHeight{\@t@calendar@gridHeightFiveRows}%
-          }
-        }
+	\ifdate{between=02-01 and 02-last}{%
+	  \gridRows=5%
+	  \setlength\@t@calendar@gridHeight{\@t@calendar@gridHeightFiveRows}%
+	}{%
+	  \ifdate{Sunday}{%
+	    \gridRows=6%
+	    \setlength\@t@calendar@gridHeight{\@t@calendar@gridHeightSixRows}%
+	  }{%
+	    \gridRows=5%
+	    \setlength\@t@calendar@gridHeight{\@t@calendar@gridHeightFiveRows}%
+	  }
+	}
       }
       %
       % Horizontal lines
@@ -1698,24 +2100,24 @@ other coffins are empty (when \texttt{varnishmask} is on) or have too much conte
       \gridLines=\gridRows
       \ifGridNoSurround\relax
       \else
-        \advance\gridLines by 1
-        \n=0
-        \draw [
-          gridcolor,
-          line width=0.3pt,
-          xshift=-0.5\@t@calendar@dayXshift,
-          yshift=0.5\@t@calendar@dayYshift,
-        ] (0,{-\n\@t@calendar@dayYshift}) -- (7\@t@calendar@dayXshift,{-\n\@t@calendar@dayYshift});
+	\advance\gridLines by 1
+	\n=0
+	\draw [
+	  gridcolor,
+	  line width=0.3pt,
+	  xshift=-0.5\@t@calendar@dayXshift,
+	  yshift=0.5\@t@calendar@dayYshift,
+	] (0,{-\n\@t@calendar@dayYshift}) -- (7\@t@calendar@dayXshift,{-\n\@t@calendar@dayYshift});
       \fi
       \foreach \n in {1,2,3,4,5,6} {
-        \ifnum\n<\gridLines
-          \draw [
-            gridcolor,
-            line width=0.3pt,
-            xshift=-0.5\@t@calendar@dayXshift,
-            yshift=0.5\@t@calendar@dayYshift,
-          ] (0,{-\n\@t@calendar@dayYshift}) -- (7\@t@calendar@dayXshift,{-\n\@t@calendar@dayYshift});
-        \fi
+	\ifnum\n<\gridLines
+	  \draw [
+	    gridcolor,
+	    line width=0.3pt,
+	    xshift=-0.5\@t@calendar@dayXshift,
+	    yshift=0.5\@t@calendar@dayYshift,
+	  ] (0,{-\n\@t@calendar@dayYshift}) -- (7\@t@calendar@dayXshift,{-\n\@t@calendar@dayYshift});
+	\fi
       }
       %
       % Vertical lines
@@ -1723,42 +2125,42 @@ other coffins are empty (when \texttt{varnishmask} is on) or have too much conte
       \gridLines=7
       \ifGridNoSurround\relax
       \else
-        \advance\gridLines by 1
-        \n=0
-        \draw [
-          gridcolor,
-          line width=0.3pt,
-          xshift=-0.5\@t@calendar@dayXshift,
-          yshift=0.5\@t@calendar@dayYshift,
-        ] ({\n\@t@calendar@dayXshift},0) -- ({\n\@t@calendar@dayXshift},{-\gridRows\@t@calendar@dayYshift});
+	\advance\gridLines by 1
+	\n=0
+	\draw [
+	  gridcolor,
+	  line width=0.3pt,
+	  xshift=-0.5\@t@calendar@dayXshift,
+	  yshift=0.5\@t@calendar@dayYshift,
+	] ({\n\@t@calendar@dayXshift},0) -- ({\n\@t@calendar@dayXshift},{-\gridRows\@t@calendar@dayYshift});
       \fi
       \foreach \n in {1,2,3,4,5,6,7} {
-        \ifnum\n<\gridLines
-          \draw [
-            gridcolor,
-            line width=0.3pt,
-            xshift=-0.5\@t@calendar@dayXshift,
-            yshift=0.5\@t@calendar@dayYshift,
-          ] ({\n\@t@calendar@dayXshift},0) -- ({\n\@t@calendar@dayXshift},{-\gridRows\@t@calendar@dayYshift});
-        \fi
+	\ifnum\n<\gridLines
+	  \draw [
+	    gridcolor,
+	    line width=0.3pt,
+	    xshift=-0.5\@t@calendar@dayXshift,
+	    yshift=0.5\@t@calendar@dayYshift,
+	  ] ({\n\@t@calendar@dayXshift},0) -- ({\n\@t@calendar@dayXshift},{-\gridRows\@t@calendar@dayYshift});
+	\fi
       }
       %
       % If we are not drawing the surrounding lines, it looks better to hide
       % some of the top and bottom edges
       %
       \ifGridNoSurround
-        \draw [
-          color=white,
-          line width=6pt,
-          xshift=-0.5\@t@calendar@dayXshift,
-          yshift={0.5\@t@calendar@dayYshift -1pt},
-        ] (0,0) -- (7\@t@calendar@dayXshift,0);
-        \draw [
-          color=white,
-          line width=6pt,
-          xshift=-0.5\@t@calendar@dayXshift,
-          yshift={0.5\@t@calendar@dayYshift +1pt},
-        ] (0,-\gridRows\@t@calendar@dayYshift) -- (7\@t@calendar@dayXshift,-\gridRows\@t@calendar@dayYshift);
+	\draw [
+	  color=white,
+	  line width=6pt,
+	  xshift=-0.5\@t@calendar@dayXshift,
+	  yshift={0.5\@t@calendar@dayYshift -1pt},
+	] (0,0) -- (7\@t@calendar@dayXshift,0);
+	\draw [
+	  color=white,
+	  line width=6pt,
+	  xshift=-0.5\@t@calendar@dayXshift,
+	  yshift={0.5\@t@calendar@dayYshift +1pt},
+	] (0,-\gridRows\@t@calendar@dayYshift) -- (7\@t@calendar@dayXshift,-\gridRows\@t@calendar@dayYshift);
       \fi
     }{}%
   }
@@ -1766,7 +2168,7 @@ other coffins are empty (when \texttt{varnishmask} is on) or have too much conte
 \end{verbatim}
 
 \subsection{headings background rule}
-\label{sec:org4ba160c}
+\label{sec:orgb2f8132}
 
 \begin{verbatim}
 \tikzstyle{headings background rule}=[
@@ -1774,9 +2176,9 @@ other coffins are empty (when \texttt{varnishmask} is on) or have too much conte
   execute before day scope={%
     \ifdate{day of month=1}{%
       \draw [
-        xshift=-0.5\@t@calendar@dayXshift,
-        yshift=0.5\@t@calendar@dayYshift,
-        background rule,
+	xshift=-0.5\@t@calendar@dayXshift,
+	yshift=0.5\@t@calendar@dayYshift,
+	background rule,
       ] (0,0) -- (7\@t@calendar@dayXshift,0);
     }{}%
   }
@@ -1784,7 +2186,7 @@ other coffins are empty (when \texttt{varnishmask} is on) or have too much conte
 \end{verbatim}
 
 \subsection{headings background bar}
-\label{sec:org20ae9c5}
+\label{sec:org1969b60}
 
 \begin{verbatim}
 \tikzstyle{headings background bar}=[
@@ -1794,9 +2196,9 @@ other coffins are empty (when \texttt{varnishmask} is on) or have too much conte
 \end{verbatim}
 
 \section{Tikz calendar styles}
-\label{sec:org9d1f8e2}
+\label{sec:org4ebf211}
 \subsection{Betelgeuse, days in a grid}
-\label{sec:org7b7858d}
+\label{sec:org30e4ed6}
 
 (Alpha Orionis)
 
@@ -1815,8 +2217,54 @@ other coffins are empty (when \texttt{varnishmask} is on) or have too much conte
 ]
 \end{verbatim}
 
+\subsection{Rigel, days in a grid, inline notes}
+\label{sec:orgb973766}
+
+(Beta Orionis)
+
+Command to print day number, so that it can be reused outside the day code block:
+
+\begin{verbatim}
+% #1 : day node name to position at, \pgfcalendarsuggestedname in the day code block
+% #2 : this node name postfix, -daynumber in the day code block
+% #3 : day number, use \tikzdaytext in the day code block
+\newcommand*\calDayNumberNode[3]{%
+    \node (#1#2) [
+      below right=3.5pt and 8pt of #1.north west,
+      anchor=north west,
+      inner sep=0pt,
+    ] {#3};
+}
+\end{verbatim}
+
+\begin{verbatim}
+\tikzstyle{rigel}=[
+  no grid surround,
+  days grid,
+  week list,
+  day xshift=\@t@calendar@dayXshift,
+  day yshift=\@t@calendar@dayYshift,
+  day fullday headings,
+  day heading/.style={black!90, yshift={-0.3\@t@calendar@dayYshift}},
+  every day/.append style={anchor=base, inner xsep=0pt, yshift={-0.25\baselineskip}},
+  execute at begin day scope={
+    \ifdate{Sunday}{\def\dayLetterColor{\color{sunday}}}{\def\dayLetterColor{\color{weekday}}}%
+  },
+  day text={\dayTextFmt\dayLetterColor\%d-},
+  day code={%
+    \node [
+      minimum width=\@t@calendar@dayXshift,
+      minimum height=\@t@calendar@dayYshift,
+      name=\pgfcalendarsuggestedname,
+      every day,
+    ] {};%
+    \calDayNumberNode{\pgfcalendarsuggestedname}{-daynumber}{\tikzdaytext}%
+  },
+]
+\end{verbatim}
+
 \subsection{Alnitak, days in one line}
-\label{sec:org3b7f33a}
+\label{sec:org426a69a}
 
 (Zeta Orionis)
 
@@ -1846,7 +2294,7 @@ other coffins are empty (when \texttt{varnishmask} is on) or have too much conte
     % === Weekday letter above the day ===
     %
     \ifdate{weekend}{\def\dayLetterColor{\color{weekend}}}{\def\dayLetterColor{\color{weekday}}}%
-    \node[anchor=south,yshift=5mm,inner sep=0pt]{%
+    \node[anchor=base,yshift=5.5mm,inner sep=0pt]{%
       \dayLetterColor\dayLetterFmt\@tr@dayLetter{\pgfcalendarcurrentweekday}%
     };%
   },
@@ -1854,11 +2302,11 @@ other coffins are empty (when \texttt{varnishmask} is on) or have too much conte
 \end{verbatim}
 
 \chapter{Year Planner}
-\label{sec:orgf40f335}
+\label{sec:orga565cf5}
 \section{Tikz calendar styles}
-\label{sec:orge85789c}
+\label{sec:org8a087db}
 \subsection{Year Planner Portrait}
-\label{sec:orga6a744a}
+\label{sec:orgb196945}
 
 \begin{verbatim}
 \newcommand\plannerPortraitMonthFmt{\fontsize{11}{11}\selectfont\color{darkgold}}
@@ -1882,7 +2330,7 @@ other coffins are empty (when \texttt{varnishmask} is on) or have too much conte
 \end{verbatim}
 
 \subsection{Year Planner Landscape}
-\label{sec:orgdf6c24d}
+\label{sec:org5b67e8c}
 
 \begin{verbatim}
 \newcommand\plannerLandscapeDateDayFont{}
@@ -1952,7 +2400,7 @@ other coffins are empty (when \texttt{varnishmask} is on) or have too much conte
 \end{verbatim}
 
 \subsection{Year Planner Landscape Grid}
-\label{sec:org69cdabb}
+\label{sec:orgfe4364f}
 
 \begin{verbatim}
 \newcommand\plannerGridMonthFont{}
@@ -2057,7 +2505,7 @@ other coffins are empty (when \texttt{varnishmask} is on) or have too much conte
 ]
 \end{verbatim}
 \section{Helpers}
-\label{sec:orgdfb1023}
+\label{sec:orge7ff03a}
 
 \begin{verbatim}
 \newcommand\plannerMarksDayTextCSV{\@wall@eventsCsv}
@@ -2097,7 +2545,7 @@ yearMarksNote(tonumber(\CalendarYear), nil, \luastring{\plannerMarksNoteCSV}, \l
 \end{verbatim}
 
 \section{\textbackslash YearPlannerPortrait}
-\label{sec:org64a6ea5}
+\label{sec:orgea607f0}
 
 \begin{verbatim}
 \newcommand\YearPlannerPortrait{%
@@ -2123,7 +2571,7 @@ yearMarksNote(tonumber(\CalendarYear), nil, \luastring{\plannerMarksNoteCSV}, \l
 \end{verbatim}
 
 \section{\textbackslash YearPlannerLandscape}
-\label{sec:orgf7b001f}
+\label{sec:org25b336f}
 
 \begin{verbatim}
 \newcommand\YearPlannerLandscape{%
@@ -2139,7 +2587,7 @@ yearMarksNote(tonumber(\CalendarYear), nil, \luastring{\plannerMarksNoteCSV}, \l
 \end{verbatim}
 
 \section{\textbackslash YearPlannerLandscapeGrid}
-\label{sec:orgce2473c}
+\label{sec:orgeb59aed}
 
 \begin{verbatim}
 \newcommand\YearPlannerLandscapeGrid{%
@@ -2208,30 +2656,30 @@ yearMarksNote(tonumber(\CalendarYear), nil, \luastring{\plannerMarksNoteCSV}, \l
     {
       \addtocounter{verticalCount}{1}
       \ifnumgreater{\value{verticalCount}}{38}{\relax}{
-        \setlength{\@tmp@a}{7\plannerGridColXShift}
-        \setlength{\@tmp@a}{\i\@tmp@a + \j\plannerGridColXShift + \plannerGridMonthNamesWidth}
+	\setlength{\@tmp@a}{7\plannerGridColXShift}
+	\setlength{\@tmp@a}{\i\@tmp@a + \j\plannerGridColXShift + \plannerGridMonthNamesWidth}
 
-        % Day headings (top and bottom)
+	% Day headings (top and bottom)
 
-        \node [
-          right = \@tmp@a of bg.north west,
-          xshift = 0.5\plannerGridColXShift + 4pt,
-          yshift = -0.5\plannerGridDayHeadingsHeight - 5pt,
-          anchor = base,
-        ] {\plannerGridDateDayFmt \d};
+	\node [
+	  right = \@tmp@a of bg.north west,
+	  xshift = 0.5\plannerGridColXShift + 4pt,
+	  yshift = -0.5\plannerGridDayHeadingsHeight - 5pt,
+	  anchor = base,
+	] {\plannerGridDateDayFmt \d};
 
-        \node [
-          right = \@tmp@a of bg.south west,
-          xshift = 0.5\plannerGridColXShift + 4pt,
-          yshift = 0.5\plannerGridDayHeadingsHeight - 5pt,
-          anchor = base,
-        ] {\plannerGridDateDayFmt \d};
+	\node [
+	  right = \@tmp@a of bg.south west,
+	  xshift = 0.5\plannerGridColXShift + 4pt,
+	  yshift = 0.5\plannerGridDayHeadingsHeight - 5pt,
+	  anchor = base,
+	] {\plannerGridDateDayFmt \d};
 
-        % % Vertical lines
+	% % Vertical lines
 
-        % \node (v-a-\i-\j) [right = \@tmp@a of bg.north west] {};
-        % \node (v-b-\i-\j) [right = \@tmp@a of bg.south west] {};
-        % \draw [gridcolor] (v-a-\i-\j) -- (v-b-\i-\j);
+	% \node (v-a-\i-\j) [right = \@tmp@a of bg.north west] {};
+	% \node (v-b-\i-\j) [right = \@tmp@a of bg.south west] {};
+	% \draw [gridcolor] (v-a-\i-\j) -- (v-b-\i-\j);
       }
     }
   }
@@ -2252,7 +2700,7 @@ yearMarksNote(tonumber(\CalendarYear), nil, \luastring{\plannerMarksNoteCSV}, \l
 \end{verbatim}
 
 \section{\textbackslash YearPlannerLandscapeGridPage}
-\label{sec:org772519b}
+\label{sec:orgbb8cea3}
 
 \begin{verbatim}
 \newcommand{\YearPlannerLandscapeGridPage}{%
@@ -2273,8 +2721,58 @@ yearMarksNote(tonumber(\CalendarYear), nil, \luastring{\plannerMarksNoteCSV}, \l
 }}}
 \end{verbatim}
 
+\chapter{Title page}
+\label{sec:orgbfe4cc3}
+
+\section{\textbackslash TitlePage}
+\label{sec:org783d8ae}
+
+\begin{verbatim}
+% #1 : image path
+% #3 : background overlay height
+% #3 : title text
+\newcommand{\TitlePage}[3]{%
+\mbox{}
+\thispagestyle{empty}
+
+\AddToShipoutPictureFG*{%
+  \put(\LenToUnit{-3mm},\LenToUnit{-3mm}){%
+    \begin{tikzpicture}
+      \node (bg) [
+	minimum width=\calPaperWidth + 6mm,
+	minimum height=\calPaperHeight + 6mm,
+      ] {%
+	\includegraphics[height={\calPaperHeight + 6mm}]{#1}%
+      };
+
+      \node (title-bg) [
+	minimum width=\calPaperWidth + 6mm,
+	minimum height=#2,
+	above left=0pt and 0pt of bg.center,
+	anchor=center,
+	fill=white,
+	opacity=0.4,
+      ] {};
+
+      \node (title-text) [
+	above left=0pt and 0pt of bg.center,
+	anchor=center,
+      ] {%
+	\begin{minipage}{\calPaperWidth + 6mm}%
+	  \centering
+	  #3%
+	  \par
+	\end{minipage}%
+      };
+    \end{tikzpicture}%
+  }%
+}%
+
+}
+\end{verbatim}
+
 \chapter{Translation keys}
-\label{sec:org9ce89e8}
+\label{sec:orgf745c25}
 
 \begin{verbatim}
 % Load internal translations
@@ -2314,8 +2812,14 @@ headings such as \texttt{\textbackslash{}def\textbackslash{}xMondayDayLetter\{\{
 \xThursdayDayLetter\or \xFridayDayLetter\or \xSaturdayDayLetter\or \xSundayDayLetter\fi}
 \end{verbatim}
 
+\begin{verbatim}
+\newcommand*\@tr@dayName[1]{%
+\ifcase#1 \xMonday\or \xTuesday\or \xWednesday\or
+\xThursday\or \xFriday\or \xSaturday\or \xSunday\fi}
+\end{verbatim}
+
 \chapter{Helper macros}
-\label{sec:org3563e80}
+\label{sec:org7ac4650}
 
 Doing this in Lua to make blasted sure the result is just a string
 
@@ -2363,7 +2867,7 @@ Doing this in Lua to make blasted sure the result is just a string
 \end{verbatim}
 
 \chapter{Epilogue}
-\label{sec:org8f36044}
+\label{sec:org15e763a}
 
 \begin{verbatim}
 % End of wallcalendar.cls

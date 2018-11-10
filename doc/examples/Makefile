@@ -1,11 +1,14 @@
 LATEX=lualatex
 LATEX_OPTS=-interaction=nonstopmode -halt-on-error
 
-all: calendars bursts
+all:
+	@echo "Are you sure? Making them all is a lot of work."
+
+#all: calendars bursts
 
 test: ./diff-cal.sh
 
-calendars: cal-plain.pdf cal-showtrims.pdf cal-showframe.pdf cal-varnishmask.pdf cal-translations cal-marks.pdf cal-year-planner.pdf cal-thumbnails.pdf
+calendars: cal-plain.pdf cal-showtrims.pdf cal-showframe.pdf cal-varnishmask.pdf cal-translations cal-marks.pdf cal-photo-and-notes.pdf cal-year-planner.pdf cal-thumbnails.pdf
 
 bursts: cal-plain-burst cal-showtrims-burst cal-showframe-burst cal-varnishmask-burst
 

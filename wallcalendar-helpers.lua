@@ -212,6 +212,26 @@ function monthMarksDayText(monthName, filterPred, eventsCsv)
   end
 end
 
+function monthMarksDayTextInline(monthName, filterPred, eventsCsv)
+  local monthNum = monthNameToNum(monthName)
+  local events = eventsInMonth(loadCsv(eventsCsv), monthNum, filterPred);
+
+  for idx,event in pairs(events) do
+    if ok(event.day_text) then
+
+      local d = date(event.date)
+
+      tsp(string.format(" \\draw node [above right=%s and %s of cal%s-%s.north west, anchor=north west] {%s}; ",
+                        "0.5pt",
+                        "20pt",
+                        d:fmt("%m"),
+                        event.date,
+                        event.day_text))
+
+    end
+  end
+end
+
 function yearMarksDayText(yearNum, filterPred, eventsCsv)
   local events = eventsInYear(loadCsv(eventsCsv), yearNum, filterPred);
 
@@ -255,6 +275,27 @@ function formatMarksNote(events, filterPred, markDefaultsCsv, isOneCalendar)
   end
 end
 
+function formatInlineNotes(events, filterPred, markDefaultsCsv)
+  local markDefaults = nil
+  if ok(markDefaultsCsv) then
+    markDefaults = loadCsv(markDefaultsCsv)
+  end
+
+  local alreadyMarkedDates = {}
+
+  for idx,event in pairs(events) do
+    if ok(event.note) and alreadyMarkedDates[event.date] == nil then
+      alreadyMarkedDates[event.date] = true
+      local d = date(event.date)
+
+      tsp(string.format(" \\draw node [above right=0pt and 0pt of cal%s-%s.north west, anchor=north west] {\\begin{minipage}[t][\\@t@calendar@dayYshift - 10pt][b]{\\@t@calendar@dayXshift - 8pt}\\eventsFmt %s\\end{minipage}}; ",
+                        d:fmt("%m"),
+                        event.date,
+                        event.note))
+    end
+  end
+end
+
 -- monthName is better for argument than monthNum
 function monthMarksNote(monthName, filterPred, eventsCsv, markDefaultsCsv)
   local monthNum = monthNameToNum(monthName)
@@ -266,6 +307,19 @@ function monthMarksNote(monthName, filterPred, eventsCsv, markDefaultsCsv)
   local events = eventsInMonth(loadCsv(eventsCsv), monthNum, filterPred);
 
   formatMarksNote(events, filterPred, markDefaultsCsv, false)
+end
+
+-- monthName is better for argument than monthNum
+function monthInlineNotes(monthName, filterPred, eventsCsv, markDefaultsCsv)
+  local monthNum = monthNameToNum(monthName)
+
+  if not ok(filterPred) then
+    filterPred = function(e) return ok(e.note) end
+  end
+
+  local events = eventsInMonth(loadCsv(eventsCsv), monthNum, filterPred);
+
+  formatInlineNotes(events, filterPred, markDefaultsCsv)
 end
 
 function yearMarksNote(yearNum, filterPred, eventsCsv, markDefaultsCsv, isOneCalendar)

@@ -1,16 +1,19 @@
-auto/
-*.toc
+# LaTeX temp files
 *.aux
 *.log
-*.swp
-*.fdb_latexmk
+*.toc
+*.lof
 *.fls
+*.fdb_latexmk
+
+# Project output
 wallcalendar.zip
 doc/wallcalendar.pdf
 doc/wallcalendar-code.pdf
 doc/_minted-wallcalendar/
 doc/_minted-wallcalendar-code/
-doc/examples/i18n/
+doc/examples/i18n
+doc/examples/wallcalendar-helpers.lua
 doc/examples/mwe.*
 doc/examples/wallcalendar.cls
 doc/examples/cal-burst/doc_data.txt
@@ -20,3 +23,22 @@ doc/examples/diff-new/*.pdf
 doc/examples/diff-new/doc_data.txt
 doc/examples/diff-compare/*.jpg
 doc/examples/diff-compare/doc_data.txt
+
+# Emacs temp files
+auto/
+*~
+\#*\#
+*.elc
+auto-save-list
+tramp
+.\#*
+.projectile
+TAGS
+
+# Vim temp files
+[._]*.s[a-v][a-z]
+[._]*.sw[a-p]
+[._]s[a-v][a-z]
+[._]sw[a-p]
+*~
+tags
