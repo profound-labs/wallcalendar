@@ -24,13 +24,7 @@ The manual includes examples and tutorials, but you may also want to see the [do
 
 ![wallcalendar layouts](./wallcalendar-layouts.png)
 
-Github: https://github.com/profound-labs/wallcalendar
-
 [examples]: https://github.com/profound-labs/wallcalendar/tree/master/doc/examples
-
-Contact: Gambhiro Bhikkhu <gambhiro.bhikkhu.85@gmail.com>
-
-LPPL LaTeX Public Project License
 
 ## Installing
 
@@ -67,4 +61,12 @@ lualatex -interaction=nonstopmode -halt-on-error ./new-calendar.tex
 
 If you wanted to install it as a local package, the `make local-install` task in
 the project root will try to install it at `$TEXMFHOME/tex`.
+
+## Back matter
+
+Github: https://github.com/profound-labs/wallcalendar
+
+Contact: Gambhiro Bhikkhu <gambhiro.bhikkhu.85@gmail.com>
+
+LPPL LaTeX Public Project License
 
