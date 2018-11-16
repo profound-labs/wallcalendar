@@ -3,7 +3,6 @@
   language = english,
   eventsCsv = ./data/holidays.csv,
   markDefaultsCsv = ./data/mark_defaults.csv,
-  imageFolder = ./photos/,
   paperWidth = 11in - 15mm,
   paperHeight = 8.5in - 15mm,
   trimSpace = 15mm,
@@ -24,64 +23,17 @@
 
 \SetPhoto[disabled = true]{September}
 
-\SetQuote{September}{}
-
 \SetCalendar{September}
 
 \SetEvents{September}{%
-% All this will be in tikzpicture environment, after drawing the calendar.
-%
-% This adds a semicolon to end the \calendar command so we can start adding nodes.
 \semicolonEndTikzCalendar%
-%
-% Overlaying a photo with text on a specific date in this month
-%
-% photo node
-\node (day-photo) [
-  above right=3.2pt and 0.1pt of cal09-2018-09-18.north west,
-  inner sep=0pt,
-  anchor=north west,
-] {%
-  \includegraphics[width={\@t@calendar@dayXshift - 0.25pt}]{TomBombadil-crop}%
-};%
-%
-% the photo is dark, add a white background for the day number
-\node (top-whitecircle) [
-  below right=0.3pt and 0.1pt of cal09-2018-09-18-daynumber.center,
-  anchor=center,
-  circle,
-  minimum width=15pt,
-  inner sep=0pt,
-  fill=white,
-  opacity=0.6,
-] {};%
-%
-% the photo is dark, add a white background for the day's event text
-\node (bottom-whitebox) [
-  above left=0pt and 0pt of day-photo.south west,
-  anchor=south west,
-  minimum width={\@t@calendar@dayXshift - 0.25pt},
-  minimum height=18pt,
-  inner sep=0pt,
-  fill=white,
-  opacity=0.6,
-] {};%
-%
-% repeat the day number (the photo has covered it)
-\calDayNumberNode{cal09-2018-09-18}{-redo}{\dayTextFmt 18}%
-%
-% print the day's marks (moon phases in this case) next to the day number
 \parseMonthMarksDayTextInlineUsing{./data/moonphases-2018.csv}%
-%
-% print the day's event text
 \parseMonthInlineNotes%
 }{}
 
 % === October ==========================================================
 
 \SetPhoto[disabled = true]{October}
-
-\SetQuote{October}{}
 
 \SetCalendar{October}
 
@@ -95,9 +47,7 @@
 
 \SetPhoto[disabled = true]{November}
 
-\SetQuote{November}{}
-
-\SetCalendar[]{November}
+\SetCalendar{November}
 
 \SetEvents{November}{%
 \semicolonEndTikzCalendar%
@@ -108,8 +58,6 @@
 % === December =========================================================
 
 \SetPhoto[disabled = true]{December}
-
-\SetQuote{December}{}
 
 \SetCalendar{December}
 
