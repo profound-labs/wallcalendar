@@ -279,10 +279,6 @@
     \ifnum\pgfcalendarifdateweekday=0\relax
       \pgfcalendarmatchestrue
     \fi
-    % Tuesday
-    \ifnum\pgfcalendarifdateweekday=1\relax
-      \pgfcalendarmatchestrue
-    \fi
   \else
     \ifnum\pgfcalendarifdateday=31\relax
       % Monday
