@@ -337,10 +337,14 @@
   },
 }
 
+\newif\ifPhotoEnabled
+\PhotoEnabledtrue
+
 \pgfkeys{
   /Photo/.is family, /Photo,
   init/.style = {
-    defaults/.style = {file = {}, thumbFile = {}, caption = {}, bleed = 0pt, xOffset=0pt, yOffset=0pt},
+    defaults/.style = {disabled = false, file = {}, thumbFile = {}, caption = {}, bleed = 0pt, xOffset=0pt, yOffset=0pt},
+    disabled/.initial = false,
     file/.initial = {},
     thumbFile/.initial = {},
     caption/.initial = {},
@@ -1196,6 +1200,8 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
 \renewcommand*\theMonthName{#2}
 \@wall@layout@reset
 \photoAndNotesFmt
+\pgfkeys{/Photo/#2/disabled/.get=\@val}
+\ifdefstring{\@val}{true}{\PhotoEnabledfalse}{\PhotoEnabledtrue}
 
 \pgfkeys{/Photo/#2/bleed/.get=\@val}
 \setlength{\@t@bleed}{\@val}
@@ -1248,6 +1254,7 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
   \rule{0pt}{\textheight}%
 }
 
+\ifPhotoEnabled
 \pgfkeys{/Photo/#2/file/.get=\@t@file}
 
 \SetHorizontalCoffin\@wall@photo{%
@@ -1255,7 +1262,9 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
     \@wall@photo@putPhoto{\@t@file}%
   }%
 }
+\fi
 
+\ifPhotoEnabled
 \SetHorizontalCoffin\@wall@quote{%
   \placeholder[fill=quote-frame]{}{%
     \begin{minipage}{\linewidth}%
@@ -1265,6 +1274,7 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
     \end{minipage}%
   }%
 }
+\fi
 
 \SetHorizontalCoffin\@wall@notepad{%
   \placeholder[fill=quote-frame]{}{%
@@ -1335,6 +1345,7 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
 \fi
 }% \SetHorizontalCoffin
 
+\ifPhotoEnabled
 \@wall@photo@setYOffset
 
 \pgfkeys{/Photo/#2/xOffset/.get=\@val}
@@ -1350,6 +1361,7 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
 \setlength{\@t@yOffset}{\@val}
 
 \JoinCoffins*\@wall@photoPageWrap[l,t]\@wall@quote[l,t](\@t@xOffset, \@t@yOffset)
+\fi
 
 % Calendar is aligned to the top of the notes page.
 
@@ -1361,8 +1373,10 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
 
 \makeatother
 
+\ifPhotoEnabled
 \clearpage
 \TypesetCoffin\@wall@photoPageWrap%
+\fi
 \clearpage
 \TypesetCoffin\@wall@notesPageWrap%
 }% \@wall@photoAndNotesLayout

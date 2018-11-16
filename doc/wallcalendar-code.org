@@ -441,10 +441,14 @@ argument.
 ** /Photo
 
 #+begin_src tex
+\newif\ifPhotoEnabled
+\PhotoEnabledtrue
+
 \pgfkeys{
   /Photo/.is family, /Photo,
   init/.style = {
-    defaults/.style = {file = {}, thumbFile = {}, caption = {}, bleed = 0pt, xOffset=0pt, yOffset=0pt},
+    defaults/.style = {disabled = false, file = {}, thumbFile = {}, caption = {}, bleed = 0pt, xOffset=0pt, yOffset=0pt},
+    disabled/.initial = false,
     file/.initial = {},
     thumbFile/.initial = {},
     caption/.initial = {},
@@ -1637,6 +1641,8 @@ other coffins are empty (when =varnishmask= is on) or have too much content.
 \renewcommand*\theMonthName{#2}
 \@wall@layout@reset
 \photoAndNotesFmt
+\pgfkeys{/Photo/#2/disabled/.get=\@val}
+\ifdefstring{\@val}{true}{\PhotoEnabledfalse}{\PhotoEnabledtrue}
 #+end_src
 
 *** Lengths and sizes
@@ -1730,6 +1736,7 @@ Notes page wrap:
 Photo:
 
 #+begin_src tex
+\ifPhotoEnabled
 \pgfkeys{/Photo/#2/file/.get=\@t@file}
 
 \SetHorizontalCoffin\@wall@photo{%
@@ -1737,11 +1744,13 @@ Photo:
     \@wall@photo@putPhoto{\@t@file}%
   }%
 }
+\fi
 #+end_src
 
 Quote:
 
 #+begin_src tex
+\ifPhotoEnabled
 \SetHorizontalCoffin\@wall@quote{%
   \placeholder[fill=quote-frame]{}{%
     \begin{minipage}{\linewidth}%
@@ -1751,6 +1760,7 @@ Quote:
     \end{minipage}%
   }%
 }
+\fi
 #+end_src
 
 Notepad:
@@ -1833,6 +1843,7 @@ Calendar:
 *** Join the coffins
 
 #+begin_src tex
+\ifPhotoEnabled
 \@wall@photo@setYOffset
 
 \pgfkeys{/Photo/#2/xOffset/.get=\@val}
@@ -1848,6 +1859,7 @@ Calendar:
 \setlength{\@t@yOffset}{\@val}
 
 \JoinCoffins*\@wall@photoPageWrap[l,t]\@wall@quote[l,t](\@t@xOffset, \@t@yOffset)
+\fi
 
 % Calendar is aligned to the top of the notes page.
 
@@ -1863,8 +1875,10 @@ Calendar:
 *** Typeset
 
 #+begin_src tex
+\ifPhotoEnabled
 \clearpage
 \TypesetCoffin\@wall@photoPageWrap%
+\fi
 \clearpage
 \TypesetCoffin\@wall@notesPageWrap%
 }% \@wall@photoAndNotesLayout
