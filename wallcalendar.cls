@@ -1221,13 +1221,13 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
 \end{tikzpicture}
 }
 
-\setlength{\@t@calendar@height}{\@t@calendar@minimumHeight + \@t@bleed}
+\setlength{\@t@calendar@height}{\@t@calendar@minimumHeight}
 
 % See if there was a height given in the options
 \pgfkeys{/Calendar/#2/minimum height/.get=\@val}
 \ifx\@val\empty \relax
 \else
-  \setlength{\@t@calendar@height}{\@val + \@t@bleed}
+  \setlength{\@t@calendar@height}{\@val}
 \fi
 
 \setlength{\@tmp@a}{\@t@calendar@verticalSpacing}
@@ -1239,7 +1239,7 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
 
 % NOTE: the -4pt and -2pt offset is somehow necessary for the sides to align
 % with the edges
-\setlength{\@t@rightOffset}{\@t@bleed +\@t@calendar@hmargin -4pt}
+\setlength{\@t@rightOffset}{\@t@calendar@hmargin -4pt}
 \setlength{\@t@minipageWidth}{\calPaperWidth -2\@t@calendar@hmargin -2pt}
 
 \setlength{\@t@calendar@dayXshift}{0.1428\@t@minipageWidth}% 1/7 = 0.1428
@@ -1292,7 +1292,7 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
 \node (bg) [
   fill = calendarbg,
   opacity = 1,
-  minimum width = {\calPaperWidth + 2\@t@bleed},
+  minimum width = {\calPaperWidth},
   anchor=north west,
   /Calendar/#2/bg,
   % override the style, in case bleed was set above
