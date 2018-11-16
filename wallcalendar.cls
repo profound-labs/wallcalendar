@@ -36,6 +36,7 @@
 \newif\ifshowframe
 \newif\iftranslationsAutoload
 \newif\ifloadBabel
+\newif\ifGridSurround
 
 \pgfkeys{
   /wall/.is family, /wall,
@@ -67,6 +68,7 @@
   markDefaultsCsv/.initial = {},
   varnishmask/.is if = varnishmask,
   showframe/.is if = showframe,
+  gridSurround/.is if = GridSurround,
   imageFolder/.store in = \@wall@imageFolder,
   paperWidth/.code = {\setlength{\calPaperWidth}{#1}},
   paperHeight/.code = {\setlength{\calPaperHeight}{#1}},
@@ -1424,12 +1426,6 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
 \newcount\gridLines
 \newcount\n
 
-\newif\ifGridNoSurround
-\GridNoSurroundfalse
-
-\tikzstyle{no grid surround}=[execute before day scope={\GridNoSurroundtrue}]
-\tikzstyle{grid surround}=[execute before day scope={\GridNoSurroundfalse}]
-
 \tikzstyle{days grid}=[%
   execute before day scope={%
     \ifdate{day of month=1}{%
@@ -1464,8 +1460,7 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
       % Horizontal lines
       %
       \gridLines=\gridRows
-      \ifGridNoSurround\relax
-      \else
+      \ifGridSurround
         \advance\gridLines by 1
         \n=0
         \draw [
@@ -1489,8 +1484,7 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
       % Vertical lines
       %
       \gridLines=7
-      \ifGridNoSurround\relax
-      \else
+      \ifGridSurround
         \advance\gridLines by 1
         \n=0
         \draw [
@@ -1514,7 +1508,8 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
       % If we are not drawing the surrounding lines, it looks better to hide
       % some of the top and bottom edges
       %
-      \ifGridNoSurround
+      \ifGridSurround\relax
+      \else
         \draw [
           color=white,
           line width=6pt,
@@ -1551,7 +1546,6 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
 ]
 
 \tikzstyle{betelgeuse}=[
-  no grid surround,
   days grid,
   week list,
   day xshift=\@t@calendar@dayXshift,
@@ -1575,7 +1569,6 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
 }
 
 \tikzstyle{rigel}=[
-  no grid surround,
   days grid,
   week list,
   day xshift=\@t@calendar@dayXshift,
