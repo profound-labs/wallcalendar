@@ -337,6 +337,71 @@
       \setlength{\@t@yOffset}{\@t@calendar@height + \@t@bleed}%
     }%
   },
+  left/.code = {%
+    \def\@wall@photo@putPhoto##1{%
+      \begin{minipage}[t][\height][b]{\calPaperWidth + 6mm}%
+        \raggedright
+        
+        \includegraphics[width=0.66\calPaperWidth + 3mm]{##1}%
+
+        \vfill\mbox{}%
+      \end{minipage}%
+    }%
+    \def\@wall@photo@setYOffset{}%
+  },
+  right/.code = {%
+    \def\@wall@photo@putPhoto##1{%
+      \begin{minipage}[t][\height][b]{\calPaperWidth + 6mm}%
+        \raggedleft
+        
+        \includegraphics[width=0.66\calPaperWidth + 3mm]{##1}%
+
+        \vfill\mbox{}%
+      \end{minipage}%
+    }%
+    \def\@wall@photo@setYOffset{}%
+  },
+}
+
+\def\@wall@quote@putQuote#1{#1}
+
+\pgfkeys{
+  /put quote/.is family, /put quote,
+  simple/.code = {%
+    \def\@wall@quote@putQuote##1{%
+      ##1%
+    }%
+  },
+  left/.code = {%
+    \def\@wall@quote@putQuote##1{%
+      \begin{minipage}[b][0.5\calPaperHeight][t]{\calPaperWidth + 6mm}%
+        \raggedright%
+        \mbox{}\vfill%
+        
+        \hspace*{8mm}%
+        \begin{minipage}{0.33\calPaperWidth - 10mm}%
+          \raggedleft%
+          \quoteFmt%
+          ##1%
+        \end{minipage}%
+      \end{minipage}%
+    }%
+  },
+  right/.code = {%
+    \def\@wall@quote@putQuote##1{%
+      \begin{minipage}[b][0.5\calPaperHeight][t]{\calPaperWidth + 6mm}%
+        \raggedleft%
+        \mbox{}\vfill%
+
+        \begin{minipage}{0.33\calPaperWidth - 10mm}%
+          \raggedright%
+          \quoteFmt%
+          ##1%
+        \end{minipage}%
+        \hspace*{8mm}%
+      \end{minipage}%
+    }%
+  },
 }
 
 \newif\ifPhotoEnabled
@@ -596,11 +661,13 @@
   /MonthPage/.is family, /MonthPage,
   layout/.style = {layout handlers/#1/.get = \@wall@month@doLayout},
   put photo/.style = {/put photo/#1},
-  defaults/.style = {layout = small landscape, put photo = simple},
+  put quote/.style = {/put quote/#1},
+  defaults/.style = {layout = small landscape, put photo = simple, put quote = simple},
   layout handlers/.cd,
     full page/.initial = \@wall@fullPageLayout,
     small landscape/.initial = \@wall@smallLandscapeLayout,
     photo and notes/.initial = \@wall@photoAndNotesLayout,
+    large calendar/.initial = \@wall@largeCalendarLayout,
 }
 
 \newcommand\MonthPage[2][]{%
@@ -795,6 +862,7 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
 \newcommand*\headingFmt{}%
 \newcommand*\calendarFmt{}%
 \newcommand*\eventsFmt{}%
+\newcommand*\dayLetterTextFmt[1]{#1}
 
 \newcommand\@wall@layout@reset{%
   \renewcommand*\monthFmt{}%
@@ -1174,8 +1242,6 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
 
   \end{minipage}%
 }
-  
-\newcommand*\dayLetterTextFmt[1]{#1}
 
 \newcommand\photoAndNotesFmt{%
   \renewcommand*\monthFmt{\LARGE}%
@@ -1384,6 +1450,187 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
 }% \@wall@photoAndNotesLayout
 
 \newcommand*{\tikzMonthCalendar@photoAndNotes}[1]{%
+\pgfkeys{/Events/\monthName{#1}/marks/.get=\@eventmarks}%
+\calendar (cal#1) [rigel, dates=\CalendarYear-#1-01 to \CalendarYear-#1-last] \@eventmarks;%
+}
+
+\newcommand\largeCalendarFmt{%
+  \renewcommand*\monthFmt{\LARGE}%
+  \renewcommand*\yearFmt{\LARGE}%
+  \renewcommand*\dayLetterColor{}%
+  \renewcommand*\dayLetterFmt{\small}%
+  \renewcommand*\dayLetterTextFmt[1]{\tiny\textls*{\MakeUppercase{##1}}}%
+  \renewcommand*\dayTextFmt{\small}%
+  \renewcommand*\quoteFmt{}%
+  \renewcommand*\headingFmt{\centering}%
+  \renewcommand*\calendarFmt{\centering}%
+  \renewcommand*\eventsFmt{\setlength{\parindent}{0pt}\raggedright\fontsize{6}{8}\selectfont}%
+  \setlength{\@t@calendar@minimumHeight}{112mm}%
+  \setlength{\@t@calendar@hmargin}{20pt}%
+  % white space to allow:
+  % - month and year label
+  % - notepad area
+  % - extra white space
+  \setlength{\@t@calendar@verticalSpacing}{30mm}%
+}
+
+\newcommand\@wall@largeCalendarLayout[2][]{%
+\makeatletter
+\renewcommand*\theMonthName{#2}
+\@wall@layout@reset
+\largeCalendarFmt
+
+\pgfkeys{/Photo/#2/bleed/.get=\@val}
+\setlength{\@t@bleed}{\@val}
+
+\def\@t@monthnum{\monthToNum{#2}}
+
+\settowidth{\@tmp@z}{%
+\begin{tikzpicture}
+  \calendar [
+    dates=\CalendarYear-\@t@monthnum-01 to \CalendarYear-\@t@monthnum-last,
+    execute at begin day scope={
+      \ifdate{six rows month}{\global\sixrowsmonthtrue}{\global\sixrowsmonthfalse}
+    },
+  ];
+\end{tikzpicture}
+}
+
+\setlength{\@t@calendar@height}{\@t@calendar@minimumHeight + \@t@bleed}
+
+% See if there was a height given in the options
+\pgfkeys{/Calendar/#2/minimum height/.get=\@val}
+\ifx\@val\empty \relax
+\else
+  \setlength{\@t@calendar@height}{\@val + \@t@bleed}
+\fi
+
+\setlength{\@tmp@a}{\@t@calendar@verticalSpacing}
+\setlength{\@tmp@b}{\@t@calendar@height -\@tmp@a}
+\setlength{\@t@calendar@dayYshift}{0.1666\@tmp@b}% 1/6 = 0.1666
+
+\setlength{\@t@calendar@gridHeightSixRows}{\@tmp@b}
+\setlength{\@t@calendar@gridHeightFiveRows}{\@tmp@b -0.1666\@tmp@b}
+
+% NOTE: the -4pt and -2pt offset is somehow necessary for the sides to align
+% with the edges
+\setlength{\@t@rightOffset}{\@t@bleed +\@t@calendar@hmargin -4pt}
+\setlength{\@t@minipageWidth}{\calPaperWidth -2\@t@calendar@hmargin -2pt}
+
+\setlength{\@t@calendar@dayXshift}{0.1428\@t@minipageWidth}% 1/7 = 0.1428
+
+\SetHorizontalCoffin\@wall@pageWrap{%
+  \color{white}%
+  \rule{\textwidth}{0pt}%
+  \rule{0pt}{\textheight}%
+}
+
+\pgfkeys{/Photo/#2/file/.get=\@t@file}
+
+\SetHorizontalCoffin\@wall@photo{%
+  \placeholder[fill=photo-frame]{hasvarnish}{%
+    \@wall@photo@putPhoto{\@t@file}%
+  }%
+}
+
+\SetHorizontalCoffin\@wall@quote{%
+\ifvarnishmask\relax
+\else
+  \placeholder[fill=quote-frame]{}{%
+    \pgfkeys{/Quote/#2/text/.get=\@val}%
+    \@wall@quote@putQuote{\@val}%
+  }%
+\fi
+}
+
+\SetHorizontalCoffin\@wall@calendar{%
+\ifvarnishmask\relax
+\else
+\begin{tikzpicture}
+
+\node (bg) [
+  fill = calendarbg,
+  opacity = 1,
+  minimum width = {\calPaperWidth + 2\@t@bleed},
+  anchor=north west,
+  /Calendar/#2/bg,
+  % override the style, in case bleed was set above
+  minimum height = {\@t@calendar@height},
+] at (0,0) {};
+
+\node (heading) [
+  below right=10pt and {\@t@rightOffset} of bg.north west,
+  anchor=north west,
+] {%
+\placeholder[fill=heading-frame]{}{%
+\begin{minipage}{\@t@minipageWidth}%
+\headingFmt
+{\monthFmt\@tr@monthNumName{\@t@monthnum}}
+\hfill
+\strcmpblank{\CalendarAltYear}{%
+   {\yearFmt\CalendarYear}%
+}{%
+  {\yearFmt\CalendarYear/\CalendarAltYear}%
+}%
+\end{minipage}%
+}%
+};
+
+\node (calendar) [
+  below right=35pt and {\@t@rightOffset} of bg.north west,
+  anchor=north west,
+] {%
+\placeholder[fill=calendar-frame]{}{%
+\begin{minipage}{\@t@minipageWidth}%
+\calendarFmt
+\hspace*{-5pt}% FIXME
+\tikz{\tikzMonthCalendar@largeCalendar{\@t@monthnum};}%
+\end{minipage}%
+}%
+};
+
+\node (events) [
+  below=105mm of bg.north,
+  anchor=north,
+] {%
+\placeholder[fill=events-frame]{}{%
+\begin{minipage}{\@t@minipageWidth}%
+\eventsFmt
+\pgfkeys{/Events/#2/text/.get=\@val}%
+\@val%
+\end{minipage}%
+}%
+};
+
+\end{tikzpicture}%
+\fi
+}% \SetHorizontalCoffin
+
+\@wall@photo@setYOffset
+
+\pgfkeys{/Photo/#2/xOffset/.get=\@val}
+\addtolength{\@t@xOffset}{\@val}
+\pgfkeys{/Photo/#2/yOffset/.get=\@val}
+\addtolength{\@t@yOffset}{\@val}
+
+\JoinCoffins*\@wall@pageWrap[l,t]\@wall@photo[l,t](-\spinemargin -\@t@bleed + \@t@xOffset, \uppermargin + \@t@bleed + \@t@yOffset)
+
+\pgfkeys{/Quote/#2/xOffset/.get=\@val}
+\setlength{\@t@xOffset}{\@val}
+\pgfkeys{/Quote/#2/yOffset/.get=\@val}
+\setlength{\@t@yOffset}{\@val}
+
+\JoinCoffins*\@wall@pageWrap[l,t]\@wall@quote[l,t](-\spinemargin -\@t@bleed + \@t@xOffset, \uppermargin + \@t@bleed + \@t@yOffset)
+                                                                
+\JoinCoffins*\@wall@pageWrap[l,b]\@wall@calendar[l,t](-\spinemargin -\@t@bleed, \textheight +\uppermargin -\paperheight -\@t@bleed +\@t@calendar@height +10mm)
+                                                          
+\makeatother
+
+\clearpage
+\TypesetCoffin\@wall@pageWrap%
+}% \@wall@largeCalendarLayout
+
+\newcommand*{\tikzMonthCalendar@largeCalendar}[1]{%
 \pgfkeys{/Events/\monthName{#1}/marks/.get=\@eventmarks}%
 \calendar (cal#1) [rigel, dates=\CalendarYear-#1-01 to \CalendarYear-#1-last] \@eventmarks;%
 }
