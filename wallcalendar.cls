@@ -1562,7 +1562,7 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
 ] at (0,0) {};
 
 \node (heading) [
-  below right=10pt and {\@t@rightOffset} of bg.north west,
+  below right=2pt and {\@t@rightOffset} of bg.north west,
   anchor=north west,
 ] {%
 \placeholder[fill=heading-frame]{}{%
