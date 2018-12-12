@@ -442,7 +442,9 @@ argument.
       \begin{minipage}[t][\height][b]{\calPaperWidth + 6mm}%
         \raggedright
         
-        \includegraphics[width=0.66\calPaperWidth + 3mm]{##1}%
+        \placeholder[fill=photo-frame]{hasvarnish}{%
+          \includegraphics[width=0.66\calPaperWidth + 3mm]{##1}%
+        }%
 
         \vfill\mbox{}%
       \end{minipage}%
@@ -454,7 +456,9 @@ argument.
       \begin{minipage}[t][\height][b]{\calPaperWidth + 6mm}%
         \raggedleft
         
-        \includegraphics[width=0.66\calPaperWidth + 3mm]{##1}%
+        \placeholder[fill=photo-frame]{hasvarnish}{%
+          \includegraphics[width=0.66\calPaperWidth + 3mm]{##1}%
+        }%
 
         \vfill\mbox{}%
       \end{minipage}%
@@ -2086,9 +2090,8 @@ Photo:
 \pgfkeys{/Photo/#2/file/.get=\@t@file}
 
 \SetHorizontalCoffin\@wall@photo{%
-  \placeholder[fill=photo-frame]{hasvarnish}{%
-    \@wall@photo@putPhoto{\@t@file}%
-  }%
+  % Varnishmask placeholder is in 'put photo/left' and 'put photo/right'.
+  \@wall@photo@putPhoto{\@t@file}%
 }
 #+end_src
 

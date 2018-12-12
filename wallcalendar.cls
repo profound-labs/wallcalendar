@@ -342,7 +342,9 @@
       \begin{minipage}[t][\height][b]{\calPaperWidth + 6mm}%
         \raggedright
         
-        \includegraphics[width=0.66\calPaperWidth + 3mm]{##1}%
+        \placeholder[fill=photo-frame]{hasvarnish}{%
+          \includegraphics[width=0.66\calPaperWidth + 3mm]{##1}%
+        }%
 
         \vfill\mbox{}%
       \end{minipage}%
@@ -354,7 +356,9 @@
       \begin{minipage}[t][\height][b]{\calPaperWidth + 6mm}%
         \raggedleft
         
-        \includegraphics[width=0.66\calPaperWidth + 3mm]{##1}%
+        \placeholder[fill=photo-frame]{hasvarnish}{%
+          \includegraphics[width=0.66\calPaperWidth + 3mm]{##1}%
+        }%
 
         \vfill\mbox{}%
       \end{minipage}%
@@ -1528,9 +1532,8 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
 \pgfkeys{/Photo/#2/file/.get=\@t@file}
 
 \SetHorizontalCoffin\@wall@photo{%
-  \placeholder[fill=photo-frame]{hasvarnish}{%
-    \@wall@photo@putPhoto{\@t@file}%
-  }%
+  % Varnishmask placeholder is in 'put photo/left' and 'put photo/right'.
+  \@wall@photo@putPhoto{\@t@file}%
 }
 
 \SetHorizontalCoffin\@wall@quote{%
