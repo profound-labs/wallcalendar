@@ -11,6 +11,7 @@ A wall calendar class with custom layouts and support for internationalization.
         - [TeXLive](#texlive)
         - [Using from a git clone](#using-from-a-git-clone)
         - [As a local package](#as-a-local-package)
+    - [Overleaf examples](#overleaf-examples)
     - [Frequently Asked Questions](#frequently-asked-questions)
     - [Back matter](#back-matter)
 
@@ -80,21 +81,17 @@ the project root will try to install it at `$TEXMFHOME/tex`.
 
 ## Overleaf examples
 
-On overleaf, keep in mind that you have to set the compiler to 'LuaLatex' in the
-project settings sidebar.
+Set the compiler to `LuaLaTeX` in the project settings sidebar.
 
-I've setup an example project on Overleaf, have a look. It includes setting up a
-custom font.
+Example using Photo and Notes layout, `wallcalendar v1.4`:
 
-The photo background (Bombadil) example is a bit complicated but you can easily
-remove that part.
+- [Project](https://www.overleaf.com/read/hzjpfdmspwds)
+- [Github repo](https://github.com/profound-labs/wallcalendar-photo-and-notes-overleaf)
 
-https://www.overleaf.com/read/hzjpfdmspwds
+Example using single page layouts, `wallcalendar v1.4`:
 
-Or on github:
-
-https://github.com/profound-labs/wallcalendar-photo-and-notes-overleaf
-
+- [Project](https://www.overleaf.com/read/kjpcxcsmxkjc)
+- [Github repo](https://github.com/profound-labs/wallcalendar-portrait-layouts-overleaf)
 
 ## Frequently Asked Questions
 
