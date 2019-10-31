@@ -1841,6 +1841,17 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
   },
 ]
 
+\tikzstyle{aldebaran}=[
+  days grid,
+  week list,
+  day xshift=\@t@calendar@dayXshift,
+  day yshift=\@t@calendar@dayYshift,
+  day letter headings,
+  day heading/.style={black!90, yshift={-0.3\@t@calendar@dayYshift}},
+  every day/.append style={anchor=base, inner xsep=0pt, yshift={-0.25\baselineskip}},
+  day text={\dayTextFmt\%d-},
+]
+
 \tikzstyle{alnitak}=[
   day list right,
   day xshift={0pt},

@@ -2460,6 +2460,21 @@ Command to print day number, so that it can be reused outside the day code block
 ]
 #+end_src
 
+*** Aldebaran, like Rigel but without heading bg bar
+
+#+begin_src tex
+\tikzstyle{aldebaran}=[
+  days grid,
+  week list,
+  day xshift=\@t@calendar@dayXshift,
+  day yshift=\@t@calendar@dayYshift,
+  day letter headings,
+  day heading/.style={black!90, yshift={-0.3\@t@calendar@dayYshift}},
+  every day/.append style={anchor=base, inner xsep=0pt, yshift={-0.25\baselineskip}},
+  day text={\dayTextFmt\%d-},
+]
+#+end_src
+
 *** Alnitak, days in one line
 
 (Zeta Orionis)
