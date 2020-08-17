@@ -2140,9 +2140,11 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
     %
     \ifnum\pgfcalendarcurrentweekday=0
       \node [
-        anchor = mid,
-        xshift = -20pt,
-      ] {\plannerCompactWeekNumFmt \the\weeknum.};
+        anchor = east,
+        xshift = -13pt,
+        yshift = -0.5pt,
+        inner sep = 0pt,
+      ] {\parbox{6mm}{\centering\plannerCompactWeekNumFmt \the\weeknum.}};
       \advance\weeknum by 1
     \fi
     % When first week doesn't start on Monday
@@ -2150,9 +2152,11 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
       \ifnum\pgfcalendarcurrentweekday=0\relax
       \else
         \node [
-          anchor = mid,
-          xshift = -20pt,
-        ] {\plannerCompactWeekNumFmt \the\weeknum.};
+          anchor = east,
+          xshift = -13pt,
+          yshift = -0.5pt,
+          inner sep = 0pt,
+        ] {\parbox{6mm}{\centering\plannerCompactWeekNumFmt \the\weeknum.}};
         \advance\weeknum by 1
       \fi
     }{}%
