@@ -38,7 +38,7 @@ The \textbf{User Guide} is in \texttt{wallcalendar.pdf}. Clone or download from 
 %
 % A wall calendar document class with custom layouts and support for internationalization.
 %
-% (c) Gambhiro Bhikkhu, 2018
+% (c) Gambhiro Bhikkhu, 2020
 % gambhiro.bhikkhu.85@gmail.com
 %
 % LPPL LaTeX Public Project License
@@ -48,7 +48,7 @@ The \textbf{User Guide} is in \texttt{wallcalendar.pdf}. Clone or download from 
 
 #+begin_src tex
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{wallcalendar}[2018/11/10 v1.4.0 A wall calendar document class with custom layouts and support for internationalization.]
+\ProvidesClass{wallcalendar}[2020/01/05 v1.5.0 A wall calendar document class with custom layouts and support for internationalization.]
 #+end_src
 
 * Preliminary Declarations
@@ -59,6 +59,8 @@ The \textbf{User Guide} is in \texttt{wallcalendar.pdf}. Clone or download from 
 
 \newlength\calPaperWidth
 \newlength\calPaperHeight
+\newlength\calTextWidth
+\newlength\calTextHeight
 \newlength\@wall@leftMargin
 \newlength\@wall@rightMargin
 \newlength\@wall@topMargin
@@ -299,6 +301,9 @@ Paper sizes and ratios.
 \checkandfixthelayout% This will typeout values in pt.
 \settypeoutlayoutunit{mm}% It is useful to see layout values in mm too.
 \typeoutlayout
+ 
+\setlength{\calTextWidth}{\calPaperWidth - \@wall@leftMargin - \@wall@rightMargin}
+\setlength{\calTextHeight}{\calPaperHeight - \@wall@topMargin - \@wall@bottomMargin}
 #+end_src
 
 ** Base font sizes and indents
@@ -2710,6 +2715,154 @@ Command to print day number, so that it can be reused outside the day code block
   },
 ]
 #+end_src
+
+*** Year Planner Compact
+
+#+begin_src tex
+\newcommand\pf{}
+\newcommand\plannerCompactDayFmt{\fontsize{9}{9}\selectfont}
+\newcommand\plannerCompactMonthFmt{\fontsize{10}{10}\selectfont\color{darkgold}}
+\newcommand\plannerCompactYearFmt{\plannerCompactMonthFmt}
+\newcommand\plannerCompactWeekNumFmt{\itshape\fontsize{7}{7}\selectfont\color{textbody}}
+
+\newcommand*\plannerCompactDateDayFormat[1]{\fontsize{8}{11}\selectfont #1}
+ 
+\newcommand\plannerCompactBeginDayScopeHook{%
+  \ifdate{weekend}{\color{weekend}}{\color{weekday}}
+}
+
+\newcount\weeknum
+  
+\tikzstyle{year planner compact}=[
+  week list,
+  month yshift=0pt,
+  day text={\plannerCompactDayFmt\%d-},
+  every day/.style={anchor=mid},%
+  %
+  execute before day scope={%
+    %
+    % Month corner node
+    %
+    \ifdate{day of month=1}{%
+      \node (month-\pgfcalendarcurrentmonth-top-left) {};
+    }{}
+    %
+    % Year number
+    %
+    \ifdate{equals=01-01}{%
+      \node [
+        above left = \tikz@lib@cal@yshift and 35pt of month-01-top-left.north west,
+        inner sep = 0pt,
+        anchor = south east,
+      ] {\plannerCompactYearFmt\CalendarYear};%
+    }{}
+    %
+    % Weekday headers in January
+    %
+    \ifdate{equals=01-01}{%
+      \weeknum=1
+      \pgfmathsetlength\pgf@xa{\tikz@lib@cal@xshift}%
+      \pgfmathsetlength\pgf@ya{\tikz@lib@cal@yshift}%
+      \foreach \d in {0,1,2,3,4,5,6} {%
+        \pgf@xa=\d\pgf@xa%
+        \pgftransformxshift{\pgf@xa}%
+        \pgftransformyshift{\pgf@ya}%
+        \pgftransformyshift{4pt}%
+        \node (d\d) [anchor=base, inner sep=0pt] {%
+          \ifnum\d=5
+            \plannerCompactDateDayFormat{\color{weekend}\@tr@dayLetter{\d}}%
+          \else
+            \ifnum\d=6
+              \plannerCompactDateDayFormat{\color{weekend}\@tr@dayLetter{\d}}%
+            \else
+              \plannerCompactDateDayFormat{\@tr@dayLetter{\d}}%
+            \fi
+          \fi
+        };%
+      };%
+    }{}%
+    %
+    % Week number
+    %
+    \ifnum\pgfcalendarcurrentweekday=0
+      \node [
+        anchor = east,
+        xshift = -13pt,
+        yshift = -0.5pt,
+        inner sep = 0pt,
+      ] {\parbox{6mm}{\centering\plannerCompactWeekNumFmt \the\weeknum.}};
+      \advance\weeknum by 1
+    \fi
+    % When first week doesn't start on Monday
+    \ifdate{equals=01-01}{%
+      \ifnum\pgfcalendarcurrentweekday=0\relax
+      \else
+        \node [
+          anchor = east,
+          xshift = -13pt,
+          yshift = -0.5pt,
+          inner sep = 0pt,
+        ] {\parbox{6mm}{\centering\plannerCompactWeekNumFmt \the\weeknum.}};
+        \advance\weeknum by 1
+      \fi
+    }{}%
+  },%
+  %
+  execute at begin day scope={%
+    %
+    % Month name
+    %
+    \ifdate{day of month=1}{%
+      \node [
+        below left = 0pt and 35pt of month-\pgfcalendarcurrentmonth-top-left.north west,
+        inner sep = 0pt,
+        anchor = north west,
+        rotate = -90,
+      ] {%
+        \plannerCompactMonthFmt\@tr@monthNumName{\pgfcalendarcurrentmonth}%
+      };
+    }{}
+    %
+    % Draw border lines between months
+    %
+    \ifdate{day of month=1}{%
+      \ifdate{equals=01-01}{%
+        % Don't draw border in January
+      }{%
+        \pgfmathsetlength\pgf@xa{\tikz@lib@cal@xshift}
+        \pgfmathsetlength\pgf@ya{\tikz@lib@cal@yshift}
+        %
+        % No bottom and left edge on Mondays
+        \ifnum\pgfcalendarcurrentweekday=0\relax
+        \else
+          %
+          % Bottom border, from left side to the number
+          \n=\pgfcalendarcurrentweekday
+          \draw [
+            gridcolor,
+            line width = 0.5pt,
+          ] ({-\n\pgf@xa -0.5\pgf@xa}, -0.5\pgf@ya) -- (-0.5\pgf@xa, -0.5\pgf@ya);
+          % Vertical edge on the left side of the number
+          \draw [
+            gridcolor,
+            line width = 0.5pt,
+          ] (-0.5\pgf@xa, 0.5\pgf@ya + 0.25pt) -- (-0.5\pgf@xa, -0.5\pgf@ya - 0.25pt);
+        \fi
+        %
+        % Top border, from the number to the right side
+        \advance \n by -6
+        \draw [
+          gridcolor,
+          line width = 0.5pt,
+        ] (-0.5\pgf@xa, 0.5\pgf@ya) -- ({-\n\pgf@xa +0.5\pgf@xa}, 0.5\pgf@ya);
+      }%
+    }{}%
+    %
+    \plannerCompactBeginDayScopeHook
+  },
+]
+#+end_src
+
 ** Helpers
 
 #+begin_src tex
@@ -2920,6 +3073,21 @@ yearMarksNote(tonumber(\CalendarYear), nil, \luastring{\plannerMarksNoteCSV}, \l
 \end{minipage}%
 \end{minipage}%
 }}}
+#+end_src
+
+** \textbackslash YearPlannerCompact
+   
+#+begin_src tex
+\newcommand\YearPlannerCompact{%
+\@wall@usePlannerMoons%
+\begin{tikzpicture}%
+  \calendar (cal) [
+    year planner compact,
+    dates=\CalendarYear-01-01 to \CalendarYear-12-31,
+  ] \@wall@plmYear;
+  \@wall@plNotesOneCalendar
+\end{tikzpicture}%
+}
 #+end_src
 
 * Title page

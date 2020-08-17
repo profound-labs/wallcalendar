@@ -8,7 +8,7 @@ all:
 
 test: ./diff-cal.sh
 
-calendars: cal-plain.pdf cal-showtrims.pdf cal-showframe.pdf cal-varnishmask.pdf cal-translations cal-marks.pdf cal-photo-and-notes.pdf cal-year-planner.pdf cal-thumbnails.pdf
+calendars: cal-translations cal-plain.pdf cal-showtrims.pdf cal-showframe.pdf cal-varnishmask.pdf cal-marks.pdf cal-photo-and-notes.pdf cal-year-planner.pdf cal-year-compact.pdf cal-thumbnails.pdf
 
 bursts: cal-plain-burst cal-showtrims-burst cal-showframe-burst cal-varnishmask-burst
 

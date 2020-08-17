@@ -1,0 +1,118 @@
+\documentclass[
+  year = 2018,
+  eventsCsv = ./data/holidays-compact.csv,
+  markDefaultsCsv = ./data/mark_defaults.csv,
+  imageFolder = ./photos/,
+  a4Paper,
+  hMargin = 7mm,
+  topMargin = 7mm,
+  bottomMargin = 7mm,
+]{wallcalendar}
+
+\makeatletter
+
+\usepackage{fontspec}
+\defaultfontfeatures{Ligatures={TeX}}
+
+\setmainfont{Alegreya Sans}
+
+% Use two CSV files for day text input to include the moon phases
+\renewcommand\@wall@plmYear{%
+\luadirect{
+require("wallcalendar-helpers.lua")
+yearMarksDayText(tonumber(\CalendarYear), nil, \luastring{\plannerMarksDayTextCSV})
+yearMarksDayText(tonumber(\CalendarYear), nil, \luastring{./data/moonphases-2018.csv})
+tex.sprint(';')
+}}
+
+\newcommand\preYearPlannerPageHook{%
+  \setlength{\markNumberAbove}{-9pt}%
+  \setlength{\markNumberRight}{-6pt}%
+  \setlength{\markDayTextAbove}{-11pt}%
+  \setlength{\markDayTextRight}{-6pt}%
+}
+
+\newcommand\postYearPlannerPageHook{%
+  \setlength{\markNumberAbove}{-10pt}%
+  \setlength{\markNumberRight}{-3pt}%
+  \setlength{\markDayTextAbove}{-10pt}%
+  \setlength{\markDayTextRight}{-3pt}%
+}
+
+\definecolor{textbody}{gray}{0}
+\definecolor{plannerdatenum}{gray}{0}
+\definecolor{weekday}{gray}{0}
+\definecolor{weekend}{gray}{0.4}
+
+\renewcommand\pf{\fontsize{8}{8}\selectfont}
+\renewcommand\plannerCompactDayFmt{\fontsize{9}{9}\selectfont}
+
+\renewcommand\plannerCompactMonthFmt{\bfseries\fontsize{10}{10}\selectfont\color{white}}
+\renewcommand\plannerCompactWeekNumFmt{\itshape\fontsize{7}{7}\selectfont\color{plannerdatenum}}
+
+\renewcommand*\plannerMoonFormat[1]{{\fontsize{10}{10}\selectfont\raisebox{-0.5pt}{#1}}}
+\renewcommand\monthMarkFmt{\fontsize{7}{9}\selectfont\color{textbody}}
+
+%\renewcommand\plannerCompactBeginDayScopeHook{}
+
+\makeatother
+
+\begin{document}
+
+% Background rectangles
+\AddToShipoutPictureBG*{\put(\LenToUnit{-3mm},\LenToUnit{-3mm})%
+  {\begin{minipage}[b]{80mm}%
+    \begin{tikzpicture}%
+      % Days background
+      \node (days-bg) [
+        minimum height = \calPaperHeight + 6mm,
+        minimum width = 70mm,
+        fill = white,
+        inner sep = 0pt,
+        rectangle,
+      ] {};
+      % Week numbers background
+      \node [
+        above right = 0pt and 0pt of days-bg.south west,
+        anchor = south west,
+        minimum height = \calPaperHeight + 6mm,
+        minimum width = 26mm,
+        % draw = none,
+        fill = black!10,
+        inner sep = 0pt,
+        rectangle,
+      ] {};
+      % Months background
+      \node [
+        above right = 0pt and 0pt of days-bg.south west,
+        anchor = south west,
+        minimum height = \calPaperHeight + 6mm,
+        minimum width = 19.5mm,
+        %draw = none,
+        fill = black!20,
+        inner sep = 0pt,
+        rectangle,
+      ] {};
+    \end{tikzpicture}%
+  \end{minipage}}%
+}%
+
+\preYearPlannerPageHook
+\noindent
+\begin{minipage}[c][\calTextHeight][c]{0.35\linewidth}%
+  \fontsize{10.6}{10.6}\selectfont
+  \YearPlannerCompact%
+\end{minipage}%
+\begin{minipage}[c][\calTextHeight][c]{0.65\linewidth}%
+  \raggedright
+  \mbox{}
+
+  \vfill
+
+  \fontsize{10}{10}\selectfont
+  \plannerEvents
+
+\end{minipage}%
+\postYearPlannerPageHook
+
+\end{document}
