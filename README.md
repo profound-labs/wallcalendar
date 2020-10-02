@@ -65,10 +65,6 @@ Files are in the [doc/examples](https://github.com/profound-labs/wallcalendar/tr
 
 ![cal-plain-03](doc/examples/cal-bursts/cal-plain-03.jpg)
 
-### No photos, with notes area
-
-![cal-no-photos](doc/examples/cal-no-photos.jpg)
-
 ### Landscape photo and notes on two pages
 
 [cal-photo-and-notes.tex](doc/examples/cal-photo-and-notes.tex)
@@ -77,31 +73,7 @@ Files are in the [doc/examples](https://github.com/profound-labs/wallcalendar/tr
 
 ![cal-photo-and-notes-photo](doc/examples/cal-photo-and-notes-photo.jpg)
 
-![cal-photo-and-notes-notes](doc/examples/cal-photo-and-notes-notes.jpg)
-
-### Showframe
-
-cal-showframe.tex
-
-### Showtrims (Cropmarks)
-
-cal-showtrims.tex
-
-### Varnishmask
-
-cal-varnishmask.tex
-
-### Thumbnails and captions
-
-cal-thumbnails.tex
-
-### Translations
-
-cal-translations-english.tex
-
-cal-translations-hungarian.tex
-
-cal-translations-japanese.tex
+![cal-photo-and-notes-calendar](doc/examples/cal-photo-and-notes-calendar.jpg)
 
 ### Year planners
 
@@ -116,6 +88,42 @@ cal-year-planner-landscape-grid.tex
 [cal-year-planner-compact.tex](doc/examples/cal-year-planner-compact.tex)
 
 ![cal-year-planner-compact](doc/examples/cal-year-planner-compact.jpg)
+
+### No photos, with notes area
+
+![cal-no-photos](doc/examples/cal-no-photos.jpg)
+
+### Showframe
+
+[cal-showframe.tex](doc/examples/cal-showframe.tex)
+
+![cal-showframe](doc/examples/cal-burst/cal-showframe-01.jpg)
+
+### Showtrims (Cropmarks)
+
+[cal-showtrims.tex](doc/examples/cal-showtrims.tex)
+
+![cal-showtrims](doc/examples/cal-burst/cal-showtrims-01.jpg)
+
+### Varnishmask
+
+[cal-varnishmask.tex](doc/examples/cal-varnishmask.tex)
+
+![cal-varnishmask](doc/examples/cal-burst/cal-varnishmask-01.jpg)
+
+### Thumbnails and captions
+
+[cal-thumbnails.tex](doc/examples/cal-thumbnails.tex)
+
+![cal-thumbnails](doc/examples/cal-thumbnails.jpg)
+
+### Translations
+
+cal-translations-english.tex
+
+cal-translations-hungarian.tex
+
+cal-translations-japanese.tex
 
 ## Overleaf examples
 
