@@ -51,7 +51,7 @@ Files are in the [doc/examples](https://github.com/profound-labs/wallcalendar/tr
 
 ### Portrait page
 
-[cal-plain.tex](doc/examples/plain.tex)
+[cal-plain.tex](doc/examples/cal-plain.tex)
 
 #### Full page photo, calendar days overlaid with opacity
 
@@ -91,7 +91,9 @@ cal-year-planner-landscape-grid.tex
 
 ### No photos, with notes area
 
-![cal-no-photos](doc/examples/cal-no-photos.jpg)
+[cal-no-photos.tex](doc/examples/cal-no-photos.tex)
+
+![cal-no-photos-01](doc/examples/cal-burst/cal-no-photos-01.jpg)
 
 ### Showframe
 
@@ -109,7 +111,7 @@ cal-year-planner-landscape-grid.tex
 
 [cal-varnishmask.tex](doc/examples/cal-varnishmask.tex)
 
-![cal-varnishmask](doc/examples/cal-burst/cal-varnishmask-01.jpg)
+![cal-varnishmask](doc/examples/cal-burst/cal-varnishmask-03.jpg)
 
 ### Thumbnails and captions
 
