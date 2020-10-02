@@ -55,15 +55,15 @@ Files are in the [doc/examples](https://github.com/profound-labs/wallcalendar/tr
 
 #### Full page photo, calendar days overlaid with opacity
 
-![cal-plain-01](doc/examples/cal-bursts/cal-plain-01.jpg)
+![cal-plain-01](doc/examples/cal-burst/cal-plain-01.jpg)
 
 #### Full page photo, photo above the calendar days
 
-![cal-plain-02](doc/examples/cal-bursts/cal-plain-02.jpg)
+![cal-plain-02](doc/examples/cal-burst/cal-plain-02.jpg)
 
 #### Small landscape photo, with a calendar grid
 
-![cal-plain-03](doc/examples/cal-bursts/cal-plain-03.jpg)
+![cal-plain-03](doc/examples/cal-burst/cal-plain-03.jpg)
 
 ### Landscape photo and notes on two pages
 
