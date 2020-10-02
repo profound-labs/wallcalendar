@@ -37,9 +37,99 @@ commented code documentation.
 
 The manual includes examples and tutorials, but you may also want to see the [doc/examples][examples] folder on Github.
 
-![wallcalendar layouts](./wallcalendar-layouts.png)
-
 [examples]: https://github.com/profound-labs/wallcalendar/tree/master/doc/examples
+
+## Examples
+
+Files are in the [doc/examples](https://github.com/profound-labs/wallcalendar/tree/master/doc/examples) folder.
+
+### Load custom event footnotes from CSV
+
+[cal-marks.tex](doc/examples/cal-marks.tex)
+
+![cal-marks](doc/examples/cal-marks.jpg)
+
+### Portrait page
+
+[cal-plain.tex](doc/examples/plain.tex)
+
+#### Full page photo, calendar days overlaid with opacity
+
+![cal-plain-01](doc/examples/cal-bursts/cal-plain-01.jpg)
+
+#### Full page photo, photo above the calendar days
+
+![cal-plain-02](doc/examples/cal-bursts/cal-plain-02.jpg)
+
+#### Small landscape photo, with a calendar grid
+
+![cal-plain-03](doc/examples/cal-bursts/cal-plain-03.jpg)
+
+### No photos, with notes area
+
+![cal-no-photos](doc/examples/cal-no-photos.jpg)
+
+### Landscape photo and notes on two pages
+
+[cal-photo-and-notes.tex](doc/examples/cal-photo-and-notes.tex)
+
+![cal-photo-and-notes-titlepage](doc/examples/cal-photo-and-notes-titlepage.jpg)
+
+![cal-photo-and-notes-photo](doc/examples/cal-photo-and-notes-photo.jpg)
+
+![cal-photo-and-notes-notes](doc/examples/cal-photo-and-notes-notes.jpg)
+
+### Showframe
+
+cal-showframe.tex
+
+### Showtrims (Cropmarks)
+
+cal-showtrims.tex
+
+### Varnishmask
+
+cal-varnishmask.tex
+
+### Thumbnails and captions
+
+cal-thumbnails.tex
+
+### Translations
+
+cal-translations-english.tex
+
+cal-translations-hungarian.tex
+
+cal-translations-japanese.tex
+
+### Year planners
+
+[cal-year-planner.tex](doc/examples/cal-year-planner.tex)
+
+![cal-year-planner](doc/examples/cal-year-planner.jpg)
+
+cal-year-planner-landscape-rows.tex
+
+cal-year-planner-landscape-grid.tex
+
+[cal-year-planner-compact.tex](doc/examples/cal-year-planner-compact.tex)
+
+![cal-year-planner-compact](doc/examples/cal-year-planner-compact.jpg)
+
+## Overleaf examples
+
+Set the compiler to `LuaLaTeX` in the project settings sidebar.
+
+Example using Photo and Notes layout, `wallcalendar v1.4`:
+
+- [Project](https://www.overleaf.com/read/hzjpfdmspwds)
+- [Github repo](https://github.com/profound-labs/wallcalendar-photo-and-notes-overleaf)
+
+Example using single page layouts, `wallcalendar v1.4`:
+
+- [Project](https://www.overleaf.com/read/kjpcxcsmxkjc)
+- [Github repo](https://github.com/profound-labs/wallcalendar-portrait-layouts-overleaf)
 
 ## Installing
 
@@ -78,20 +168,6 @@ lualatex -interaction=nonstopmode -halt-on-error ./new-calendar.tex
 
 If you wanted to install it as a local package, the `make local-install` task in
 the project root will try to install it at `$TEXMFHOME/tex`.
-
-## Overleaf examples
-
-Set the compiler to `LuaLaTeX` in the project settings sidebar.
-
-Example using Photo and Notes layout, `wallcalendar v1.4`:
-
-- [Project](https://www.overleaf.com/read/hzjpfdmspwds)
-- [Github repo](https://github.com/profound-labs/wallcalendar-photo-and-notes-overleaf)
-
-Example using single page layouts, `wallcalendar v1.4`:
-
-- [Project](https://www.overleaf.com/read/kjpcxcsmxkjc)
-- [Github repo](https://github.com/profound-labs/wallcalendar-portrait-layouts-overleaf)
 
 ## Frequently Asked Questions
 

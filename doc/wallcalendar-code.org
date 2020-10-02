@@ -48,7 +48,7 @@ The \textbf{User Guide} is in \texttt{wallcalendar.pdf}. Clone or download from 
 
 #+begin_src tex
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{wallcalendar}[2020/01/05 v1.5.0 A wall calendar document class with custom layouts and support for internationalization.]
+\ProvidesClass{wallcalendar}[2020/10/02 v1.5.0 A wall calendar document class with custom layouts and support for internationalization.]
 #+end_src
 
 * Preliminary Declarations

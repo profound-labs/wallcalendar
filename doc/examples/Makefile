@@ -12,6 +12,11 @@ calendars: cal-translations cal-plain.pdf cal-showtrims.pdf cal-showframe.pdf ca
 
 bursts: cal-plain-burst cal-showtrims-burst cal-showframe-burst cal-varnishmask-burst
 
+jpg: cal-marks.jpg
+
+%.jpg: %.pdf
+	./jpg-to-pdf.sh $<
+
 %.pdf: %.tex
 	$(LATEX) $(LATEX_OPTS) $<
 
