@@ -1,0 +1,51 @@
+\documentclass[
+  year = 2018,
+  eventsCsv = ./data/holidays-compact.csv,
+  markDefaultsCsv = ./data/mark_defaults.csv,
+  a4PaperLandscape,
+  hMargin = 5mm,
+  topMargin = 5mm,
+  bottomMargin = 5mm,
+]{wallcalendar}
+
+\makeatletter
+
+\definecolor{textbody}{gray}{0}
+
+\usepackage{fontspec}
+\defaultfontfeatures{Ligatures=TeX}
+
+\setmainfont{Alegreya Sans}
+
+\newfontfamily\AlegreyaSans{Alegreya Sans}
+
+\newfontfamily\AlegreyaSansExtraBold{Alegreya Sans Extra Bold}
+
+\SetTracking[spacing={350,100,}]{encoding=*, family=Alegreya Sans Extra Bold}{120}
+
+\renewcommand\plannerGridYearNumberFont{\AlegreyaSans}
+\renewcommand\plannerGridMonthFont{\AlegreyaSansExtraBold}
+\renewcommand\plannerGridNotesFont{\AlegreyaSans}
+
+\renewcommand\monthMarkFmt{\fontsize{6}{9}\selectfont\color{textbody}}
+
+\renewcommand\plannerMoonSize{\@setfontsize\plannerMoonSize{13}{13}}
+
+% Use two CSV files for day text input to include the moon phases
+\renewcommand\@wall@plmYear{%
+\luadirect{
+require("wallcalendar-helpers.lua")
+yearMarksDayText(tonumber(\CalendarYear), nil, \luastring{\plannerMarksDayTextCSV})
+yearMarksDayText(tonumber(\CalendarYear), nil, \luastring{./data/moonphases-2018.csv})
+tex.sprint(';')
+}}
+
+\makeatother
+
+\begin{document}
+
+\mbox{}
+
+\YearPlannerLandscapeGridPage
+
+\end{document}

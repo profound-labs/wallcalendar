@@ -1889,7 +1889,7 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
 ]
 
 \newcommand\plannerPortraitMonthFmt{\fontsize{11}{11}\selectfont\color{darkgold}}
-\newcommand\plannerPortraitDayFmt{\fontsize{8}{8}\selectfont\color{plannerdatenum}}
+\newcommand\plannerPortraitDayFmt{\fontsize{10}{10}\selectfont\color{plannerdatenum}}
 
 \tikzstyle{year planner portrait}=[
   week list,
@@ -2043,7 +2043,7 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
   day xshift=\plannerGridColXShift,
   month yshift=\plannerGridRowYShift,
   day text={\plannerGridDayFmt \%d-},
-  every day/.append style={anchor=base, yshift=-12pt, inner xsep=0pt},
+  every day/.append style={anchor=base, yshift=-4pt, inner xsep=0pt},
   execute at begin day scope={%
     % White fill to cover the page background color
     \node (cell) [

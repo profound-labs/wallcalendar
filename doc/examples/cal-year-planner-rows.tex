@@ -1,0 +1,82 @@
+\documentclass[
+  year = 2018,
+  eventsCsv = ./data/holidays.csv,
+  markDefaultsCsv = ./data/mark_defaults.csv,
+  a4PaperLandscape,
+  hMargin = 7mm,
+  topMargin = 7mm,
+  bottomMargin = 7mm,
+]{wallcalendar}
+
+\makeatletter
+
+\definecolor{textbody}{gray}{0}
+
+\usepackage{fontspec}
+\defaultfontfeatures{Ligatures=TeX}
+
+\setmainfont{Alegreya Sans}
+
+\newfontfamily\AlegreyaSans{Alegreya Sans}
+
+\newfontfamily\AlegreyaSansLight{Alegreya Sans Light}
+
+\renewcommand\plannerLandscapeDateDayFont{\AlegreyaSans}
+\renewcommand\plannerLandscapeDayFont{\AlegreyaSansLight}
+\renewcommand\plannerLandscapeMonthFont{\AlegreyaSans}
+
+\renewcommand\plannerLandscapeDayFmt{%
+  \plannerLandscapeDayFont%
+  \fontsize{11}{12}\selectfont%
+}
+
+\renewcommand*\plannerMoonFormat[1]{{\color{gold}\plannerMoonSize #1}}
+
+\renewcommand\monthMarkFmt{\fontsize{6}{9}\selectfont\color{textbody}}
+
+\setlength{\plannerLandscapeDayXShift}{6.93mm}
+\setlength{\plannerLandscapeMonthYShift}{13.2mm}
+
+\renewcommand\plannerMoonSize{\@setfontsize\plannerMoonSize{13}{13}}
+
+% Use two CSV files for day text input to include the moon phases
+\renewcommand\@wall@plmYear{%
+\luadirect{
+require("wallcalendar-helpers.lua")
+yearMarksDayText(tonumber(\CalendarYear), nil, \luastring{\plannerMarksDayTextCSV})
+yearMarksDayText(tonumber(\CalendarYear), nil, \luastring{./data/moonphases-2018.csv})
+tex.sprint(';')
+}}
+
+\makeatother
+
+\begin{document}
+
+{\centering%
+\plannerLandscapeMonthFont\fontsize{15}{18}\selectfont\color{gold}%
+\textbf{\CalendarYear}
+\par}
+
+\vspace*{3mm}
+
+\raggedright
+
+\YearPlannerLandscape
+
+\vspace*{-2mm}
+
+\hspace*{2mm}%
+{\raggedright
+\fontsize{8}{10}\selectfont
+
+\begin{multicols}{5}
+\parseYearEvents[%
+  filter pred = hasNote,
+  format cmd = {\textsuperscript{\eIdx}~\eMonthShort~\eDay:~\textit{\eNote}\\},
+]%
+\end{multicols}
+
+}
+
+\end{document}
+

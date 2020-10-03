@@ -1,6 +1,6 @@
 \documentclass[
   year = 2018,
-  eventsCsv = ./data/holidays.csv,
+  eventsCsv = ./data/holidays-compact.csv,
   markDefaultsCsv = ./data/mark_defaults.csv,
   imageFolder = ./photos/,
 ]{wallcalendar}
@@ -9,8 +9,7 @@
 
 \usepackage{fontspec}
 \defaultfontfeatures{Ligatures={TeX}}
-\setmainfont{TeX Gyre Pagella}
-\newfontfamily\dejaVuSans{DejaVu Sans}
+\setmainfont{Alegreya Sans}
 
 % Use two CSV files for day text input to include the moon phases
 \renewcommand\@wall@plm[1]{%
@@ -22,6 +21,8 @@ tex.sprint(';')
 }}
 
 \newcommand\plannerYearFmt{\fontsize{26}{26}\selectfont\color{orangegold}}
+
+\renewcommand\plannerPortraitDayFmt{\fontsize{10}{10}\selectfont\color{plannerdatenum}}
 
 \newlength\plannerNotesSep
 \setlength{\plannerNotesSep}{3mm}
