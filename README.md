@@ -7,11 +7,28 @@ A wall calendar class with custom layouts and support for internationalization.
 
 - [Wallcalendar LaTeX documentclass](#wallcalendar-latex-documentclass)
     - [Features](#features)
+    - [Examples](#examples)
+        - [Load custom event footnotes from CSV](#load-custom-event-footnotes-from-csv)
+        - [Portrait page](#portrait-page)
+            - [Full page photo, calendar days overlaid with opacity](#full-page-photo-calendar-days-overlaid-with-opacity)
+            - [Full page photo, photo above the calendar days](#full-page-photo-photo-above-the-calendar-days)
+            - [Small landscape photo, with a calendar grid](#small-landscape-photo-with-a-calendar-grid)
+            - [Thumbnails and captions page](#thumbnails-and-captions-page)
+        - [Landscape photo and notes on two pages](#landscape-photo-and-notes-on-two-pages)
+            - [No photos, with notes area](#no-photos-with-notes-area)
+        - [Year planners](#year-planners)
+            - [Portrait year planner](#portrait-year-planner)
+            - [Landscape year planner with dates in rows](#landscape-year-planner-with-dates-in-rows)
+            - [Landscape year planner with grid](#landscape-year-planner-with-grid)
+            - [Compact year planner](#compact-year-planner)
+        - [Showtrims (Cropmarks)](#showtrims-cropmarks)
+        - [Varnishmask](#varnishmask)
+        - [Showframe](#showframe)
+    - [Overleaf examples](#overleaf-examples)
     - [Installing](#installing)
         - [TeXLive](#texlive)
         - [Using from a git clone](#using-from-a-git-clone)
         - [As a local package](#as-a-local-package)
-    - [Overleaf examples](#overleaf-examples)
     - [Frequently Asked Questions](#frequently-asked-questions)
     - [Back matter](#back-matter)
 
@@ -65,6 +82,12 @@ Files are in the [doc/examples](https://github.com/profound-labs/wallcalendar/tr
 
 ![cal-plain-03](doc/examples/cal-burst/cal-plain-03.jpg)
 
+#### Thumbnails and captions page
+
+[cal-thumbnails.tex](doc/examples/cal-thumbnails.tex) | [cal-thumbnails.pdf](https://raw.githubusercontent.com/profound-labs/wallcalendar/master/doc/examples/cal-thumbnails.pdf)
+
+![cal-thumbnails](doc/examples/cal-thumbnails.jpg)
+
 ### Landscape photo and notes on two pages
 
 [cal-photo-and-notes.tex](doc/examples/cal-photo-and-notes.tex) | [cal-photo-and-notes.pdf](https://raw.githubusercontent.com/profound-labs/wallcalendar/master/doc/examples/cal-photo-and-notes.pdf)
@@ -75,6 +98,12 @@ Files are in the [doc/examples](https://github.com/profound-labs/wallcalendar/tr
 
 ![cal-photo-and-notes-calendar](doc/examples/cal-photo-and-notes-calendar.jpg)
 
+#### No photos, with notes area
+
+[cal-no-photos.tex](doc/examples/cal-no-photos.tex) | [cal-no-photos.pdf](https://raw.githubusercontent.com/profound-labs/wallcalendar/master/doc/examples/cal-no-photos.pdf)
+
+![cal-no-photos-01](doc/examples/cal-burst/cal-no-photos-01.jpg)
+
 ### Year planners
 
 #### Portrait year planner
@@ -84,8 +113,6 @@ Files are in the [doc/examples](https://github.com/profound-labs/wallcalendar/tr
 ![cal-year-planner](doc/examples/cal-year-planner.jpg)
 
 #### Landscape year planner with dates in rows
-
-https://raw.githubusercontent.com/profound-labs/wallcalendar/compact-notes/doc/examples/cal-year-planner.pdf
 
 [cal-year-planner-rows.tex](doc/examples/cal-year-planner-rows.tex) | [cal-year-planner-rows.pdf](https://raw.githubusercontent.com/profound-labs/wallcalendar/master/doc/examples/cal-year-planner-rows.pdf)
 
@@ -103,19 +130,9 @@ https://raw.githubusercontent.com/profound-labs/wallcalendar/compact-notes/doc/e
 
 ![cal-year-planner-compact](doc/examples/cal-year-planner-compact.jpg)
 
-### No photos, with notes area
-
-[cal-no-photos.tex](doc/examples/cal-no-photos.tex) | [cal-no-photos.pdf](https://raw.githubusercontent.com/profound-labs/wallcalendar/master/doc/examples/cal-no-photos.pdf)
-
-![cal-no-photos-01](doc/examples/cal-burst/cal-no-photos-01.jpg)
-
-### Showframe
-
-[cal-showframe.tex](doc/examples/cal-showframe.tex) | [cal-showframe.pdf](https://raw.githubusercontent.com/profound-labs/wallcalendar/master/doc/examples/cal-showframe.pdf)
-
-![cal-showframe](doc/examples/cal-burst/cal-showframe-01.jpg)
-
 ### Showtrims (Cropmarks)
+
+Cropmarks for printing and trimming bleeded images.
 
 [cal-showtrims.tex](doc/examples/cal-showtrims.tex) | [cal-showtrims.pdf](https://raw.githubusercontent.com/profound-labs/wallcalendar/master/doc/examples/cal-showtrims.pdf)
 
@@ -123,23 +140,19 @@ https://raw.githubusercontent.com/profound-labs/wallcalendar/compact-notes/doc/e
 
 ### Varnishmask
 
+Varnishmask (or UV mask) file for applying gloss varnish when printing.
+
 [cal-varnishmask.tex](doc/examples/cal-varnishmask.tex) | [cal-varnishmask.pdf](https://raw.githubusercontent.com/profound-labs/wallcalendar/master/doc/examples/cal-varnishmask.pdf)
 
 ![cal-varnishmask](doc/examples/cal-burst/cal-varnishmask-03.jpg)
 
-### Thumbnails and captions
+### Showframe
 
-[cal-thumbnails.tex](doc/examples/cal-thumbnails.tex) | [cal-thumbnails.pdf](https://raw.githubusercontent.com/profound-labs/wallcalendar/master/doc/examples/cal-thumbnails.pdf)
+Useful option for debugging layout positioning.
 
-![cal-thumbnails](doc/examples/cal-thumbnails.jpg)
+[cal-showframe.tex](doc/examples/cal-showframe.tex) | [cal-showframe.pdf](https://raw.githubusercontent.com/profound-labs/wallcalendar/master/doc/examples/cal-showframe.pdf)
 
-### Translations
-
-cal-translations-english.tex
-
-cal-translations-hungarian.tex
-
-cal-translations-japanese.tex
+![cal-showframe](doc/examples/cal-burst/cal-showframe-01.jpg)
 
 ## Overleaf examples
 
