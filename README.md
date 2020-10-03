@@ -140,7 +140,7 @@ Cropmarks for printing and trimming bleeded images.
 
 ### Varnishmask
 
-Varnishmask (or UV mask) file for applying gloss varnish when printing.
+Varnishmask (or UV mask) file for applying gloss varnish on the photo when printing.
 
 [cal-varnishmask.tex](doc/examples/cal-varnishmask.tex) | [cal-varnishmask.pdf](https://raw.githubusercontent.com/profound-labs/wallcalendar/master/doc/examples/cal-varnishmask.pdf)
 
