@@ -21,9 +21,10 @@ A wall calendar class with custom layouts and support for internationalization.
             - [Landscape year planner with dates in rows](#landscape-year-planner-with-dates-in-rows)
             - [Landscape year planner with grid](#landscape-year-planner-with-grid)
             - [Compact year planner](#compact-year-planner)
-        - [Showtrims (Cropmarks)](#showtrims-cropmarks)
-        - [Varnishmask](#varnishmask)
-        - [Showframe](#showframe)
+        - [Class Options](#class-options)
+            - [Showtrims](#showtrims)
+            - [Varnishmask](#varnishmask)
+            - [Showframe](#showframe)
     - [Overleaf examples](#overleaf-examples)
     - [Installing](#installing)
         - [TeXLive](#texlive)
@@ -130,7 +131,9 @@ Files are in the [doc/examples](https://github.com/profound-labs/wallcalendar/tr
 
 ![cal-year-planner-compact](doc/examples/cal-year-planner-compact.jpg)
 
-### Showtrims (Cropmarks)
+### Class Options
+
+#### Showtrims
 
 Cropmarks for printing and trimming bleeded images.
 
@@ -138,7 +141,7 @@ Cropmarks for printing and trimming bleeded images.
 
 ![cal-showtrims](doc/examples/cal-burst/cal-showtrims-01.jpg)
 
-### Varnishmask
+#### Varnishmask
 
 Varnishmask (or UV mask) file for applying gloss varnish on the photo when printing.
 
@@ -146,7 +149,7 @@ Varnishmask (or UV mask) file for applying gloss varnish on the photo when print
 
 ![cal-varnishmask](doc/examples/cal-burst/cal-varnishmask-03.jpg)
 
-### Showframe
+#### Showframe
 
 Useful option for debugging layout positioning.
 

@@ -1186,6 +1186,127 @@ Typesets the photo thumb image with its caption text on the right side.
 \end{document}
 #+end_src
 
+* Examples from doc/examples folder
+** Portrait page
+
+=doc/examples/cal-plain.tex=
+
+*** Full page photo, calendar days overlaid with opacity
+
+#+begin_export latex
+\frame{\includegraphics[width=5cm]{./examples/cal-burst/cal-plain-01.pdf}}
+#+end_export
+
+*** Full page photo, photo above the calendar days
+
+#+begin_export latex
+\frame{\includegraphics[width=5cm]{./examples/cal-burst/cal-plain-02.pdf}}
+#+end_export
+
+*** Small landscape photo, with a calendar grid
+
+#+begin_export latex
+\frame{\includegraphics[width=5cm]{./examples/cal-burst/cal-plain-03.pdf}}
+#+end_export
+
+*** Thumbnails and captions page
+
+=doc/examples/cal-thumbnails.tex=
+
+#+begin_export latex
+\frame{\includegraphics[width=5cm]{./examples/cal-thumbnails.pdf}}
+#+end_export
+
+** Landscape photo and notes on two pages
+
+=doc/examples/cal-photo-and-notes.tex=
+
+#+begin_export latex
+\frame{\includegraphics[width=5cm]{./examples/cal-photo-and-notes-titlepage.pdf}}
+#+end_export
+
+#+begin_export latex
+\frame{\includegraphics[width=5cm]{./examples/cal-photo-and-notes-photo.pdf}}
+#+end_export
+
+#+begin_export latex
+\frame{\includegraphics[width=5cm]{./examples/cal-photo-and-notes-calendar.pdf}}
+#+end_export
+
+*** No photos, with notes area
+
+=doc/examples/cal-no-photos.tex=
+
+#+begin_export latex
+\frame{\includegraphics[width=5cm]{./examples/cal-burst/cal-no-photos-01.pdf}}
+#+end_export
+
+** Year planners
+
+*** Portrait year planner
+
+=doc/examples/cal-year-planner.tex=
+
+#+begin_export latex
+\frame{\includegraphics[width=5cm]{./examples/cal-year-planner.pdf}}
+#+end_export
+
+*** Landscape year planner with dates in rows
+
+=doc/examples/cal-year-planner-rows.tex=
+
+#+begin_export latex
+\frame{\includegraphics[width=5cm]{./examples/cal-year-planner-rows.pdf}}
+#+end_export
+
+*** Landscape year planner with grid
+
+=doc/examples/cal-year-planner-grid.tex=
+
+#+begin_export latex
+\frame{\includegraphics[width=5cm]{./examples/cal-year-planner-grid.pdf}}
+#+end_export
+
+*** Compact year planner
+ 
+=doc/examples/cal-year-planner-compact.tex=
+
+#+begin_export latex
+\frame{\includegraphics[width=5cm]{./examples/cal-year-planner-compact.pdf}}
+#+end_export
+
+** Class Options
+
+*** Showtrims
+
+Cropmarks for printing and trimming bleeded images.
+
+=doc/examples/cal-showtrims.tex=
+
+#+begin_export latex
+\frame{\includegraphics[width=5cm]{./examples/cal-burst/cal-showtrims-01.pdf}}
+#+end_export
+
+*** Varnishmask
+
+Varnishmask (or UV mask) file for applying gloss varnish on the photo when printing.
+
+=doc/examples/cal-varnishmask.tex=
+
+#+begin_export latex
+\frame{\includegraphics[width=5cm]{./examples/cal-burst/cal-varnishmask-03.pdf}}
+#+end_export
+
+*** Showframe
+
+Useful option for debugging layout positioning.
+
+=doc/examples/cal-showframe.tex=
+
+#+begin_export latex
+\frame{\includegraphics[width=5cm]{./examples/cal-burst/cal-showframe-01.pdf}}
+#+end_export
+
 * Documentclass Options
 
 : year

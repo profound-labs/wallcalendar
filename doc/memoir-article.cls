@@ -86,7 +86,7 @@
 \RequirePackage{titletoc}
 \RequirePackage{eso-pic}
 
-\graphicspath{{./includes/}}
+\graphicspath{{./includes/},{./examples/},{./examples/cal-burst/}}
 
 \hypersetup{
   colorlinks=true,
