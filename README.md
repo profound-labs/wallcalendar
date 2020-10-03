@@ -45,13 +45,13 @@ Files are in the [doc/examples](https://github.com/profound-labs/wallcalendar/tr
 
 ### Load custom event footnotes from CSV
 
-[cal-marks.tex](doc/examples/cal-marks.tex) | [cal-marks.pdf](doc/examples/cal-marks.pdf)
+[cal-marks.tex](doc/examples/cal-marks.tex) | [cal-marks.pdf](https://raw.githubusercontent.com/profound-labs/wallcalendar/master/doc/examples/cal-marks.pdf)
 
 ![cal-marks](doc/examples/cal-marks.jpg)
 
 ### Portrait page
 
-[cal-plain.tex](doc/examples/cal-plain.tex) | [cal-plain.pdf](doc/examples/cal-plain.pdf)
+[cal-plain.tex](doc/examples/cal-plain.tex) | [cal-plain.pdf](https://raw.githubusercontent.com/profound-labs/wallcalendar/master/doc/examples/cal-plain.pdf)
 
 #### Full page photo, calendar days overlaid with opacity
 
@@ -67,7 +67,7 @@ Files are in the [doc/examples](https://github.com/profound-labs/wallcalendar/tr
 
 ### Landscape photo and notes on two pages
 
-[cal-photo-and-notes.tex](doc/examples/cal-photo-and-notes.tex) | [cal-photo-and-notes.pdf](doc/examples/cal-photo-and-notes.pdf)
+[cal-photo-and-notes.tex](doc/examples/cal-photo-and-notes.tex) | [cal-photo-and-notes.pdf](https://raw.githubusercontent.com/profound-labs/wallcalendar/master/doc/examples/cal-photo-and-notes.pdf)
 
 ![cal-photo-and-notes-titlepage](doc/examples/cal-photo-and-notes-titlepage.jpg)
 
@@ -79,55 +79,57 @@ Files are in the [doc/examples](https://github.com/profound-labs/wallcalendar/tr
 
 #### Portrait year planner
 
-[cal-year-planner.tex](doc/examples/cal-year-planner.tex) | [cal-year-planner.pdf](doc/examples/cal-year-planner.pdf)
+[cal-year-planner.tex](doc/examples/cal-year-planner.tex) | [cal-year-planner.pdf](https://raw.githubusercontent.com/profound-labs/wallcalendar/master/doc/examples/cal-year-planner.pdf)
 
 ![cal-year-planner](doc/examples/cal-year-planner.jpg)
 
 #### Landscape year planner with dates in rows
 
-[cal-year-planner-landscape-rows.tex](doc/examples/cal-year-planner-landscape-rows.tex) | [cal-year-planner-landscape-rows.pdf](doc/examples/cal-year-planner-landscape-rows.pdf)
+https://raw.githubusercontent.com/profound-labs/wallcalendar/compact-notes/doc/examples/cal-year-planner.pdf
 
-![cal-year-planner-landscape-rows](doc/examples/cal-year-planner-landscape-rows.tex)
+[cal-year-planner-rows.tex](doc/examples/cal-year-planner-rows.tex) | [cal-year-planner-rows.pdf](https://raw.githubusercontent.com/profound-labs/wallcalendar/master/doc/examples/cal-year-planner-rows.pdf)
+
+![cal-year-planner-rows](doc/examples/cal-year-planner-rows.jpg)
 
 #### Landscape year planner with grid
 
-[cal-year-planner-landscape-grid.tex](doc/examples/cal-year-planner-landscape-grid.tex) | [cal-year-planner-landscape-grid.pdf](doc/examples/cal-year-planner-landscape-grid.pdf)
+[cal-year-planner-grid.tex](doc/examples/cal-year-planner-grid.tex) | [cal-year-planner-grid.pdf](https://raw.githubusercontent.com/profound-labs/wallcalendar/master/doc/examples/cal-year-planner-grid.pdf)
 
-![cal-year-planner-landscape-grid](doc/examples/cal-year-planner-landscape-grid.jpg)
+![cal-year-planner-grid](doc/examples/cal-year-planner-grid.jpg)
 
 #### Compact year planner
 
-[cal-year-planner-compact.tex](doc/examples/cal-year-planner-compact.tex) | [cal-year-planner-compact.pdf](doc/examples/cal-year-planner-compact.pdf)
+[cal-year-planner-compact.tex](doc/examples/cal-year-planner-compact.tex) | [cal-year-planner-compact.pdf](https://raw.githubusercontent.com/profound-labs/wallcalendar/master/doc/examples/cal-year-planner-compact.pdf)
 
 ![cal-year-planner-compact](doc/examples/cal-year-planner-compact.jpg)
 
 ### No photos, with notes area
 
-[cal-no-photos.tex](doc/examples/cal-no-photos.tex) | [cal-no-photos.pdf](doc/examples/cal-no-photos.pdf)
+[cal-no-photos.tex](doc/examples/cal-no-photos.tex) | [cal-no-photos.pdf](https://raw.githubusercontent.com/profound-labs/wallcalendar/master/doc/examples/cal-no-photos.pdf)
 
 ![cal-no-photos-01](doc/examples/cal-burst/cal-no-photos-01.jpg)
 
 ### Showframe
 
-[cal-showframe.tex](doc/examples/cal-showframe.tex) | [cal-showframe.pdf](doc/examples/cal-showframe.pdf)
+[cal-showframe.tex](doc/examples/cal-showframe.tex) | [cal-showframe.pdf](https://raw.githubusercontent.com/profound-labs/wallcalendar/master/doc/examples/cal-showframe.pdf)
 
 ![cal-showframe](doc/examples/cal-burst/cal-showframe-01.jpg)
 
 ### Showtrims (Cropmarks)
 
-[cal-showtrims.tex](doc/examples/cal-showtrims.tex) | [cal-showtrims.pdf](doc/examples/cal-showtrims.pdf)
+[cal-showtrims.tex](doc/examples/cal-showtrims.tex) | [cal-showtrims.pdf](https://raw.githubusercontent.com/profound-labs/wallcalendar/master/doc/examples/cal-showtrims.pdf)
 
 ![cal-showtrims](doc/examples/cal-burst/cal-showtrims-01.jpg)
 
 ### Varnishmask
 
-[cal-varnishmask.tex](doc/examples/cal-varnishmask.tex) | [cal-varnishmask.pdf](doc/examples/cal-varnishmask.pdf)
+[cal-varnishmask.tex](doc/examples/cal-varnishmask.tex) | [cal-varnishmask.pdf](https://raw.githubusercontent.com/profound-labs/wallcalendar/master/doc/examples/cal-varnishmask.pdf)
 
 ![cal-varnishmask](doc/examples/cal-burst/cal-varnishmask-03.jpg)
 
 ### Thumbnails and captions
 
-[cal-thumbnails.tex](doc/examples/cal-thumbnails.tex) | [cal-thumbnails.pdf](doc/examples/cal-thumbnails.pdf)
+[cal-thumbnails.tex](doc/examples/cal-thumbnails.tex) | [cal-thumbnails.pdf](https://raw.githubusercontent.com/profound-labs/wallcalendar/master/doc/examples/cal-thumbnails.pdf)
 
 ![cal-thumbnails](doc/examples/cal-thumbnails.jpg)
 
