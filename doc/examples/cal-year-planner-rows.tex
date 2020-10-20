@@ -1,6 +1,7 @@
 \documentclass[
   year = 2018,
   eventsCsv = ./data/holidays.csv,
+  moonsCsv = ./data/moonphases-2018.csv,
   markDefaultsCsv = ./data/mark_defaults.csv,
   a4PaperLandscape,
   hMargin = 7mm,
@@ -39,15 +40,6 @@
 
 \renewcommand\plannerMoonSize{\@setfontsize\plannerMoonSize{13}{13}}
 
-% Use two CSV files for day text input to include the moon phases
-\renewcommand\@wall@plmYear{%
-\luadirect{
-require("wallcalendar-helpers.lua")
-yearMarksDayText(tonumber(\CalendarYear), nil, \luastring{\plannerMarksDayTextCSV})
-yearMarksDayText(tonumber(\CalendarYear), nil, \luastring{./data/moonphases-2018.csv})
-tex.sprint(';')
-}}
-
 \makeatother
 
 \begin{document}
@@ -71,8 +63,8 @@ tex.sprint(';')
 
 \begin{multicols}{5}
 \parseYearEvents[%
-  filter pred = hasNote,
-  format cmd = {\textsuperscript{\eIdx}~\eMonthShort~\eDay:~\textit{\eNote}\\},
+  filter pred = hasFootnote,
+  format cmd = {\textsuperscript{\eIdx}~\eMonthShort~\eDay:~\textit{\eFootnote}\\},
 ]%
 \end{multicols}
 

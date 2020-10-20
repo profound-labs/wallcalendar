@@ -68,6 +68,8 @@ The \textbf{User Guide} is in \texttt{wallcalendar.pdf}. Clone or download from 
 \newlength\@wall@trimSpace
 
 \def\@wall@eventsCsv{}
+\def\@wall@moonsCsv{}
+\def\@wall@dateAnnotationsStr{}
 \def\@wall@markDefaultsCsv{}
 \def\@wall@translationsInputFile{}
 
@@ -92,7 +94,7 @@ Paper sizes and ratios.
 \newif\ifshowframe
 \newif\iftranslationsAutoload
 \newif\ifloadBabel
-\newif\ifGridSurround
+\newif\ifgridSurround
 
 \pgfkeys{
   /wall/.is family, /wall,
@@ -102,6 +104,7 @@ Paper sizes and ratios.
     loadBabel = false,
     language = english,
     translationsAutoload = true,
+    dateAnnotations = true,
     imageFolder = {./src-images},
     choralOctavoPaper,
     hMargin = 17mm,
@@ -120,11 +123,15 @@ Paper sizes and ratios.
   translationsAutoload/.is if = translationsAutoload,
   eventsCsv/.store in = \@wall@eventsCsv,
   eventsCsv/.initial = {},
+  moonsCsv/.store in = \@wall@moonsCsv,
+  moonsCsv/.initial = {},
   markDefaultsCsv/.store in = \@wall@markDefaultsCsv,
   markDefaultsCsv/.initial = {},
   varnishmask/.is if = varnishmask,
   showframe/.is if = showframe,
-  gridSurround/.is if = GridSurround,
+  gridSurround/.is if = gridSurround,
+  dateAnnotations/.store in = \@wall@dateAnnotationsStr,
+  dateAnnotations/.initial = true,
   imageFolder/.store in = \@wall@imageFolder,
   paperWidth/.code = {\setlength{\calPaperWidth}{#1}},
   paperHeight/.code = {\setlength{\calPaperHeight}{#1}},
@@ -190,6 +197,8 @@ Paper sizes and ratios.
 \DeclareGraphicsExtensions{.pdf,.png,.jpg}
 \graphicspath{{\@wall@imageFolder}}
 
+\RequirePackage{xparse}
+\RequirePackage{soul}
 \RequirePackage{eso-pic}
 \RequirePackage{ccicons}
 \RequirePackage{multicol}
@@ -605,7 +614,8 @@ argument.
 \def\eMonthShort{}
 \def\eDay{}
 \def\eDayText{}
-\def\eNote{}
+\def\eFootnote{}
+\def\eSidenote{}
 
 \pgfkeys{
   /parseMonthEvents/.is family, /parseMonthEvents,
@@ -620,7 +630,7 @@ argument.
     month = \theMonthName,
     filter pred = nil,
     format func = nil,
-    format cmd = {\textsuperscript{\eIdx}~\eMonthShort~\eDay:~\eNote\par},
+    format cmd = {\textsuperscript{\eIdx}~\eMonthShort~\eDay:~\eFootnote\par},
     events csv = \@wall@eventsCsv,
     mark defaults csv = \@wall@markDefaultsCsv,
     min events = nil,
@@ -644,7 +654,7 @@ argument.
     year = \CalendarYear,
     filter pred = nil,
     format func = nil,
-    format cmd = {\textsuperscript{\eIdx}~\eMonthShort~\eDay:~\eNote\ifnumless{\eIdx}{\eMaxIdx}{,\space}{.}},
+    format cmd = {\textsuperscript{\eIdx}~\eMonthShort~\eDay:~\eFootnote\ifnumless{\eIdx}{\eMaxIdx}{,\space}{.}},
     events csv = \@wall@eventsCsv,
     mark defaults csv = \@wall@markDefaultsCsv,
     min events = nil,
@@ -778,6 +788,86 @@ center of its glyph box (i.e. not at the center of the character x):
 }
 
 \@wall@useDefaultMoons
+#+end_src
+
+** Date Annotations
+
+#+begin_src tex
+% #1 = (opt) color
+% #2 = date as '2018-09-14'
+\newcommand*\dateCircle[2][textbody]{%
+  \node[
+  circle,
+  minimum height=12pt,
+  draw,
+  color={#1},
+  above right=2pt and 0pt of {cal-#2.mid},
+  anchor=mid,
+  ] {};%
+}
+
+% #1 = (opt) color
+% #2 = date as '2018-09-14'
+\newcommand*\dateSquare[2][textbody]{%
+  \node[
+  rectangle,
+  minimum width=12pt,
+  minimum height=12pt,
+  draw,
+  color={#1},
+  above right=2pt and 0pt of {cal-#2.mid},
+  anchor=mid,
+  ] {};%
+}
+
+% #1 = (opt) color
+% #2 = date as '2018-09-14'
+\newcommand*\dateStart[2][textbody]{%
+  \node (#2-rec) [
+  rectangle,
+  minimum width=12pt,
+  minimum height=12pt,
+  above right=2pt and 0pt of {cal-#2.mid},
+  anchor=mid,
+  ] {};%
+  \node (#2-a) [above left=-6pt and 0pt of {#2-rec.north east}] {};%
+  \node (#2-b) [above left=-6pt and -1pt of {#2-rec.north}] {};%
+  \node (#2-c) [above left=-6pt and -3pt of {#2-rec.west}] {};%
+  \node (#2-d) [above left=-6pt and -1pt of {#2-rec.south}] {};%
+  \node (#2-e) [above left=-6pt and 0pt of {#2-rec.south east}] {};%
+  \draw [color={#1}] (#2-a.mid) -- (#2-b.mid) -- (#2-c.mid) -- (#2-d.mid) -- (#2-e.mid);
+}
+
+% #1 = (opt) color
+% #2 = date as '2018-09-14'
+\newcommand*\dateEnd[2][textbody]{%
+  \node (#2-rec) [
+  rectangle,
+  minimum width=12pt,
+  minimum height=12pt,
+  above right=2pt and 0pt of {cal-#2.mid},
+  anchor=mid,
+  ] {};%
+  \node (#2-a) [above right=-6pt and 0pt of {#2-rec.north west}] {};%
+  \node (#2-b) [above right=-6pt and -1pt of {#2-rec.north}] {};%
+  \node (#2-c) [above right=-6pt and -3pt of {#2-rec.east}] {};%
+  \node (#2-d) [above right=-6pt and -1pt of {#2-rec.south}] {};%
+  \node (#2-e) [above right=-6pt and 0pt of {#2-rec.south west}] {};%
+  \draw [color={#1}] (#2-a.mid) -- (#2-b.mid) -- (#2-c.mid) -- (#2-d.mid) -- (#2-e.mid);
+}
+
+% #1 = (opt) color
+% #2 = date as '2018-09-14'
+\newcommand*\dateUnder[2][textbody]{%
+  \node (#2-rec) [
+  rectangle,
+  minimum width=12pt,
+  minimum height=12pt,
+  above right=3pt and 0pt of {cal-#2.mid},
+  anchor=mid,
+  ] {};%
+  \draw [color={#1}] (#2-rec.south west) -- (#2-rec.south east);
+}
 #+end_src
 
 * User Commands
@@ -2308,7 +2398,7 @@ Calendar:
       % Horizontal lines
       %
       \gridLines=\gridRows
-      \ifGridSurround
+      \ifgridSurround
         \advance\gridLines by 1
         \n=0
         \draw [
@@ -2332,7 +2422,7 @@ Calendar:
       % Vertical lines
       %
       \gridLines=7
-      \ifGridSurround
+      \ifgridSurround
         \advance\gridLines by 1
         \n=0
         \draw [
@@ -2356,7 +2446,7 @@ Calendar:
       % If we are not drawing the surrounding lines, it looks better to hide
       % some of the top and bottom edges
       %
-      \ifGridSurround\relax
+      \ifgridSurround\relax
       \else
         \draw [
           color=white,
@@ -2868,12 +2958,14 @@ Command to print day number, so that it can be reused outside the day code block
 #+begin_src tex
 \newcommand\plannerMarksDayTextCSV{\@wall@eventsCsv}
 \newcommand\plannerMarksNoteCSV{\@wall@eventsCsv}
+\newcommand\plannerMoonsCSV{\@wall@moonsCsv}
 \newcommand\plannerMarkDefaultsCsv{}
 
 \newcommand\@wall@plm[1]{%
 \luadirect{
 require("wallcalendar-helpers.lua")
 monthMarksDayText(\luastring{#1}, nil, \luastring{\plannerMarksDayTextCSV})
+monthMarksDayText(\luastring{#1}, nil, \luastring{\plannerMoonsCSV})
 tex.sprint(';')
 }}
 
@@ -2881,7 +2973,11 @@ tex.sprint(';')
 \luadirect{
 require("wallcalendar-helpers.lua")
 yearMarksDayText(tonumber(\CalendarYear), nil, \luastring{\plannerMarksDayTextCSV})
+yearMarksDayText(tonumber(\CalendarYear), nil, \luastring{\plannerMoonsCSV})
 tex.sprint(';')
+if isEqual(\luastring{\@wall@dateAnnotationsStr}, "true") then
+  drawAnnotations(tonumber(\CalendarYear), nil, \luastring{\plannerMarksDayTextCSV})
+end
 }}
 
 \newcommand\@wall@plNotes{%
@@ -2897,9 +2993,79 @@ yearMarksNote(tonumber(\CalendarYear), nil, \luastring{\plannerMarksNoteCSV}, \l
 }}
 
 \newcommand\plannerEvents{%
-\parseYearEvents[filter pred = hasNote]%
+\parseYearEvents[filter pred = hasFootnote]%
 }
 
+\newcommand\plannerWeeklyNotes{%
+\luadirect{
+require("wallcalendar-helpers.lua")
+plannerWeeklyNotes(tonumber(\CalendarYear), nil, \luastring{\plannerMarksDayTextCSV})
+}}
+
+\newcommand\plannerWeeklyImages{%
+\luadirect{
+require("wallcalendar-helpers.lua")
+plannerWeeklyImages(tonumber(\CalendarYear), nil, \luastring{\plannerMarksDayTextCSV})
+}}
+
+% \varul<gap-width>[below-depth][line-thickness]{text}
+% https://tex.stackexchange.com/questions/36894/underline-omitting-the-descenders
+
+\ExplSyntaxOn
+\cs_new:Npn \white_text:n #1
+{
+  \fp_set:Nn \l_tmpa_fp {#1 * .01}
+  \llap{\textcolor{white}{\the\SOUL@syllable}\hspace{\fp_to_decimal:N \l_tmpa_fp em}}
+  \llap{\textcolor{white}{\the\SOUL@syllable}\hspace{-\fp_to_decimal:N \l_tmpa_fp em}}
+}
+\NewDocumentCommand{\whiten}{ m }
+{
+  \int_step_function:nnnN {1}{1}{#1} \white_text:n
+}
+\ExplSyntaxOff
+
+\NewDocumentCommand{ \varul }{ D<>{5} O{0.3ex} O{0.1ex} +m } {%
+  \begingroup
+  \setul{#2}{#3}%
+  \def\SOUL@uleverysyllable{%
+    \setbox0=\hbox{\the\SOUL@syllable}%
+    \ifdim\dp0>\z@
+    \SOUL@ulunderline{\phantom{\the\SOUL@syllable}}%
+    \whiten{#1}%
+    \llap{%
+      \the\SOUL@syllable
+      \SOUL@setkern\SOUL@charkern
+    }%
+    \else
+    \SOUL@ulunderline{%
+      \the\SOUL@syllable
+      \SOUL@setkern\SOUL@charkern
+    }%
+    \fi}%
+  \ul{#4}%
+  \endgroup
+}
+
+% #1 = (opt) color
+% #2 = text
+\newcommand*\colorUL[2][textbody]{%
+  \setulcolor{#1}%
+  \varul{#2}%
+  \setulcolor{textbody}%
+}
+
+% #1 = color
+% #2 = date
+% #3 = text
+\newcommand\weeklyNoteFmt[3]{%
+  \colorUL[#1]{#2:} #3\quad%
+}
+
+% #1 = (opt) image options
+% #2 = image path
+\newcommand\weeklyImageFmt[2][width=20mm]{%
+  \includegraphics[#1]{#2}%
+}
 #+end_src
 
 ** \textbackslash YearPlannerPortrait
@@ -3067,8 +3233,8 @@ yearMarksNote(tonumber(\CalendarYear), nil, \luastring{\plannerMarksNoteCSV}, \l
 \plannerGridNotesFmt
 \hspace*{2mm}%
 \parseYearEvents[%
-  filter pred = hasNote,
-  format cmd = {\textsuperscript{\eIdx}~\eMonthShort~\eDay:~\textit{\eNote}\ifnumless{\eIdx}{\eMaxIdx}{,\space}{.}},
+  filter pred = hasFootnote,
+  format cmd = {\textsuperscript{\eIdx}~\eMonthShort~\eDay:~\textit{\eFootnote}\ifnumless{\eIdx}{\eMaxIdx}{,\space}{.}},
 ]%
 \end{minipage}%
 \end{minipage}%

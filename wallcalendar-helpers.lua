@@ -17,8 +17,16 @@ function ok(x)
   return x ~= nil and x ~= ""
 end
 
-function hasNote(event)
-  return ok(event.note)
+function isEqual(x, val)
+  return x == val
+end
+
+function hasFootnote(event)
+  return ok(event.footnote)
+end
+
+function hasSidenote(event)
+  return ok(event.sidenote)
 end
 
 function monthNameToNum(monthName)
@@ -31,7 +39,7 @@ function getMark(idx, events, markDefaults, isNote)
   local default_mark = {}
   default_mark.number = {}
   default_mark.day_text = {}
-  default_mark.note = {}
+  default_mark.footnote = {}
 
   default_mark.number.symbol = idx
   default_mark.number.above_offset = "\\markNumberAbove"
@@ -41,9 +49,9 @@ function getMark(idx, events, markDefaults, isNote)
   default_mark.day_text.above_offset = "\\markDayTextAbove"
   default_mark.day_text.right_offset = "\\markDayTextRight"
 
-  default_mark.note.symbol = idx
-  default_mark.note.above_offset = "" -- placeholder, not used for note
-  default_mark.note.right_offset = "" -- placeholder, not used for note
+  default_mark.footnote.symbol = idx
+  default_mark.footnote.above_offset = "" -- placeholder, not used for note
+  default_mark.footnote.right_offset = "" -- placeholder, not used for note
 
   local mark = {}
 
@@ -53,14 +61,14 @@ function getMark(idx, events, markDefaults, isNote)
     local csv_key = ""
 
     if ok(isNote) then
-      mark_key = "note"
+      mark_key = "footnote"
     elseif ok(event.day_text) then
       mark_key = "day_text"
     else
       mark_key = "number"
     end
 
-    m  = default_mark[mark_key]
+    m = default_mark[mark_key]
     csv_key = mark_key .. "_" .. k
 
     if not ok(markDefaults) or not ok(markDefaults[idx]) or not ok(markDefaults[idx][csv_key]) then
@@ -173,10 +181,15 @@ function formatEvents(events, formatFunc, formatCmd, markDefaultsCsv, minEvents)
       else
         tsp("\\def\\eDayText{}")
       end
-      if ok(event.note) then
-        tsp("\\def\\eNote{"..event.note                  .."}") -- \def\eNote{Anniversary Day}
+      if ok(event.footnote) then
+        tsp("\\def\\eFootnote{"..event.footnote              .."}") -- \def\eFootnote{Anniversary Day}
       else
-        tsp("\\def\\eNote{}")
+        tsp("\\def\\eFootnote{}")
+      end
+      if ok(event.sidenote) then
+        tsp("\\def\\eSidenote{"..event.sidenote              .."}") -- \def\eSidenote{Anniversary Day}
+      else
+        tsp("\\def\\eSidenote{}")
       end
 
       tsp(formatCmd)
@@ -188,6 +201,9 @@ end
 -- It's better to call it with the name of the month than its number because it
 -- fits the wrapper commands better.
 function monthEvents(monthName, filterPred, formatFunc, formatCmd, eventsCsv, markDefaultsCsv, minEvents)
+  if not ok(eventsCsv) then
+    return
+  end
   local monthNum = monthNameToNum(monthName)
   local events = eventsInMonth(loadCsv(eventsCsv), monthNum, filterPred)
 
@@ -195,6 +211,9 @@ function monthEvents(monthName, filterPred, formatFunc, formatCmd, eventsCsv, ma
 end
 
 function yearEvents(yearNum, filterPred, formatFunc, formatCmd, eventsCsv, markDefaultsCsv, minEvents)
+  if not ok(eventsCsv) then
+    return
+  end
   local events = eventsInYear(loadCsv(eventsCsv), yearNum, filterPred)
 
   formatEvents(events, formatFunc, formatCmd, markDefaultsCsv, minEvents)
@@ -202,6 +221,9 @@ end
 
 -- monthName is better for argument than monthNum
 function monthMarksDayText(monthName, filterPred, eventsCsv)
+  if not ok(eventsCsv) then
+    return
+  end
   local monthNum = monthNameToNum(monthName)
   local events = eventsInMonth(loadCsv(eventsCsv), monthNum, filterPred);
 
@@ -213,6 +235,9 @@ function monthMarksDayText(monthName, filterPred, eventsCsv)
 end
 
 function monthMarksDayTextInline(monthName, filterPred, eventsCsv)
+  if not ok(eventsCsv) then
+    return
+  end
   local monthNum = monthNameToNum(monthName)
   local events = eventsInMonth(loadCsv(eventsCsv), monthNum, filterPred);
 
@@ -233,12 +258,95 @@ function monthMarksDayTextInline(monthName, filterPred, eventsCsv)
 end
 
 function yearMarksDayText(yearNum, filterPred, eventsCsv)
+  if not ok(eventsCsv) then
+    return
+  end
   local events = eventsInYear(loadCsv(eventsCsv), yearNum, filterPred);
 
   for idx,event in pairs(events) do
     if ok(event.day_text) then
       tsp(string.format(" if (equals=%s) [day text={%s}, xshift=\\dayTextXshift, yshift=\\dayTextYshift] ", event.date, event.day_text))
     end
+  end
+end
+
+function drawAnnotations(yearNum, filterPred, eventsCsv)
+  if not ok(eventsCsv) then
+    return
+  end
+  local events = eventsInYear(loadCsv(eventsCsv), yearNum, filterPred);
+
+  for idx,event in pairs(events) do
+    if ok(event.annotation) then
+      if ok(event.annotation_color) then
+        tsp(string.format("%s[%s]{%s}", event.annotation, event.annotation_color, event.date))
+      else
+        tsp(string.format("%s{%s}", event.annotation, event.date))
+      end
+    end
+    if ok(event.date_end) and ok(event.annotation_end) then
+      if ok(event.annotation_color) then
+        tsp(string.format("%s[%s]{%s}", event.annotation_end, event.annotation_color, event.date_end))
+      else
+        tsp(string.format("%s{%s}", event.annotation_end, event.date_end))
+      end
+    end
+  end
+end
+
+function plannerWeeklyNotes(yearNum, filterPred, eventsCsv)
+  if not ok(eventsCsv) then
+    return
+  end
+  local events = eventsInYear(loadCsv(eventsCsv), yearNum, filterPred);
+
+  local week = 1
+  while week <= 53 do
+    for idx,event in pairs(events) do
+      d = date(event.date)
+      w = d:getisoweeknumber()
+      if week == w and ok(event.sidenote) then
+        if ok(event.date_end) then
+          de = date(event.date_end)
+          m = d:getmonth()
+          me = de:getmonth()
+          if m == me then
+            tsp(string.format("\\weeklyNoteFmt{%s}{%s}{%s}", event.annotation_color, d:fmt("%b").." "..d:getday().."--"..de:getday(), event.sidenote))
+          else
+            tsp(string.format("\\weeklyNoteFmt{%s}{%s}{%s}", event.annotation_color, d:fmt("%b").." "..d:getday().." -- "..de:fmt("%b").." "..de:getday(), event.sidenote))
+          end
+        else
+          tsp(string.format("\\weeklyNoteFmt{%s}{%s}{%s}", event.annotation_color, d:fmt("%b").." "..d:getday(), event.sidenote))
+        end
+      end
+    end
+    tsp("\\mbox{}\\par ")
+
+    week = week + 1
+  end
+end
+
+function plannerWeeklyImages(yearNum, filterPred, eventsCsv)
+  if not ok(eventsCsv) then
+    return
+  end
+  local events = eventsInYear(loadCsv(eventsCsv), yearNum, filterPred);
+
+  local week = 1
+  while week <= 53 do
+    for idx,event in pairs(events) do
+      w = d:getisoweeknumber()
+      if week == w and ok(event.image) then
+        if ok(event.image_options) then
+          tsp(string.format("\\weeklyImageFmt[%s]{%s}", event.image_options, event.image))
+        else
+          tsp(string.format("\\weeklyImageFmt{%s}", event.image))
+        end
+      end
+    end
+    tsp("\\mbox{}\\par ")
+
+    week = week + 1
   end
 end
 
@@ -251,7 +359,7 @@ function formatMarksNote(events, filterPred, markDefaultsCsv, isOneCalendar)
   local alreadyMarkedDates = {}
 
   for idx,event in pairs(events) do
-    if ok(event.note) and alreadyMarkedDates[event.date] == nil then
+    if ok(event.footnote) and alreadyMarkedDates[event.date] == nil then
       alreadyMarkedDates[event.date] = true
       local d = date(event.date)
 
@@ -284,24 +392,27 @@ function formatInlineNotes(events, filterPred, markDefaultsCsv)
   local alreadyMarkedDates = {}
 
   for idx,event in pairs(events) do
-    if ok(event.note) and alreadyMarkedDates[event.date] == nil then
+    if ok(event.footnote) and alreadyMarkedDates[event.date] == nil then
       alreadyMarkedDates[event.date] = true
       local d = date(event.date)
 
       tsp(string.format(" \\draw node [above right=0pt and 0pt of cal%s-%s.north west, anchor=north west] {\\begin{minipage}[t][\\@t@calendar@dayYshift - 10pt][b]{\\@t@calendar@dayXshift - 8pt}\\eventsFmt %s\\end{minipage}}; ",
                         d:fmt("%m"),
                         event.date,
-                        event.note))
+                        event.footnote))
     end
   end
 end
 
 -- monthName is better for argument than monthNum
 function monthMarksNote(monthName, filterPred, eventsCsv, markDefaultsCsv)
+  if not ok(eventsCsv) then
+    return
+  end
   local monthNum = monthNameToNum(monthName)
 
   if not ok(filterPred) then
-    filterPred = function(e) return ok(e.note) end
+    filterPred = function(e) return ok(e.footnote) end
   end
 
   local events = eventsInMonth(loadCsv(eventsCsv), monthNum, filterPred);
@@ -311,10 +422,13 @@ end
 
 -- monthName is better for argument than monthNum
 function monthInlineNotes(monthName, filterPred, eventsCsv, markDefaultsCsv)
+  if not ok(eventsCsv) then
+    return
+  end
   local monthNum = monthNameToNum(monthName)
 
   if not ok(filterPred) then
-    filterPred = function(e) return ok(e.note) end
+    filterPred = function(e) return ok(e.footnote) end
   end
 
   local events = eventsInMonth(loadCsv(eventsCsv), monthNum, filterPred);
@@ -323,8 +437,11 @@ function monthInlineNotes(monthName, filterPred, eventsCsv, markDefaultsCsv)
 end
 
 function yearMarksNote(yearNum, filterPred, eventsCsv, markDefaultsCsv, isOneCalendar)
+  if not ok(eventsCsv) then
+    return
+  end
   if not ok(filterPred) then
-    filterPred = function(e) return ok(e.note) end
+    filterPred = function(e) return ok(e.footnote) end
   end
 
   local events = eventsInYear(loadCsv(eventsCsv), yearNum, filterPred);

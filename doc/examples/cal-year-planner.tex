@@ -1,6 +1,7 @@
 \documentclass[
   year = 2018,
   eventsCsv = ./data/holidays-compact.csv,
+  moonsCsv = ./data/moonphases-2018.csv,
   markDefaultsCsv = ./data/mark_defaults.csv,
   imageFolder = ./photos/,
 ]{wallcalendar}
@@ -10,15 +11,6 @@
 \usepackage{fontspec}
 \defaultfontfeatures{Ligatures={TeX}}
 \setmainfont{Alegreya Sans}
-
-% Use two CSV files for day text input to include the moon phases
-\renewcommand\@wall@plm[1]{%
-\luadirect{
-require("wallcalendar-helpers.lua")
-monthMarksDayText(\luastring{#1}, nil, \luastring{\plannerMarksDayTextCSV})
-monthMarksDayText(\luastring{#1}, nil, \luastring{./data/moonphases-2018.csv})
-tex.sprint(';')
-}}
 
 \newcommand\plannerYearFmt{\fontsize{26}{26}\selectfont\color{orangegold}}
 

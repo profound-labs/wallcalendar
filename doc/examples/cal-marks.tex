@@ -28,7 +28,7 @@ not even a sound
 \SetCalendar[bg/.style={opacity=0.4}]{September}
 
 \SetEvents{September}{%
-\parseMonthMarksDayTextUsing{./data/moonphases.csv}%
+\parseMonthMarksDayTextUsing{./data/moonphases-2018.csv}%
 \parseMonthMarksDayText%
 \parseMonthMarksNote%
 }{%
@@ -36,7 +36,7 @@ not even a sound
 \parseMonthEvents[%
   format cmd = {%
     \textsuperscript{\eMark}~\eMonthShort~\eDay:\space%
-    \eNote\ifnumless{\eIdx}{\eMaxIdx}{,\space}{.}%
+    \eFootnote\ifnumless{\eIdx}{\eMaxIdx}{,\space}{.}%
    },
 ]%
 }
