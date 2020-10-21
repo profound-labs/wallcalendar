@@ -2392,6 +2392,18 @@ plannerWeeklyImages(tonumber(\CalendarYear), nil, \luastring{\plannerMarksDayTex
   \endgroup
 }
 
+\def\@wall@oneWeekNotes@fontSize{9}
+\def\@wall@oneWeekNotes@lineHeight{14.55}
+\newcommand\oneWeekNotesSize{\@setfontsize\oneWeekNotesSize{\@wall@oneWeekNotes@fontSize}{\@wall@oneWeekNotes@lineHeight}}
+
+\newlength\oneNoteSkip
+\newlength\oneImageSkip
+\setlength{\oneNoteSkip}{\@wall@oneWeekNotes@lineHeight pt}
+\setlength{\oneImageSkip}{\oneNoteSkip}
+
+\newcommand\oneWeekNotesSep{}
+\newcommand\oneWeekImagesSep{}
+
 % #1 = (opt) color
 % #2 = text
 \newcommand*\colorUL[2][textbody]{%
@@ -2401,16 +2413,41 @@ plannerWeeklyImages(tonumber(\CalendarYear), nil, \luastring{\plannerMarksDayTex
 }
 
 % #1 = color
-% #2 = date
-% #3 = text
-\newcommand\weeklyNoteFmt[3]{%
-  \colorUL[#1]{#2:} #3\quad%
+% #2 = week number
+% #3 = date
+% #4 = text
+\newcommand\oneNote[4]{%
+  \colorUL[#1]{#3:} #4\quad%
+}
+
+% #1 = week number
+% #2 = combined text
+\newcommand\oneWeekNotes[2]{%
+  \node [
+    below left = {#1\oneNoteSkip} and 0pt of bg.north east,
+    anchor = north east,
+    inner sep = 0pt,
+  ] {%
+    \begin{minipage}{\linewidth}%
+      \raggedright%
+      \setlength{\parindent}{0pt}%
+      \oneWeekNotesSize\selectfont%
+      #2%
+    \end{minipage}%
+  };%
 }
 
 % #1 = (opt) image options
-% #2 = image path
-\newcommand\weeklyImageFmt[2][width=20mm]{%
-  \includegraphics[#1]{#2}%
+% #2 = week number
+% #3 = image path
+\newcommand\oneImage[3][width=20mm]{%
+  \node [
+    below left = {#2\oneImageSkip} and 0pt of bg.north east,
+    anchor = north east,
+    inner sep = 0pt,
+  ] {%
+    \includegraphics[#1]{#3}%
+  };%
 }
 
 \newcommand\YearPlannerPortrait{%

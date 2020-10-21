@@ -47,6 +47,26 @@
 
 \setlength{\parindent}{0pt}
 
+\newlength\weeklyNotesTopSep
+\newlength\weeklyImagesTopSep
+\setlength{\weeklyNotesTopSep}{15pt}
+\setlength{\weeklyImagesTopSep}{\weeklyNotesTopSep}
+
+\newlength\sideNotesColWidth
+\newlength\imagesColWidth
+\newlength\footNotesColWidth
+
+\setlength{\sideNotesColWidth}{110mm}
+\setlength{\imagesColWidth}{23mm}
+
+\newlength\sideNotesXOffset
+\newlength\imagesXOffset
+
+\setlength\sideNotesXOffset{63mm}
+\setlength\imagesXOffset{\sideNotesXOffset + \sideNotesColWidth + 3mm}
+
+\setlength{\footNotesColWidth}{\sideNotesColWidth + 3mm + \imagesColWidth}
+
 \makeatother
 
 \begin{document}
@@ -102,42 +122,50 @@
   }%
 }
 
-% Weekly images
-\AddToShipoutPictureBG*{\put(\LenToUnit{7mm + 0.35\linewidth},\LenToUnit{7mm})%
+% Weekly annotated side notes
+\AddToShipoutPictureBG*{\put(\LenToUnit{7mm + \sideNotesXOffset},\LenToUnit{7mm})%
   {%
-    \begin{minipage}[b][\calTextHeight][t]{0.65\linewidth}%
-      \raggedleft
-      \fontsize{10}{10}\selectfont
-      \setlength{\parindent}{0pt}%
-      \setlength{\parskip}{4.53pt}%
-      \vspace*{25pt}
-
-      \plannerWeeklyImages
-
+    \begin{minipage}[b][\calTextHeight][t]{\sideNotesColWidth}%
+      \vspace*{\weeklyNotesTopSep}%
+      \begin{tikzpicture}%
+        \node (bg) [
+          rectangle,
+          draw = none,
+          fill = none,
+          minimum height = \calTextHeight - \weeklyNotesTopSep,
+          minimum width = \linewidth,
+          inner sep = 0pt,
+        ] {};
+        \plannerWeeklyNotes%
+      \end{tikzpicture}%
     \end{minipage}%
   }%
 }
 
-% Weekly annotated side notes
-\AddToShipoutPictureBG*{\put(\LenToUnit{7mm + 0.35\linewidth},\LenToUnit{7mm})%
+% Weekly images
+\AddToShipoutPictureBG*{\put(\LenToUnit{7mm + \imagesXOffset},\LenToUnit{7mm})%
   {%
-    \begin{minipage}[b][\calTextHeight][t]{0.65\linewidth}%
-      \raggedright
-      \fontsize{10}{10}\selectfont
-      \setlength{\parindent}{0pt}%
-      \setlength{\parskip}{4.53pt}%
-      \vspace*{25pt}
-
-      \plannerWeeklyNotes
-
+    \begin{minipage}[b][\calTextHeight][t]{\imagesColWidth}%
+      \vspace*{\weeklyImagesTopSep}%
+      \begin{tikzpicture}%
+        \node (bg) [
+          rectangle,
+          draw = none,
+          fill = none,
+          minimum height = \calTextHeight - \weeklyImagesTopSep,
+          minimum width = \linewidth,
+          inner sep = 0pt,
+        ] {};
+        \plannerWeeklyImages%
+      \end{tikzpicture}%
     \end{minipage}%
   }%
 }
 
 % Footnote event notes
-\AddToShipoutPictureBG*{\put(\LenToUnit{7mm + 0.35\linewidth},\LenToUnit{7mm})%
+\AddToShipoutPictureBG*{\put(\LenToUnit{7mm + \sideNotesXOffset},\LenToUnit{7mm})%
   {%
-    \begin{minipage}[b][\calTextHeight][t]{0.65\linewidth}%
+    \begin{minipage}[b][\calTextHeight][t]{\footNotesColWidth}%
       \raggedright
       \fontsize{10}{10}\selectfont
       \setlength{\parindent}{0pt}%

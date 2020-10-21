@@ -302,6 +302,7 @@ function plannerWeeklyNotes(yearNum, filterPred, eventsCsv)
 
   local week = 1
   while week <= 53 do
+    tsp(string.format("\\oneWeekNotes{%s}{", week))
     for idx,event in pairs(events) do
       d = date(event.date)
       w = d:getisoweeknumber()
@@ -311,16 +312,16 @@ function plannerWeeklyNotes(yearNum, filterPred, eventsCsv)
           m = d:getmonth()
           me = de:getmonth()
           if m == me then
-            tsp(string.format("\\weeklyNoteFmt{%s}{%s}{%s}", event.annotation_color, d:fmt("%b").." "..d:getday().."--"..de:getday(), event.sidenote))
+            tsp(string.format("\\oneNote{%s}{%s}{%s}{%s}", event.annotation_color, week, d:fmt("%b").." "..d:getday().."--"..de:getday(), event.sidenote))
           else
-            tsp(string.format("\\weeklyNoteFmt{%s}{%s}{%s}", event.annotation_color, d:fmt("%b").." "..d:getday().." -- "..de:fmt("%b").." "..de:getday(), event.sidenote))
+            tsp(string.format("\\oneNote{%s}{%s}{%s}{%s}", event.annotation_color, week, d:fmt("%b").." "..d:getday().." -- "..de:fmt("%b").." "..de:getday(), event.sidenote))
           end
         else
-          tsp(string.format("\\weeklyNoteFmt{%s}{%s}{%s}", event.annotation_color, d:fmt("%b").." "..d:getday(), event.sidenote))
+          tsp(string.format("\\oneNote{%s}{%s}{%s}{%s}", event.annotation_color, week, d:fmt("%b").." "..d:getday(), event.sidenote))
         end
       end
     end
-    tsp("\\mbox{}\\par ")
+    tsp("}\\oneWeekNotesSep ")
 
     week = week + 1
   end
@@ -335,16 +336,17 @@ function plannerWeeklyImages(yearNum, filterPred, eventsCsv)
   local week = 1
   while week <= 53 do
     for idx,event in pairs(events) do
+      d = date(event.date)
       w = d:getisoweeknumber()
       if week == w and ok(event.image) then
         if ok(event.image_options) then
-          tsp(string.format("\\weeklyImageFmt[%s]{%s}", event.image_options, event.image))
+          tsp(string.format("\\oneImage[%s]{%s}{%s}", event.image_options, week, event.image))
         else
-          tsp(string.format("\\weeklyImageFmt{%s}", event.image))
+          tsp(string.format("\\oneImage{%s}{%s}", week, event.image))
         end
       end
     end
-    tsp("\\mbox{}\\par ")
+    tsp("\\oneWeekImagesSep ")
 
     week = week + 1
   end
