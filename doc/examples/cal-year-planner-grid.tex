@@ -12,8 +12,6 @@
 
 \makeatletter
 
-\definecolor{textbody}{gray}{0}
-
 \usepackage{fontspec}
 \defaultfontfeatures{Ligatures=TeX}
 
@@ -29,7 +27,10 @@
 \renewcommand\plannerGridMonthFont{\AlegreyaSansExtraBold}
 \renewcommand\plannerGridNotesFont{\AlegreyaSans}
 
-\renewcommand\monthMarkFmt{\fontsize{6}{9}\selectfont\color{textbody}}
+\renewcommand\monthMarkFmt{%
+  \fontsize{7}{7}\selectfont%
+  \color{textbody}%
+}
 
 \renewcommand\plannerMoonSize{\@setfontsize\plannerMoonSize{13}{13}}
 

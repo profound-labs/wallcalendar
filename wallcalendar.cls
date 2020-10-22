@@ -13,7 +13,7 @@
 % LPPL LaTeX Public Project License
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{wallcalendar}[2020/10/21 v1.5.0 A wall calendar document class with custom layouts and support for internationalization.]
+\ProvidesClass{wallcalendar}[2020/10/22 v1.5.0 A wall calendar document class with custom layouts and support for internationalization.]
 
 \RequirePackage{pgfopts}
 \RequirePackage{calc}
@@ -170,7 +170,7 @@
   }
 }
 
-\definecolor{textbody}{gray}{0.15}
+\definecolor{textbody}{gray}{0}
 
 % pantone 1245C, RGB 191,145,12 HEX: #BF910C
 % pantone 1255C, CMYK 0,27.5,100,34
@@ -179,6 +179,7 @@
 %\definecolor{orangegold}{cmyk}{0,0.31,0.89,0}
 \colorlet{orangegold}{darkgold}
 
+\colorlet{month}{darkgold}
 \colorlet{gridcolor}{black!30}
 \colorlet{weekday}{black}
 \colorlet{weekend}{black!50}
@@ -187,7 +188,7 @@
 \definecolor{sunday}{RGB}{255,0,0}
 
 \definecolor{datenum}{gray}{0.3}
-\definecolor{plannerdatenum}{gray}{0.15}
+\definecolor{plannerdatenum}{gray}{0}
 \definecolor{quote}{gray}{0.3}
 \definecolor{notes}{gray}{0.3}
 
@@ -791,7 +792,7 @@
 \def\@t@formatCmd{}
 \def\@t@minEvents{}
 
-\newcommand\monthMarkFmt{\color{textbody}}
+\newcommand\monthMarkFmt{\fontsize{10}{10}\selectfont\color{textbody}}
 
 \newcommand\symbolSpace{\thinspace}
 \newcommand\symbolSeparator{,\symbolSpace}
@@ -1974,11 +1975,13 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
   },
 ]
 
-\newcommand\plannerPortraitMonthFmt{\fontsize{11}{11}\selectfont\color{darkgold}}
-\newcommand\plannerPortraitDayFmt{\fontsize{10}{10}\selectfont\color{plannerdatenum}}
+\newcommand\plannerPortraitMonthFmt{\fontsize{13}{13}\selectfont\color{darkgold}}
+\newcommand\plannerPortraitDayFmt{\fontsize{12}{12}\selectfont\color{plannerdatenum}}
 
 \tikzstyle{year planner portrait}=[
   week list,
+  day xshift=20pt,
+  day yshift=18pt,
   month text={\plannerPortraitMonthFmt\@tr@monthNumName{\pgfcalendarcurrentmonth}},
   day text={\plannerPortraitDayFmt\%d-},
   every month/.append style={%
@@ -2005,7 +2008,7 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
 
 \newcommand\plannerLandscapeDayFmt{%
   \plannerLandscapeDayFont%
-  \fontsize{10}{12}\selectfont%
+  \fontsize{11}{12}\selectfont%
 }
 
 \newcommand*\plannerLandscapeDateDayFormat[1]{%
@@ -2042,17 +2045,30 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
   month label left,
   execute at begin day scope={
     \plannerLandscapeBeginDayScopeHook
+    % Week divider line on Sunday as a thin rectangle
+    \ifdate{Sunday}{%
+      \node[
+        rectangle,
+        inner sep=0pt,
+        minimum width={0.4pt},
+        minimum height={\plannerLandscapeMonthYShift},
+        xshift={0.5\plannerLandscapeDayXShift},
+        yshift=2pt,
+        draw=none,
+        fill=black!80,
+        ]{};%
+    }{}%
     % Weekday headers in January
     \ifdate{between=01-01 and 01-31}{
       \def\l{\ifcase\pgfcalendarcurrentweekday M\or T\or W\or T\or F\or S\or S\fi}%
-      \ifdate{weekend}{\def\daylabelcolor{gold}}{\def\daylabelcolor{black}}%
+      \ifdate{weekend}{\def\daylabelcolor{weekend}}{\def\daylabelcolor{weekday}}%
       \node[anchor=south,yshift=5mm,inner sep=0pt]{\color{\daylabelcolor}\plannerLandscapeDateDayFormat{\l}};%
     }{}
     % Weekday headers in December
     \ifdate{between=12-01 and 12-31}{
       \pgftransformyshift{-3mm}%
       \def\l{\ifcase\pgfcalendarcurrentweekday M\or T\or W\or T\or F\or S\or S\fi}%
-      \ifdate{weekend}{\def\daylabelcolor{gold}}{\def\daylabelcolor{black}}%
+      \ifdate{weekend}{\def\daylabelcolor{weekend}}{\def\daylabelcolor{weekday}}%
       \node[anchor=south,yshift=5mm,inner sep=0pt]{\color{\daylabelcolor}\plannerLandscapeDateDayFormat{\l}};%
     }{}
   }
@@ -2072,24 +2088,24 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
 
 \newcommand\plannerGridMonthFmt{%
   \plannerGridMonthFont%
-  \fontsize{13}{13}\selectfont%
+  \fontsize{9.5}{9.5}\selectfont%
   \color{white}%
 }
 
 \newcommand\plannerGridDayFmt{%
   \plannerGridDayFont%
-  \fontsize{11}{11}\selectfont%
+  \fontsize{10.5}{10.5}\selectfont%
 }
 
 \newcommand\plannerGridDateDayFmt{%
   \plannerGridDateDayFont%
-  \fontsize{9}{9}\selectfont%
+  \fontsize{8.5}{8.5}\selectfont%
   \color{black!80}%
 }
 
 \newcommand{\plannerGridNotesFmt}{%
   \plannerGridNotesFont%
-  \fontsize{11}{11}\selectfont%
+  \fontsize{9}{9}\selectfont%
 }
 
 \newcommand\plannerGridBeginDayScopeHook{%
@@ -2106,13 +2122,12 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
 \newlength\plannerGridMonthNamesWidth
 
 \newlength\plannerGridNotesHeight
-\setlength{\plannerGridNotesHeight}{10mm}
+\setlength{\plannerGridNotesHeight}{7mm}
+\setlength{\plannerGridDayHeadingsHeight}{5mm}
+\setlength{\plannerGridMonthNamesWidth}{5mm}
 
-\setlength{\plannerGridCalendarWidth}{\calPaperWidth - \@wall@leftMargin - \@wall@rightMargin}
+\setlength{\plannerGridCalendarWidth}{\calPaperWidth - \@wall@leftMargin - \@wall@rightMargin - \plannerGridMonthNamesWidth}
 \setlength{\plannerGridCalendarHeight}{\calPaperHeight - \@wall@topMargin - \@wall@bottomMargin - \plannerGridNotesHeight}
-
-\setlength{\plannerGridDayHeadingsHeight}{10mm}
-\setlength{\plannerGridMonthNamesWidth}{10mm}
 
 \setlength{\@tmp@a}{\plannerGridCalendarWidth - \plannerGridMonthNamesWidth}
 % 37 columns. 1/37 = 0.027. Max week shift is 6 = Sunday. 31 days + 6 = 37.
@@ -2142,16 +2157,16 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
     ] {};%
     %
     \ifdate{Monday}{%
-      \node (a) [above left = 15pt and -3.5pt of cell.west] {};
-      \node (b) [below left = 15pt and -3.5pt of cell.west] {};
-      \node (c) [right = 10pt of cell.west] {};
+      \node (a) [above left = 10pt and -3.5pt of cell.west] {};
+      \node (b) [below left = 10pt and -3.5pt of cell.west] {};
+      \node (c) [right = 5pt of cell.west] {};
       \path [on layer = one, fill = pagebgcolor] (a.south) -- (b.north) -- (c.west) -- (a.south);%
     }{}%
     %
     \ifdate{Sunday}{%
-      \node (a) [above left = 15pt and {-3.5pt + 1pt} of cell.east] {};
-      \node (b) [below left = 15pt and {-3.5pt + 1pt} of cell.east] {};
-      \node (c) [right = {10pt - 1pt} of cell.east] {};
+      \node (a) [above left = 10pt and {-3.5pt + 0.6pt} of cell.east] {};
+      \node (b) [below left = 10pt and {-3.5pt + 0.6pt} of cell.east] {};
+      \node (c) [right = {5pt - 0.6pt} of cell.east] {};
       \path [on layer = two, fill = white] (a.south) -- (b.north) -- (c.west) -- (a.south);%
     }{}%
     %
@@ -2159,11 +2174,11 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
   },
 ]
 
-\newcommand\pf{}
+\newcommand\pf{\fontsize{8}{8}\selectfont}
 \newcommand\plannerCompactDayFmt{\fontsize{9}{9}\selectfont}
-\newcommand\plannerCompactMonthFmt{\fontsize{10}{10}\selectfont\color{darkgold}}
+\newcommand\plannerCompactMonthFmt{\bfseries\fontsize{10}{10}\selectfont\color{month}}
 \newcommand\plannerCompactYearFmt{\plannerCompactMonthFmt}
-\newcommand\plannerCompactWeekNumFmt{\itshape\fontsize{7}{7}\selectfont\color{textbody}}
+\newcommand\plannerCompactWeekNumFmt{\itshape\fontsize{7}{7}\selectfont\color{plannerdatenum}}
 
 \newcommand*\plannerCompactDateDayFormat[1]{\fontsize{8}{11}\selectfont #1}
  
@@ -2505,7 +2520,7 @@ plannerWeeklyImages(tonumber(\CalendarYear), nil, \luastring{\plannerMarksDayTex
 
     \node [
       below = \@tmp@a of bg.north west,
-      yshift = 0.5\plannerGridRowYShift,
+      yshift = 0.5\plannerGridRowYShift - 2pt,
       xshift = 0.5\plannerGridColXShift - 2pt,
       anchor = base,
       rotate = 90,
@@ -2528,10 +2543,11 @@ plannerWeeklyImages(tonumber(\CalendarYear), nil, \luastring{\plannerMarksDayTex
 
   % Year number in the corner
   \node [
-    right = 0pt of bg.north west,
+    below right = -1pt and -5pt of bg.north west,
     xshift = 0.5\plannerGridMonthNamesWidth,
-    yshift = -0.5\plannerGridDayHeadingsHeight - 5pt,
-    anchor = base,
+    yshift = -0.5\plannerGridDayHeadingsHeight,
+    anchor = north west,
+    inner sep = 0pt,
   ] {\plannerGridYearNumberFmt\CalendarYear};
 
   \setcounter{verticalCount}{1}

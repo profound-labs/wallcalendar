@@ -11,8 +11,6 @@
 
 \makeatletter
 
-\definecolor{textbody}{gray}{0}
-
 \usepackage{fontspec}
 \defaultfontfeatures{Ligatures=TeX}
 
@@ -26,19 +24,12 @@
 \renewcommand\plannerLandscapeDayFont{\AlegreyaSansLight}
 \renewcommand\plannerLandscapeMonthFont{\AlegreyaSans}
 
-\renewcommand\plannerLandscapeDayFmt{%
-  \plannerLandscapeDayFont%
-  \fontsize{11}{12}\selectfont%
-}
-
 \renewcommand*\plannerMoonFormat[1]{{\color{gold}\plannerMoonSize #1}}
 
-\renewcommand\monthMarkFmt{\fontsize{6}{9}\selectfont\color{textbody}}
+\renewcommand\monthMarkFmt{\fontsize{7}{9}\selectfont\color{textbody}}
 
 \setlength{\plannerLandscapeDayXShift}{6.93mm}
 \setlength{\plannerLandscapeMonthYShift}{13.2mm}
-
-\renewcommand\plannerMoonSize{\@setfontsize\plannerMoonSize{13}{13}}
 
 \makeatother
 

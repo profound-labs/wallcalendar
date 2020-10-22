@@ -4,6 +4,10 @@
   moonsCsv = ./data/moonphases-2018.csv,
   markDefaultsCsv = ./data/mark_defaults.csv,
   imageFolder = ./photos/,
+  a4Paper,
+  hMargin = 7mm,
+  topMargin = 7mm,
+  bottomMargin = 7mm,
 ]{wallcalendar}
 
 \makeatletter
@@ -14,7 +18,7 @@
 
 \newcommand\plannerYearFmt{\fontsize{26}{26}\selectfont\color{orangegold}}
 
-\renewcommand\plannerPortraitDayFmt{\fontsize{10}{10}\selectfont\color{plannerdatenum}}
+\renewcommand\symbolSeparator{,}
 
 \newlength\plannerNotesSep
 \setlength{\plannerNotesSep}{3mm}
@@ -41,6 +45,9 @@
 \mbox{}
 \else
 \preYearPlannerPageHook
+
+\vspace*{10mm}
+
 {\centering
 
 {\printPlannerTitle}

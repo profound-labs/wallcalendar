@@ -31,16 +31,9 @@
   \setlength{\markDayTextRight}{-3pt}%
 }
 
-\definecolor{textbody}{gray}{0}
-\definecolor{plannerdatenum}{gray}{0}
 \definecolor{weekday}{gray}{0}
 \definecolor{weekend}{gray}{0.4}
-
-\renewcommand\pf{\fontsize{8}{8}\selectfont}
-\renewcommand\plannerCompactDayFmt{\fontsize{9}{9}\selectfont}
-
-\renewcommand\plannerCompactMonthFmt{\bfseries\fontsize{10}{10}\selectfont\color{white}}
-\renewcommand\plannerCompactWeekNumFmt{\itshape\fontsize{7}{7}\selectfont\color{plannerdatenum}}
+\colorlet{month}{white}
 
 \renewcommand*\plannerMoonFormat[1]{{\fontsize{10}{10}\selectfont\raisebox{-0.5pt}{#1}}}
 \renewcommand\monthMarkFmt{\fontsize{7}{9}\selectfont\color{textbody}}
