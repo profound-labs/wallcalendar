@@ -13,7 +13,7 @@
 % LPPL LaTeX Public Project License
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{wallcalendar}[2020/10/22 v1.5.0 A wall calendar document class with custom layouts and support for internationalization.]
+\ProvidesClass{wallcalendar}[2020/10/24 v1.5.0 A wall calendar document class with custom layouts and support for internationalization.]
 
 \RequirePackage{pgfopts}
 \RequirePackage{calc}
@@ -2429,10 +2429,14 @@ plannerWeeklyImages(tonumber(\CalendarYear), nil, \luastring{\plannerMarksDayTex
 
 % #1 = color
 % #2 = week number
-% #3 = date
+% #3 = date string
 % #4 = text
 \newcommand\oneNote[4]{%
-  \colorUL[#1]{#3:} #4\quad%
+  \ifstrequal{#3}{}{%
+    #4\quad%
+  }{%
+    \colorUL[#1]{#3} #4\quad%
+  }%
 }
 
 % #1 = week number

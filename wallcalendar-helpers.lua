@@ -307,18 +307,34 @@ function plannerWeeklyNotes(yearNum, filterPred, eventsCsv)
       d = date(event.date)
       w = d:getisoweeknumber()
       if week == w and ok(event.sidenote) then
-        if ok(event.date_end) then
-          de = date(event.date_end)
-          m = d:getmonth()
-          me = de:getmonth()
-          if m == me then
-            tsp(string.format("\\oneNote{%s}{%s}{%s}{%s}", event.annotation_color, week, d:fmt("%b").." "..d:getday().."--"..de:getday(), event.sidenote))
+
+        local date_str = ""
+        -- empty note_show_date: use default, i.e. include the date
+        if not (ok(event.note_show_date) and event.note_show_date == "FALSE") then
+          if ok(event.date_end) then
+            de = date(event.date_end)
+            m = d:getmonth()
+            me = de:getmonth()
+            if m == me then
+              date_str = d:fmt("%b").." "..d:getday().."--"..de:getday()
+            else
+              date_str = d:fmt("%b").." "..d:getday().." -- "..de:fmt("%b").." "..de:getday()
+            end
           else
-            tsp(string.format("\\oneNote{%s}{%s}{%s}{%s}", event.annotation_color, week, d:fmt("%b").." "..d:getday().." -- "..de:fmt("%b").." "..de:getday(), event.sidenote))
+            date_str = d:fmt("%b").." "..d:getday()
           end
-        else
-          tsp(string.format("\\oneNote{%s}{%s}{%s}{%s}", event.annotation_color, week, d:fmt("%b").." "..d:getday(), event.sidenote))
+          date_str = date_str..":"
         end
+
+        local note = ""
+        -- empty note_show_day_text: use default, i.e. DON'T include the date
+        if ok(event.note_show_day_text) and event.note_show_day_text == "TRUE" and ok(event.day_text) then
+          note = event.day_text.." "..event.sidenote
+        else
+          note = event.sidenote
+        end
+
+        tsp(string.format("\\oneNote{%s}{%s}{%s}{%s}", event.annotation_color, week, date_str, note))
       end
     end
     tsp("}\\oneWeekNotesSep ")

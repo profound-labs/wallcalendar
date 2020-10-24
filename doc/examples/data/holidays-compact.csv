@@ -1,14 +1,16 @@
-date;date_end;day_text;annotation;annotation_end;annotation_color;footnote;sidenote;image;image_options
-2018-01-01;;;\dateCircle;;red;;Dude, it’s a red circle;;
-2018-09-10;;;\dateCircle;;;;Dude, Gandalf escapes from Orthanc;photos/TomBombadil-crop.jpg;
-2018-09-27;2018-10-03;;\dateUnder;\dateUnder;orange;;Hey;;
-2018-11-01;2018-11-04;;\dateStart;\dateEnd;;;Ho;;
-2018-09-14;;;\dateSquare;;blue;;Dude, it’s Frodo \& Bilbo's birthday;;
-2018-09-10;;\pf G;;;;Gandalf escapes from Orthanc;;;
-2018-09-14;;\pf F;;;;Frodo \& Bilbo's birthday;;;
-2018-09-15;;;;;;Black riders enter the Shire;;;
-2018-09-18;;;;;;Frodo and company rescued by Bombadil;;;
-2018-09-28;;\pf W;;;;Wraith attack, Frodo wounded at Weathertop;;;
-2018-10-05;;\pf F;;;;Frodo crosses bridge of Mitheithel;;;
-2018-10-16;;\pf B;;;;Boromir reaches Rivendell;;;
-2018-10-17;;\pf E;;;;Council of Elrond;;;
+date;date_end;day_text;annotation;annotation_end;annotation_color;footnote;sidenote;image;image_options;note_show_date;note_show_day_text
+2018-01-05;;\emoji{👹};;;;;Fellowship enters Moria;;;;
+2018-01-09;;;\dateCircle;;red;;Fellowship reaches Lorien;;;;
+2018-05-01;;\emoji{😄};;;;;Old Tom Bombadil is a merry fellow, bright blue his jacket is, and his boots are yellow.;photos/TomBombadil-crop.jpg;;FALSE;TRUE
+2018-06-11;;;\dateSquare;;blue;;Sauron attacks Osgilliath;;;;
+2018-07-04;;\emoji{🧙‍♂️};;;;;Gandalf imprisoned by Saruman;;;;
+2018-09-27;2018-10-03;;\dateUnder;\dateUnder;orange;;Underline;;;;
+2018-11-01;2018-11-04;;\dateStart;\dateEnd;;;Date range;;;;
+2018-09-10;;\pf G;;;;Gandalf escapes from Orthanc;;;;;
+2018-09-14;;\pf F;;;;Frodo \& Bilbo's birthday;;;;;
+2018-09-15;;;;;;Black riders enter the Shire;;;;;
+2018-09-18;;;;;;Frodo and company rescued by Bombadil;;;;;
+2018-09-28;;\pf W;;;;Wraith attack, Frodo wounded at Weathertop;;;;;
+2018-10-05;;\pf F;;;;Frodo crosses bridge of Mitheithel;;;;;
+2018-10-16;;\pf B;;;;Boromir reaches Rivendell;;;;;
+2018-10-17;;\pf E;;;;Council of Elrond;;;;;
