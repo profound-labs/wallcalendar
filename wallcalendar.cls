@@ -2187,7 +2187,13 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
 }
 
 \newcount\weeknum
-  
+
+\newif\ifstartswithlastyear
+
+\luadirect{
+require("wallcalendar-helpers.lua")
+setStartsWithLastYear(\luastring{\CalendarYear})}
+
 \tikzstyle{year planner compact}=[
   week list,
   month yshift=0pt,
@@ -2252,13 +2258,22 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
     \ifdate{equals=01-01}{%
       \ifnum\pgfcalendarcurrentweekday=0\relax
       \else
-        \node [
-          anchor = east,
-          xshift = -13pt,
-          yshift = -0.5pt,
-          inner sep = 0pt,
-        ] {\parbox{6mm}{\centering\plannerCompactWeekNumFmt \the\weeknum.}};
-        \advance\weeknum by 1
+        \ifstartswithlastyear
+          \node [
+            anchor = east,
+            xshift = -13pt,
+            yshift = -0.5pt,
+            inner sep = 0pt,
+          ] {\parbox{6mm}{\centering\plannerCompactWeekNumFmt 53.}};
+        \else
+          \node [
+            anchor = east,
+            xshift = -13pt,
+            yshift = -0.5pt,
+            inner sep = 0pt,
+          ] {\parbox{6mm}{\centering\plannerCompactWeekNumFmt \the\weeknum.}};
+          \advance\weeknum by 1
+        \fi
       \fi
     }{}%
   },%

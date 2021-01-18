@@ -294,18 +294,11 @@ function drawAnnotations(yearNum, filterPred, eventsCsv)
   end
 end
 
-function plannerWeeklyNotes(yearNum, filterPred, eventsCsv)
-  if not ok(eventsCsv) then
-    return
-  end
-  local events = eventsInYear(loadCsv(eventsCsv), yearNum, filterPred);
-
-  local week = 1
-  while week <= 53 do
-    tsp(string.format("\\oneWeekNotes{%s}{", week))
+function collectWeekNotes(events, week)
     for idx,event in pairs(events) do
       d = date(event.date)
       w = d:getisoweeknumber()
+
       if week == w and ok(event.sidenote) then
 
         local date_str = ""
@@ -337,6 +330,41 @@ function plannerWeeklyNotes(yearNum, filterPred, eventsCsv)
         tsp(string.format("\\oneNote{%s}{%s}{%s}{%s}", event.annotation_color, week, date_str, note))
       end
     end
+end
+
+function setStartsWithLastYear(yearNum)
+  d = date(yearNum .. "-01-01")
+  if d:getisoweeknumber() == 53 then
+    tsp("\\startswithlastyeartrue")
+  end
+end
+
+function plannerWeeklyNotes(yearNum, filterPred, eventsCsv)
+  if not ok(eventsCsv) then
+    return
+  end
+  local events = eventsInYear(loadCsv(eventsCsv), yearNum, filterPred)
+
+  local starts_with_last_year = false
+  d = date(yearNum .. "-01-01")
+  if d:getisoweeknumber() == 53 then
+    starts_with_last_year = true
+  end
+
+  local week_offset = 0
+
+  if starts_with_last_year then
+    week_offset = 1
+
+    tsp(string.format("\\oneWeekNotes{%s}{", 1))
+    collectWeekNotes(events, 53)
+    tsp("}\\oneWeekNotesSep ")
+  end
+
+  local week = 1
+  while week <= 53 - week_offset do
+    tsp(string.format("\\oneWeekNotes{%s}{", week + week_offset))
+    collectWeekNotes(events, week)
     tsp("}\\oneWeekNotesSep ")
 
     week = week + 1
