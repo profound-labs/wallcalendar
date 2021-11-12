@@ -124,7 +124,6 @@
 \graphicspath{{\@wall@imageFolder}}
 
 \RequirePackage{eso-pic}
-\RequirePackage{ccicons}
 \RequirePackage{multicol}
 \RequirePackage{wasysym}
 
