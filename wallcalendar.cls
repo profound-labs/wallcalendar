@@ -1823,41 +1823,42 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
     ] {#3};
 }
 
+% cargo-culted from https://texample.net//tikz/examples/changing-the-default-calendar-layout/
 \tikzstyle{week list sunday}=[
-% Note that we cannot extend from week list,
-% the execute before day scope is cumulative
-execute before day scope={%
-  \ifdate{day of month=1}{\ifdate{equals=\pgfcalendarbeginiso}{}{
-      % On first of month, except when first date in calendar.
-      \pgfmathsetlength{\pgf@y}{\tikz@lib@cal@month@yshift}%
-      \pgftransformyshift{-\pgf@y}
-    }}{}%
-},
-execute at begin day scope={%
-  % Because for TikZ Monday is 0 and Sunday is 6,
-  % we can't directly use \pgfcalendercurrentweekday,
-  % but instead we define \c@pgf@counta (basically) as:
-  % (\pgfcalendercurrentweekday + 1) % 7
-  \pgfmathsetlength\pgf@x{\tikz@lib@cal@xshift}%
-  \ifnum\pgfcalendarcurrentweekday=6
-  \c@pgf@counta=0
-  \else
-  \c@pgf@counta=\pgfcalendarcurrentweekday
-  \advance\c@pgf@counta by 1
-  \fi
-  \pgf@x=\c@pgf@counta\pgf@x
-  % Shift to the right position for the day.
-  \pgftransformxshift{\pgf@x}
-},
-execute after day scope={
-  % Week is done, shift to the next line.
-  \ifdate{Saturday}{
-    \pgfmathsetlength{\pgf@y}{\tikz@lib@cal@yshift}%
-    \pgftransformyshift{-\pgf@y}
-  }{}%
-},
-% This should be defined, glancing from the source code.
-tikz@lib@cal@width=7
+        % Note that we cannot extend from week list,
+        % the execute before day scope is cumulative
+        execute before day scope={%
+               \ifdate{day of month=1}{\ifdate{equals=\pgfcalendarbeginiso}{}{
+               % On first of month, except when first date in calendar.
+                   \pgfmathsetlength{\pgf@y}{\tikz@lib@cal@month@yshift}%
+                   \pgftransformyshift{-\pgf@y}
+               }}{}%
+        },
+        execute at begin day scope={%
+            % Because for TikZ Monday is 0 and Sunday is 6,
+            % we can't directly use \pgfcalendercurrentweekday,
+            % but instead we define \c@pgf@counta (basically) as:
+            % (\pgfcalendercurrentweekday + 1) % 7
+            \pgfmathsetlength\pgf@x{\tikz@lib@cal@xshift}%
+            \ifnum\pgfcalendarcurrentweekday=6
+                \c@pgf@counta=0
+            \else
+                \c@pgf@counta=\pgfcalendarcurrentweekday
+                \advance\c@pgf@counta by 1
+            \fi
+            \pgf@x=\c@pgf@counta\pgf@x
+            % Shift to the right position for the day.
+            \pgftransformxshift{\pgf@x}
+        },
+        execute after day scope={
+            % Week is done, shift to the next line.
+            \ifdate{Saturday}{
+                \pgfmathsetlength{\pgf@y}{\tikz@lib@cal@yshift}%
+                \pgftransformyshift{-\pgf@y}
+            }{}%
+        },
+        % This should be defined, glancing from the source code.
+        tikz@lib@cal@width=7
 ]
 
 \tikzstyle{rigel}=[
