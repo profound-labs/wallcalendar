@@ -283,7 +283,7 @@
 \pgfkeys{/pgf/calendar/six rows month/.code={%
   \ifnum\pgfcalendarifdateday=30\relax
     % Monday
-    \ifnum\pgfcalendarifdateweekday=0\relax
+    \ifnum\pgfcalendarifdateweekday=6\relax
       \pgfcalendarmatchestrue
     \fi
   \else
@@ -293,7 +293,7 @@
         \pgfcalendarmatchestrue
       \fi
       % Tuesday
-      \ifnum\pgfcalendarifdateweekday=1\relax
+      \ifnum\pgfcalendarifdateweekday=6\relax
         \pgfcalendarmatchestrue
       \fi
     \fi
@@ -1689,7 +1689,7 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
       %
       % 31 day months
       \ifdate{between=01-01 and 01-31, between=03-01 and 03-31, between=05-01 and 05-31, between=07-01 and 07-31, between=08-01 and 08-31, between=10-01 and 10-31, between=12-01 and 12-31}{%
-        \ifdate{Saturday,Sunday}{%
+        \ifdate{Friday,Saturday}{%
           \gridRows=6%
           \setlength\@t@calendar@gridHeight{\@t@calendar@gridHeightSixRows}%
         }{%
@@ -1702,7 +1702,7 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
           \gridRows=5%
           \setlength\@t@calendar@gridHeight{\@t@calendar@gridHeightFiveRows}%
         }{%
-          \ifdate{Sunday}{%
+          \ifdate{Saturday}{%
             \gridRows=6%
             \setlength\@t@calendar@gridHeight{\@t@calendar@gridHeightSixRows}%
           }{%
@@ -1802,7 +1802,7 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
 
 \tikzstyle{betelgeuse}=[
   days grid,
-  week list,
+  week list sunday,
   day xshift=\@t@calendar@dayXshift,
   day yshift=\@t@calendar@dayYshift,
   headings background bar,
@@ -1823,9 +1823,47 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
     ] {#3};
 }
 
+% cargo-culted from https://texample.net//tikz/examples/changing-the-default-calendar-layout/
+\tikzstyle{week list sunday}=[
+        % Note that we cannot extend from week list,
+        % the execute before day scope is cumulative
+        execute before day scope={%
+               \ifdate{day of month=1}{\ifdate{equals=\pgfcalendarbeginiso}{}{
+               % On first of month, except when first date in calendar.
+                   \pgfmathsetlength{\pgf@y}{\tikz@lib@cal@month@yshift}%
+                   \pgftransformyshift{-\pgf@y}
+               }}{}%
+        },
+        execute at begin day scope={%
+            % Because for TikZ Monday is 0 and Sunday is 6,
+            % we can't directly use \pgfcalendercurrentweekday,
+            % but instead we define \c@pgf@counta (basically) as:
+            % (\pgfcalendercurrentweekday + 1) % 7
+            \pgfmathsetlength\pgf@x{\tikz@lib@cal@xshift}%
+            \ifnum\pgfcalendarcurrentweekday=6
+                \c@pgf@counta=0
+            \else
+                \c@pgf@counta=\pgfcalendarcurrentweekday
+                \advance\c@pgf@counta by 1
+            \fi
+            \pgf@x=\c@pgf@counta\pgf@x
+            % Shift to the right position for the day.
+            \pgftransformxshift{\pgf@x}
+        },
+        execute after day scope={
+            % Week is done, shift to the next line.
+            \ifdate{Saturday}{
+                \pgfmathsetlength{\pgf@y}{\tikz@lib@cal@yshift}%
+                \pgftransformyshift{-\pgf@y}
+            }{}%
+        },
+        % This should be defined, glancing from the source code.
+        tikz@lib@cal@width=7
+]
+
 \tikzstyle{rigel}=[
   days grid,
-  week list,
+  week list sunday,
   day xshift=\@t@calendar@dayXshift,
   day yshift=\@t@calendar@dayYshift,
   day fullday headings,
@@ -1848,7 +1886,7 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
 
 \tikzstyle{aldebaran}=[
   days grid,
-  week list,
+  week list sunday,
   day xshift=\@t@calendar@dayXshift,
   day yshift=\@t@calendar@dayYshift,
   day letter headings,
@@ -1892,7 +1930,7 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
 \newcommand\plannerPortraitDayFmt{\fontsize{8}{8}\selectfont\color{plannerdatenum}}
 
 \tikzstyle{year planner portrait}=[
-  week list,
+  week list sunday,
   month text={\plannerPortraitMonthFmt\@tr@monthNumName{\pgfcalendarcurrentmonth}},
   day text={\plannerPortraitDayFmt\%d-},
   every month/.append style={%
@@ -2039,7 +2077,7 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
 \newcounter{verticalCount}
 
 \tikzstyle{year planner landscape grid days}=[
-  month list,
+  month list sunday,
   day xshift=\plannerGridColXShift,
   month yshift=\plannerGridRowYShift,
   day text={\plannerGridDayFmt \%d-},
@@ -2088,7 +2126,7 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
 \newcount\weeknum
   
 \tikzstyle{year planner compact}=[
-  week list,
+  week list sunday,
   month yshift=0pt,
   day text={\plannerCompactDayFmt\%d-},
   every day/.style={anchor=mid},%
@@ -2482,8 +2520,8 @@ yearMarksNote(tonumber(\CalendarYear), nil, \luastring{\plannerMarksNoteCSV}, \l
 \xThursdayDayLetter\or \xFridayDayLetter\or \xSaturdayDayLetter\or \xSundayDayLetter\fi}
 
 \newcommand*\@tr@dayName[1]{%
-\ifcase#1 \xMonday\or \xTuesday\or \xWednesday\or
-\xThursday\or \xFriday\or \xSaturday\or \xSunday\fi}
+\ifcase#1 \xSunday\or \xMonday\or \xTuesday\or \xWednesday\or
+\xThursday\or \xFriday\or \xSaturday \fi}
 
 \newcommand*{\monthToNum}[1]{%
 \luadirect{
