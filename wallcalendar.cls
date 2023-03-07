@@ -1802,7 +1802,7 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
 
 \tikzstyle{betelgeuse}=[
   days grid,
-  week list,
+  week list sunday,
   day xshift=\@t@calendar@dayXshift,
   day yshift=\@t@calendar@dayYshift,
   headings background bar,
@@ -1885,7 +1885,7 @@ tikz@lib@cal@width=7
 
 \tikzstyle{aldebaran}=[
   days grid,
-  week list,
+  week list sunday,
   day xshift=\@t@calendar@dayXshift,
   day yshift=\@t@calendar@dayYshift,
   day letter headings,
@@ -1929,7 +1929,7 @@ tikz@lib@cal@width=7
 \newcommand\plannerPortraitDayFmt{\fontsize{8}{8}\selectfont\color{plannerdatenum}}
 
 \tikzstyle{year planner portrait}=[
-  week list,
+  week list sunday,
   month text={\plannerPortraitMonthFmt\@tr@monthNumName{\pgfcalendarcurrentmonth}},
   day text={\plannerPortraitDayFmt\%d-},
   every month/.append style={%
@@ -2076,7 +2076,7 @@ tikz@lib@cal@width=7
 \newcounter{verticalCount}
 
 \tikzstyle{year planner landscape grid days}=[
-  month list,
+  month list sunday,
   day xshift=\plannerGridColXShift,
   month yshift=\plannerGridRowYShift,
   day text={\plannerGridDayFmt \%d-},
@@ -2125,7 +2125,7 @@ tikz@lib@cal@width=7
 \newcount\weeknum
   
 \tikzstyle{year planner compact}=[
-  week list,
+  week list sunday,
   month yshift=0pt,
   day text={\plannerCompactDayFmt\%d-},
   every day/.style={anchor=mid},%
