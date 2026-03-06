@@ -8,9 +8,14 @@ all:
 
 test: ./diff-cal.sh
 
-calendars: cal-translations cal-plain.pdf cal-showtrims.pdf cal-showframe.pdf cal-varnishmask.pdf cal-marks.pdf cal-photo-and-notes.pdf cal-year-planner.pdf cal-year-planner-compact.pdf cal-thumbnails.pdf
+calendars: cal-translations cal-plain.pdf cal-showtrims.pdf cal-showframe.pdf cal-varnishmask.pdf cal-marks.pdf cal-photo-and-notes.pdf cal-year-planner.pdf cal-year-planner-rows.pdf cal-year-planner-grid.pdf cal-year-planner-compact.pdf cal-thumbnails.pdf
 
-bursts: cal-plain-burst cal-showtrims-burst cal-showframe-burst cal-varnishmask-burst
+bursts: cal-plain-burst cal-showtrims-burst cal-showframe-burst cal-varnishmask-burst cal-no-photos-burst
+
+jpg: cal-marks.jpg
+
+%.jpg: %.pdf
+	./jpg-to-pdf.sh $<
 
 %.pdf: %.tex
 	$(LATEX) $(LATEX_OPTS) $<
@@ -26,6 +31,9 @@ cal-showframe-burst:
 
 cal-varnishmask-burst:
 	pdftk cal-varnishmask.pdf burst output ./cal-burst/cal-varnishmask-%02d.pdf
+
+cal-no-photos-burst:
+	pdftk cal-no-photos.pdf burst output ./cal-burst/cal-no-photos-%02d.pdf
 
 cal-translations: cal-translations-japanese.pdf cal-translations-english.pdf cal-translations-hungarian.pdf
 

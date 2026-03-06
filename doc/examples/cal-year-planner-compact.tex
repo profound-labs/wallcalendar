@@ -1,6 +1,7 @@
 \documentclass[
   year = 2018,
   eventsCsv = ./data/holidays-compact.csv,
+  moonsCsv = ./data/moonphases-2018.csv,
   markDefaultsCsv = ./data/mark_defaults.csv,
   imageFolder = ./photos/,
   a4Paper,
@@ -16,14 +17,10 @@
 
 \setmainfont{Alegreya Sans}
 
-% Use two CSV files for day text input to include the moon phases
-\renewcommand\@wall@plmYear{%
-\luadirect{
-require("wallcalendar-helpers.lua")
-yearMarksDayText(tonumber(\CalendarYear), nil, \luastring{\plannerMarksDayTextCSV})
-yearMarksDayText(tonumber(\CalendarYear), nil, \luastring{./data/moonphases-2018.csv})
-tex.sprint(';')
-}}
+\newfontfamily\EmojiFont{Noto Color Emoji}[Renderer=Harfbuzz]
+%\newfontfamily\EmojiFont{Twemoji Mozilla}[Renderer=Harfbuzz]
+
+\newcommand\emoji[1]{{\EmojiFont\selectfont #1}}
 
 \newcommand\preYearPlannerPageHook{%
   \setlength{\markNumberAbove}{-9pt}%
@@ -39,25 +36,42 @@ tex.sprint(';')
   \setlength{\markDayTextRight}{-3pt}%
 }
 
-\definecolor{textbody}{gray}{0}
-\definecolor{plannerdatenum}{gray}{0}
 \definecolor{weekday}{gray}{0}
 \definecolor{weekend}{gray}{0.4}
-
-\renewcommand\pf{\fontsize{8}{8}\selectfont}
-\renewcommand\plannerCompactDayFmt{\fontsize{9}{9}\selectfont}
-
-\renewcommand\plannerCompactMonthFmt{\bfseries\fontsize{10}{10}\selectfont\color{white}}
-\renewcommand\plannerCompactWeekNumFmt{\itshape\fontsize{7}{7}\selectfont\color{plannerdatenum}}
+\colorlet{month}{white}
 
 \renewcommand*\plannerMoonFormat[1]{{\fontsize{10}{10}\selectfont\raisebox{-0.5pt}{#1}}}
 \renewcommand\monthMarkFmt{\fontsize{7}{9}\selectfont\color{textbody}}
 
-%\renewcommand\plannerCompactBeginDayScopeHook{}
+\setlength{\parindent}{0pt}
+
+\newlength\weeklyNotesTopSep
+\newlength\weeklyImagesTopSep
+\setlength{\weeklyNotesTopSep}{15pt}
+\setlength{\weeklyImagesTopSep}{\weeklyNotesTopSep}
+
+\newlength\sideNotesColWidth
+\newlength\imagesColWidth
+\newlength\footNotesColWidth
+
+\setlength{\sideNotesColWidth}{110mm}
+\setlength{\imagesColWidth}{23mm}
+
+\newlength\sideNotesXOffset
+\newlength\imagesXOffset
+
+\setlength\sideNotesXOffset{63mm}
+\setlength\imagesXOffset{\sideNotesXOffset + \sideNotesColWidth + 3mm}
+
+\setlength{\footNotesColWidth}{\sideNotesColWidth + 3mm + \imagesColWidth}
 
 \makeatother
 
 \begin{document}
+
+\mbox{}
+
+% Positioning with eso-pic so that overflowing elements don't break the layout.
 
 % Background rectangles
 \AddToShipoutPictureBG*{\put(\LenToUnit{-3mm},\LenToUnit{-3mm})%
@@ -77,7 +91,6 @@ tex.sprint(';')
         anchor = south west,
         minimum height = \calPaperHeight + 6mm,
         minimum width = 26mm,
-        % draw = none,
         fill = black!10,
         inner sep = 0pt,
         rectangle,
@@ -88,7 +101,6 @@ tex.sprint(';')
         anchor = south west,
         minimum height = \calPaperHeight + 6mm,
         minimum width = 19.5mm,
-        %draw = none,
         fill = black!20,
         inner sep = 0pt,
         rectangle,
@@ -97,22 +109,74 @@ tex.sprint(';')
   \end{minipage}}%
 }%
 
-\preYearPlannerPageHook
-\noindent
-\begin{minipage}[c][\calTextHeight][c]{0.35\linewidth}%
-  \fontsize{10.6}{10.6}\selectfont
-  \YearPlannerCompact%
-\end{minipage}%
-\begin{minipage}[c][\calTextHeight][c]{0.65\linewidth}%
-  \raggedright
-  \mbox{}
+% Calendar dates
+\AddToShipoutPictureBG*{\put(\LenToUnit{7mm},\LenToUnit{7mm})%
+  {%
+    \preYearPlannerPageHook%
+    \begin{minipage}[b][\calTextHeight][c]{0.35\linewidth}%
+      \fontsize{10.6}{10.6}\selectfont%
+      \YearPlannerCompact%
+    \end{minipage}%
+  }%
+}
 
-  \vfill
+% Weekly images
+% Images before notes so they can be background when overlapping
+\AddToShipoutPictureBG*{\put(\LenToUnit{7mm + \imagesXOffset},\LenToUnit{7mm})%
+  {%
+    \begin{minipage}[b][\calTextHeight][t]{\imagesColWidth}%
+      \vspace*{\weeklyImagesTopSep}%
+      \begin{tikzpicture}%
+        \node (bg) [
+          rectangle,
+          draw = none,
+          fill = none,
+          minimum height = \calTextHeight - \weeklyImagesTopSep,
+          minimum width = \linewidth,
+          inner sep = 0pt,
+        ] {};
+        \plannerWeeklyImages%
+      \end{tikzpicture}%
+    \end{minipage}%
+  }%
+}
 
-  \fontsize{10}{10}\selectfont
-  \plannerEvents
+% Weekly annotated side notes
+\AddToShipoutPictureBG*{\put(\LenToUnit{7mm + \sideNotesXOffset},\LenToUnit{7mm})%
+  {%
+    \begin{minipage}[b][\calTextHeight][t]{\sideNotesColWidth}%
+      \vspace*{\weeklyNotesTopSep}%
+      \begin{tikzpicture}%
+        \node (bg) [
+          rectangle,
+          draw = none,
+          fill = none,
+          minimum height = \calTextHeight - \weeklyNotesTopSep,
+          minimum width = \linewidth,
+          inner sep = 0pt,
+        ] {};
+        \plannerWeeklyNotes%
+      \end{tikzpicture}%
+    \end{minipage}%
+  }%
+}
 
-\end{minipage}%
-\postYearPlannerPageHook
+% Footnote event notes
+\AddToShipoutPictureBG*{\put(\LenToUnit{7mm + \sideNotesXOffset},\LenToUnit{7mm})%
+  {%
+    \begin{minipage}[b][\calTextHeight][t]{\footNotesColWidth}%
+      \raggedright
+      \fontsize{10}{10}\selectfont
+      \setlength{\parindent}{0pt}%
+      \mbox{}
+
+      \vfill
+
+      \plannerEvents
+
+    \end{minipage}%
+    \postYearPlannerPageHook%
+  }%
+}
 
 \end{document}

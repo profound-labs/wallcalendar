@@ -44,3 +44,6 @@ TAGS
 [._]sw[a-p]
 *~
 tags
+
+# Misc
+.~lock.*\#

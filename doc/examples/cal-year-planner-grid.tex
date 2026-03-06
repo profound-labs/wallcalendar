@@ -1,0 +1,45 @@
+\documentclass[
+  year = 2018,
+  eventsCsv = ./data/holidays-compact.csv,
+  moonsCsv = ./data/moonphases-2018.csv,
+  markDefaultsCsv = ./data/mark_defaults.csv,
+  dateAnnotations = false,
+  a4PaperLandscape,
+  hMargin = 5mm,
+  topMargin = 5mm,
+  bottomMargin = 5mm,
+]{wallcalendar}
+
+\makeatletter
+
+\usepackage{fontspec}
+\defaultfontfeatures{Ligatures=TeX}
+
+\setmainfont{Alegreya Sans}
+
+\newfontfamily\AlegreyaSans{Alegreya Sans}
+
+\newfontfamily\AlegreyaSansExtraBold{Alegreya Sans Extra Bold}
+
+\SetTracking[spacing={350,100,}]{encoding=*, family=Alegreya Sans Extra Bold}{120}
+
+\renewcommand\plannerGridYearNumberFont{\AlegreyaSans}
+\renewcommand\plannerGridMonthFont{\AlegreyaSansExtraBold}
+\renewcommand\plannerGridNotesFont{\AlegreyaSans}
+
+\renewcommand\monthMarkFmt{%
+  \fontsize{7}{7}\selectfont%
+  \color{textbody}%
+}
+
+\renewcommand\plannerMoonSize{\@setfontsize\plannerMoonSize{13}{13}}
+
+\makeatother
+
+\begin{document}
+
+\mbox{}
+
+\YearPlannerLandscapeGridPage
+
+\end{document}
