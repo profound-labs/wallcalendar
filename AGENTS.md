@@ -1,0 +1,1 @@
+/home/gambhiro/prods/libs/wallcalendar/CLAUDE.md
