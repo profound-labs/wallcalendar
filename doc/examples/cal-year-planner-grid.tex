@@ -23,6 +23,11 @@
 
 \SetTracking[spacing={350,100,}]{encoding=*, family=Alegreya Sans Extra Bold}{120}
 
+\newfontfamily\EmojiFont{Noto Color Emoji}[Renderer=Harfbuzz]
+%\newfontfamily\EmojiFont{Twemoji Mozilla}[Renderer=Harfbuzz]
+
+\newcommand\emoji[1]{{\EmojiFont\selectfont #1}}
+
 \renewcommand\plannerGridYearNumberFont{\AlegreyaSans}
 \renewcommand\plannerGridMonthFont{\AlegreyaSansExtraBold}
 \renewcommand\plannerGridNotesFont{\AlegreyaSans}

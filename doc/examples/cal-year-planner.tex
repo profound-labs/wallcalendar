@@ -16,6 +16,11 @@
 \defaultfontfeatures{Ligatures={TeX}}
 \setmainfont{Alegreya Sans}
 
+\newfontfamily\EmojiFont{Noto Color Emoji}[Renderer=Harfbuzz]
+%\newfontfamily\EmojiFont{Twemoji Mozilla}[Renderer=Harfbuzz]
+
+\newcommand\emoji[1]{{\EmojiFont\selectfont #1}}
+
 \newcommand\plannerYearFmt{\fontsize{26}{26}\selectfont\color{orangegold}}
 
 \renewcommand\symbolSeparator{,}

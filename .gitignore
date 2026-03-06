@@ -5,6 +5,7 @@
 *.lof
 *.fls
 *.fdb_latexmk
+.auctex-auto/
 
 # Project output
 wallcalendar.zip

@@ -4,11 +4,6 @@
 #+latex: \input{frontpage.tex}
 
 * Tasks :noexport:
-** TODO basic things should work without any class options
-** setup A5 desk page layout
-*** new example on the front page
-** describe \fullPageFmt and \smallLandscapeFmt
-** can use env variables for class options with Lua? language, resolution, etc.
 * Tutorial: Forest Calendar
 
 In this tutorial we will produce the three example pages seen in the summary.

@@ -7,13 +7,13 @@
 %
 % A wall calendar document class with custom layouts and support for internationalization.
 %
-% (c) Gambhiro Bhikkhu, 2020
-% gambhiro.bhikkhu.85@gmail.com
+% (c) Gambhiro Bhikkhu, 2026
+% Contact: https://gambhiro.github.io/
 %
 % LPPL LaTeX Public Project License
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{wallcalendar}[2020/10/24 v1.5.0 A wall calendar document class with custom layouts and support for internationalization.]
+\ProvidesClass{wallcalendar}[2026/03/06 v1.6.0 A wall calendar document class with custom layouts and support for internationalization.]
 
 \RequirePackage{pgfopts}
 \RequirePackage{calc}
