@@ -8,7 +8,7 @@
 % A wall calendar document class with custom layouts and support for internationalization.
 %
 % (c) Gambhiro Bhikkhu, 2026
-% Contact: https://gambhiro.github.io/
+% Contact: https://gambhiro.github.io
 %
 % LPPL LaTeX Public Project License
 

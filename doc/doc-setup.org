@@ -6,4 +6,4 @@
 #+OPTIONS: toc:nil tasks:nil ':t H:4
 #+SOURCES_URL: https://github.com/profound-labs/wallcalendar/
 #+AUTHOR: Gambhīro Bhikkhu
-#+EMAIL: https://gambhiro.github.io/
+#+EMAIL: https://gambhiro.github.io

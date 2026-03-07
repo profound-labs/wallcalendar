@@ -3,7 +3,7 @@
 % A memoir-based documentclass for org-mode exports.
 %
 % (c) Gambhiro Bhikkhu, 2016
-% gambhiro.bhikkhu.85@gmail.com
+% https://gambhiro.github.io
 %
 % LPPL LaTeX Pubic Project Licence
 %

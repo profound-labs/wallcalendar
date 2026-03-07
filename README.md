@@ -215,11 +215,11 @@ See [FAQ](./FAQ.md)
 
 ## Back matter
 
-Github: https://github.com/profound-labs/wallcalendar
+Github: <https://github.com/profound-labs/wallcalendar>
 
-CTAN: https://ctan.org/pkg/wallcalendar
+CTAN: <https://ctan.org/pkg/wallcalendar>
 
-Contact: Gambhiro Bhikkhu <gambhiro.bhikkhu.85@gmail.com>
+Contact: <https://gambhiro.github.io>
 
 LPPL LaTeX Public Project License
 

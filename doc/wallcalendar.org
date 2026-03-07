@@ -1764,4 +1764,4 @@ including how to disable the notepad area.
 
 Github: <https://github.com/profound-labs/wallcalendar/>
 
-Contact: <https://gambhiro.github.io/>
+Contact: <https://gambhiro.github.io>
