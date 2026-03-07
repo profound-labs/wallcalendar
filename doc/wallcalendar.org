@@ -1304,6 +1304,37 @@ page using =\TitlePage=.
 
 #+latex: \end{multicols}
 
+*** Sunday-first week layout
+
+=doc/examples/cal-photo-and-notes-sunday.tex=
+
+#+latex: \begin{multicols}{2}
+
+#+begin_export latex
+\frame{\includegraphics[width=5cm]{./examples/cal-burst/cal-photo-and-notes-sunday-02.pdf}}
+#+end_export
+
+#+latex: \columnbreak
+
+The =sundayFirst= class option shifts the week to start on Sunday instead of
+Monday. All layouts (monthly grids, year planners, compact planners) respect this
+option. The day-of-week headings automatically reorder to show Sunday in the
+first column.
+
+This example is based on the Photo and Notes layout, showing September with
+Sunday as the first day of the week.
+
+#+begin_src tex
+\documentclass[
+  year = 2018,
+  language = english,
+  imageFolder = ./photos/,
+  sundayFirst,
+]{wallcalendar}
+#+end_src
+
+#+latex: \end{multicols}
+
 *** No photos, with notes area
 
 =doc/examples/cal-no-photos.tex=
@@ -1554,6 +1585,7 @@ Options are set as key-value pairs in the =\documentclass= call:
 - =showtrims= :: Show crop marks for printing (memoir class option, omit to disable)
 - =varnishmask= :: Generate UV varnish mask pages (boolean, default: false)
 - =gridSurround= :: Draw grid lines around calendar day cells (boolean, default: false)
+- =sundayFirst= :: Start the week on Sunday instead of Monday (boolean, default: false)
 - =dateAnnotations = true= :: Enable/disable date annotation superscripts (string, default: true)
 
 Note: =dateAnnotations= is stored as a string (not a TeX boolean) because its

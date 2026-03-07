@@ -8,9 +8,9 @@ all:
 
 test: ./diff-cal.sh
 
-calendars: cal-translations cal-plain.pdf cal-showtrims.pdf cal-showframe.pdf cal-varnishmask.pdf cal-marks.pdf cal-photo-and-notes.pdf cal-year-planner.pdf cal-year-planner-rows.pdf cal-year-planner-grid.pdf cal-year-planner-compact.pdf cal-thumbnails.pdf
+calendars: cal-translations cal-plain.pdf cal-photo-and-notes-sunday.pdf cal-showtrims.pdf cal-showframe.pdf cal-varnishmask.pdf cal-marks.pdf cal-photo-and-notes.pdf cal-year-planner.pdf cal-year-planner-rows.pdf cal-year-planner-grid.pdf cal-year-planner-compact.pdf cal-thumbnails.pdf
 
-bursts: cal-plain-burst cal-showtrims-burst cal-showframe-burst cal-varnishmask-burst cal-no-photos-burst cal-photo-and-notes-burst
+bursts: cal-plain-burst cal-photo-and-notes-sunday-burst cal-showtrims-burst cal-showframe-burst cal-varnishmask-burst cal-no-photos-burst cal-photo-and-notes-burst
 
 jpg: cal-marks.jpg
 
@@ -22,6 +22,9 @@ jpg: cal-marks.jpg
 
 cal-plain-burst:
 	pdftk cal-plain.pdf burst output ./cal-burst/cal-plain-%02d.pdf
+
+cal-photo-and-notes-sunday-burst:
+	pdftk cal-photo-and-notes-sunday.pdf burst output ./cal-burst/cal-photo-and-notes-sunday-%02d.pdf
 
 cal-showtrims-burst:
 	pdftk cal-showtrims.pdf burst output ./cal-burst/cal-showtrims-%02d.pdf
