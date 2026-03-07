@@ -336,7 +336,7 @@
   \chapterstyle{default}
   \renewcommand*{\chaptitlefont}{\LARGE\scshape}
   \renewcommand*{\chapnumfont}{\chaptitlefont}
-  \settowidth{\chapindent}{\normalsize 999}
+  \settowidth{\chapindent}{\normalsize 9999}
   \renewcommand*{\chapterheadstart}{}
   \renewcommand*{\printchaptername}{}
   \renewcommand*{\chapternamenum}{}

@@ -11,6 +11,7 @@
 wallcalendar.zip
 doc/wallcalendar.pdf
 doc/wallcalendar-code.pdf
+doc/_minted/
 doc/_minted-wallcalendar/
 doc/_minted-wallcalendar-code/
 doc/examples/i18n
@@ -48,3 +49,5 @@ tags
 
 # Misc
 .~lock.*\#
+
+.agent-shell/

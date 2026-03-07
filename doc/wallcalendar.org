@@ -152,6 +152,8 @@ add a transparent background for the quote.
 This layout is a good option when the top or the bottom of the photo has to be
 cropped, and you can't use the full page aspect ratio for the photo.
 
+\clearpage
+
 #+begin_src tex :tangle ./examples/forest.tex
 \SetPhoto[bleed=3mm, file={obscure-crop}]{July}
 
@@ -191,6 +193,8 @@ But I shall be gone.
 {\dejaVuSans\char"263C} July 27: Mars at Opposition
 }
 #+end_src
+
+\clearpage
 
 ** August
 
@@ -259,6 +263,7 @@ Typesetting the month pages in the document is now just this much:
 #+latex: \clearpage
 
 * Tutorial: Translations
+#+latex: \label{sec:translations-tutorial}
 
 In this tutorial we will produce the same calendar in three languages: Japanese,
 English and Hungarian.
@@ -504,6 +509,8 @@ an =\input=.
 \newfontfamily\dejaVuSans{DejaVu Sans}
 #+end_src
 
+\clearpage
+
 =cal-translations-hungarian.tex=
 
 #+begin_src tex :tangle ./examples/cal-translations-hungarian.tex
@@ -692,6 +699,7 @@ not even a sound
 #+latex: \clearpage
 
 * Example: Photo and Notes with Title page
+#+latex: \label{sec:photo-and-notes-title-page}
  
 #+begin_export latex
 \begin{extrafullwidth}
@@ -934,6 +942,7 @@ tex.sprint(';')
 #+latex: \clearpage
 
 * Example: Photo Thumbnails Page
+#+latex: \label{sec:photo-thumbnails-page}
 
 #+begin_export latex
 \begin{fullwidth}
@@ -970,6 +979,8 @@ tex.sprint(';')
 ** \textbackslash ThumbWithCaptionLeftSide
 
 Typesets the photo thumb image with its caption text on the left side.
+
+#+latex: \enlargethispage{\baselineskip}
 
 : \ThumbWithCaptionLeftSide{January}
 
@@ -1019,6 +1030,8 @@ Typesets the photo thumb image with its caption text on the left side.
 ** \textbackslash ThumbWithCaptionRightSide
 
 Typesets the photo thumb image with its caption text on the right side.
+
+#+latex: \enlargethispage{\baselineskip}
 
 : \ThumbWithCaptionRightSide{January}
 
@@ -1173,6 +1186,8 @@ Typesets the photo thumb image with its caption text on the right side.
 
 ** Use it
 
+#+latex: \enlargethispage{\baselineskip}
+
 #+begin_src tex :tangle ./examples/cal-thumbnails.tex
 \begin{document}
 
@@ -1182,151 +1197,389 @@ Typesets the photo thumb image with its caption text on the right side.
 #+end_src
 
 * Examples from doc/examples folder
-** Portrait page
+** Portrait page layouts
 
-=doc/examples/cal-plain.tex=
+=doc/examples/cal-plain.tex= demonstrates three different =\MonthPage= layouts
+using portrait-oriented pages. Each month in the example uses a different layout
+and photo placement option.
 
 *** Full page photo, calendar days overlaid with opacity
+
+=\MonthPage[layout=full page, put photo=full page]{June}=
+
+#+latex: \begin{multicols}{2}
 
 #+begin_export latex
 \frame{\includegraphics[width=5cm]{./examples/cal-burst/cal-plain-01.pdf}}
 #+end_export
 
+#+latex: \columnbreak
+
+The photo covers the entire page (with bleed). Calendar days are overlaid at the
+bottom with a semi-transparent background.
+
+#+latex: \end{multicols}
+
 *** Full page photo, photo above the calendar days
+
+#+latex: \begin{fullwidth}
+
+=\MonthPage[layout=full page, put photo=full width above calendar]{July}=
+
+#+latex: \end{fullwidth}
+
+#+latex: \begin{multicols}{2}
 
 #+begin_export latex
 \frame{\includegraphics[width=5cm]{./examples/cal-burst/cal-plain-02.pdf}}
 #+end_export
 
+#+latex: \columnbreak
+
+The photo fills the width of the page and sits above the calendar row. The
+calendar days are drawn on a solid (opaque) background below the photo.
+
+#+latex: \end{multicols}
+
+\clearpage
+
 *** Small landscape photo, with a calendar grid
+
+=\MonthPage[layout=small landscape, put photo=full width]{August}=
+
+#+latex: \begin{multicols}{2}
 
 #+begin_export latex
 \frame{\includegraphics[width=5cm]{./examples/cal-burst/cal-plain-03.pdf}}
 #+end_export
 
+#+latex: \columnbreak
+
+A landscape-oriented photo is placed at the top, scaled to the full page width.
+Below it, a calendar grid shows the month with day-of-week headers and room for
+events.
+
+#+latex: \end{multicols}
+
 *** Thumbnails and captions page
 
-=doc/examples/cal-thumbnails.tex=
+=doc/examples/cal-thumbnails.tex= 
+
+#+latex: \begin{multicols}{2}
 
 #+begin_export latex
 \frame{\includegraphics[width=5cm]{./examples/cal-thumbnails.pdf}}
 #+end_export
 
+#+latex: \columnbreak
+
+A standalone page showing thumbnail images
+for all twelve months arranged in two columns, with captions alongside each
+thumbnail. See the \hyperref[sec:photo-thumbnails-page]{Example: Photo Thumbnails Page} section for details.
+
+#+latex: \end{multicols}
+
+\clearpage
+
 ** Landscape photo and notes on two pages
 
 =doc/examples/cal-photo-and-notes.tex=
 
+#+latex: \begin{multicols}{2}
+
 #+begin_export latex
 \frame{\includegraphics[width=5cm]{./examples/cal-photo-and-notes-titlepage.pdf}}
-#+end_export
 
-#+begin_export latex
 \frame{\includegraphics[width=5cm]{./examples/cal-photo-and-notes-photo.pdf}}
-#+end_export
 
-#+begin_export latex
 \frame{\includegraphics[width=5cm]{./examples/cal-photo-and-notes-calendar.pdf}}
 #+end_export
+
+#+latex: \columnbreak
+
+This layout uses the =layout=photo and notes= option.
+Each month produces two pages: a landscape photo page and a facing calendar page
+with a grid, event marks, and a notepad area. The example also includes a title
+page using =\TitlePage=.
+
+#+latex: \end{multicols}
 
 *** No photos, with notes area
 
 =doc/examples/cal-no-photos.tex=
 
+#+latex: \begin{multicols}{2}
+
 #+begin_export latex
 \frame{\includegraphics[width=5cm]{./examples/cal-burst/cal-no-photos-01.pdf}}
 #+end_export
 
+#+latex: \columnbreak
+
+This uses the same =photo and notes= layout but with
+=disabled = true= on all photos. This produces calendar-only pages with a grid,
+event marks and notepad area -- suitable for a desk planner or scheduling tool.
+
+#+latex: \end{multicols}
+
+\clearpage
+
 ** Year planners
+
+The planners support event marks from CSV files and moon phase symbols via the
+=eventsCsv=, =moonsCsv= and =markDefaultsCsv= class options.
 
 *** Portrait year planner
 
 =doc/examples/cal-year-planner.tex=
 
+#+latex: \begin{multicols}{2}
+
 #+begin_export latex
 \frame{\includegraphics[width=5cm]{./examples/cal-year-planner.pdf}}
 #+end_export
+
+#+latex: \columnbreak
+
+Uses =\YearPlannerPortrait= to render a 3-column, 4-row grid of monthly
+calendars in portrait orientation. This example defines a custom
+=\YearPlannerPage= command that wraps =\YearPlannerPortrait= with a title and
+=\plannerEvents= footer. The =\plannerEvents= command prints all events from the
+CSV that have a footnote marker.
+
+#+latex: \end{multicols}
 
 *** Landscape year planner with dates in rows
 
 =doc/examples/cal-year-planner-rows.tex=
 
 #+begin_export latex
-\frame{\includegraphics[width=5cm]{./examples/cal-year-planner-rows.pdf}}
+\frame{\includegraphics[width=\linewidth]{./examples/cal-year-planner-rows.pdf}}
 #+end_export
+
+Uses =\YearPlannerLandscape= to render the entire year as a continuous row-based
+layout in landscape orientation. Event footnotes are printed below in a
+=multicols= environment using =\parseYearEvents=.
+
+\clearpage
 
 *** Landscape year planner with grid
 
 =doc/examples/cal-year-planner-grid.tex=
 
 #+begin_export latex
-\frame{\includegraphics[width=5cm]{./examples/cal-year-planner-grid.pdf}}
+\frame{\includegraphics[width=\linewidth]{./examples/cal-year-planner-grid.pdf}}
 #+end_export
 
-*** Compact year planner
- 
+Uses =\YearPlannerLandscapeGridPage= which renders a grid-style planner in
+landscape orientation. The layout includes event footnotes at the bottom.
+
+Uses the =a4PaperLandscape= page preset with the =dateAnnotations = false=
+option to disable annotation superscripts on dates (event footnotes are shown
+separately).
+
+*** Compact year planner with weekly notes
+
 =doc/examples/cal-year-planner-compact.tex=
 
+#+latex: \begin{multicols}{2}
+
 #+begin_export latex
-\frame{\includegraphics[width=5cm]{./examples/cal-year-planner-compact.pdf}}
+\frame{\includegraphics[width=\linewidth]{./examples/cal-year-planner-compact.pdf}}
 #+end_export
 
-** Class Options
+#+latex: \columnbreak
 
+Uses =\YearPlannerCompact= to render a compact year planner in portrait (A4)
+orientation with the calendar dates on the left side of the page and annotated
+weekly notes alongside. This layout also supports weekly images positioned next
+to the notes using =\plannerWeeklyNotes= and =\plannerWeeklyImages=.
+
+Uses the =a4Paper= page preset. The =\plannerMoonFormat= and =\monthMarkFmt=
+commands can be renewed to customize moon phase symbol size and event mark
+formatting.
+
+#+latex: \end{multicols}
+
+\clearpage
+
+** Class options for printing and debugging
 *** Showtrims
 
-Cropmarks for printing and trimming bleeded images.
-
 =doc/examples/cal-showtrims.tex=
+
+#+latex: \begin{multicols}{2}
 
 #+begin_export latex
 \frame{\includegraphics[width=5cm]{./examples/cal-burst/cal-showtrims-01.pdf}}
 #+end_export
 
+#+latex: \columnbreak
+
+The =showtrims= class option adds cropmarks around the page, showing where the
+paper should be trimmed after printing. This is essential when using bleeded images that extend beyond the trim area.
+
+#+latex: \end{multicols}
+
 *** Varnishmask
 
-Varnishmask (or UV mask) file for applying gloss varnish on the photo when printing.
-
 =doc/examples/cal-varnishmask.tex=
+
+#+latex: \begin{multicols}{2}
 
 #+begin_export latex
 \frame{\includegraphics[width=5cm]{./examples/cal-burst/cal-varnishmask-03.pdf}}
 #+end_export
 
+#+latex: \columnbreak
+
+The =varnishmask= class option generates a UV mask (varnish mask) file. This
+produces black shapes where the photos are, on a white background. The mask file
+is used by the print shop to apply selective gloss varnish on the photo areas.
+
+#+latex: \end{multicols}
+
+\clearpage
+
 *** Showframe
 
-Useful option for debugging layout positioning.
-
 =doc/examples/cal-showframe.tex=
+
+#+latex: \begin{multicols}{2}
 
 #+begin_export latex
 \frame{\includegraphics[width=5cm]{./examples/cal-burst/cal-showframe-01.pdf}}
 #+end_export
 
+#+latex: \columnbreak
+
+The =showframe= class option draws the page structure: margins, text area, and
+content box boundaries. Useful for debugging layout positioning when designing
+custom formatting or adjusting element placement.
+
+#+latex: \end{multicols}
+
+\clearpage
+
 * Documentclass Options
 
-: year
+Options are set as key-value pairs in the =\documentclass= call:
 
-: language
+#+begin_src tex
+\documentclass[
+  year = 2018,
+  language = english,
+  imageFolder = ./photos/,
+  eventsCsv = ./data/holidays.csv,
+  moonsCsv = ./data/moonphases-2018.csv,
+  markDefaultsCsv = ./data/mark_defaults.csv,
+  a4Paper,
+  hMargin = 7mm,
+  topMargin = 7mm,
+  bottomMargin = 7mm,
+]{wallcalendar}
+#+end_src
 
-: imageFolder
+#+latex: \begin{fullwidth}
+#+latex: \raggedright
 
-: showframe
+- =year = 2018= :: The calendar year (e.g. 2018)
+- =language = english= :: Language for translations (e.g. english, japanese, hungarian)
+- =imageFolder = ./photos/= :: Path to the folder containing photo images
+- =eventsCsv = ./data/holidays.csv= :: Path to the CSV file with calendar events
+- =moonsCsv = ./data/moonphases-2018.csv= :: Path to the CSV file with moon phase data
+- =markDefaultsCsv = ./data/mark_defaults.csv= :: Path to the CSV file with default mark styles
+- =translationsInputFile = frog-english.tex= :: Path to a file with =\SetTxt{}= translation keys
+- =paperWidth = 11in - 15mm= :: Custom paper width (default: US Letter landscape width)
+- =paperHeight = 8.5in - 15mm= :: Custom paper height (default: US Letter landscape height)
+- =hMargin = 7mm= :: Horizontal margin on both sides (default: 17mm)
+- =topMargin = 15mm= :: Top margin (default: 20.5mm)
+- =bottomMargin = 7mm= :: Bottom margin (default: 10mm)
+- =trimSpace = 15mm= :: Extra stock size for trim marks (default: 35mm)
+- =a4Paper= :: Preset for A4 portrait (210mm x 297mm)
+- =a4PaperLandscape= :: Preset for A4 landscape (297mm x 210mm)
+- =showframe= :: Show page structure for debugging layout (boolean, default: false)
+- =showtrims= :: Show crop marks for printing (memoir class option, omit to disable)
+- =varnishmask= :: Generate UV varnish mask pages (boolean, default: false)
+- =gridSurround= :: Draw grid lines around calendar day cells (boolean, default: false)
+- =dateAnnotations = true= :: Enable/disable date annotation superscripts (string, default: true)
 
-: showtrims
+Note: =dateAnnotations= is stored as a string (not a TeX boolean) because its
+value is passed to Lua code via =\luadirect= where it is compared as
+=isEqual(..., "true")=. This means it only recognizes the literal string ="true"=
+to enable annotations; any other value (including ="false"=) disables them.
 
-: varnishmask
+#+latex: \end{fullwidth}
+
+#+latex: \clearpage
 
 * User Commands
 
 : \SetPhoto[ options ]{ month }
 
+Set the photo for a given month. Options include =file= (image filename without
+extension), =bleed= (bleed amount), =thumbFile= (thumbnail image for the
+thumbnails page), =caption= (caption text), =disabled= (skip the photo), and
+=yOffset= (vertical offset).
+
+#+begin_src tex
+\SetPhoto[bleed=3mm, file={obscure-crop}]{June}
+\SetPhoto[bleed=3mm, file={frog-crop}, thumbFile={frog-crop-thumb}, caption={Let the frog jump}]{January}
+\SetPhoto[disabled = true]{September}
+#+end_src
+
 : \SetQuote[ options ]{ month }{ quote text }
+
+Set a quote overlay for a given month. Options include =xOffset= and =yOffset=
+to position the quote minipage relative to the top-left corner of the page.
+
+#+begin_src tex
+\SetQuote[xOffset=-5mm, yOffset=-20mm]{June}{%
+  \raggedright\Large\color{white}%
+  I shall be gone.%
+}
+#+end_src
 
 : \SetCalendar[ options ]{ month }
 
+Set calendar rendering options for a given month. The main option is =bg/.style=
+which controls the TikZ style of the calendar background.
+
+#+begin_src tex
+\SetCalendar[bg/.style={opacity=0.8}]{June}
+\SetCalendar[]{September}
+#+end_src
+
 : \SetEvents[ options ]{ month }{ calendar tikz marks }{ events text }
 
+Set event marks and event text for a given month. The second argument contains
+TikZ calendar mark expressions. The third argument contains the text to display
+in the events area.
+
+#+begin_src tex
+\SetEvents{June}{%
+  if (equals=2018-06-21)
+    [day text={\dejaVuSans\char"263C}];% U+263C white sun with rays
+}{%
+  \raggedleft
+  {\dejaVuSans\char"263C} June 21: Summer Solstice
+}
+#+end_src
+
+\clearpage
+
 : \MonthPage[ options ]{ month }
+
+Typeset a month page. The =layout= option selects the layout handler (=full
+page=, =small landscape=, or =photo and notes=). The =put photo= option controls
+photo placement (=full page=, =full width above calendar=, or =full width=).
+
+#+begin_src tex
+\MonthPage[layout=full page, put photo=full page]{June}
+\MonthPage[layout=full page, put photo=full width above calendar]{July}
+\MonthPage[layout=small landscape, put photo=full width]{August}
+\MonthPage[layout=photo and notes, put photo=full page]{September}
+#+end_src
 
 #+latex: \clearpage
 
@@ -1371,8 +1624,92 @@ portrait photos that can be scaled to cover the entire page. The =small
 landscape= layout is for landscape photos which can be scaled horizontally,
 possibly bleeding into the side margins.
 
+\clearpage
+
+** Formatting Hooks: =\fullPageFmt=
+
+Each layout runs a formatting command before typesetting the page. The =full
+page= layout calls =\fullPageFmt=, which sets hooks for fonts, sizes, colors
+and alignment. You can =\renewcommand= it in your preamble to customize
+the appearance.
+
+The default definition is:
+
+#+begin_src tex
+\newcommand\fullPageFmt{%
+  \renewcommand*\monthFmt{\LARGE}%
+  \renewcommand*\yearFmt{\LARGE}%
+  \renewcommand*\dayLetterColor{}%
+  \renewcommand*\dayLetterFmt{\tiny}%
+  \renewcommand*\dayTextFmt{\small}%
+  \renewcommand*\quoteFmt{}%
+  \renewcommand*\headingFmt{\centering}%
+  \renewcommand*\calendarFmt{\centering}%
+  \renewcommand*\eventsFmt{%
+    \setlength{\parindent}{0pt}\raggedleft\footnotesize%
+  }%
+}
+#+end_src
+
+The hooks control the following elements:
+
+- =\monthFmt= -- Font and size for the month name
+- =\yearFmt= -- Font and size for the year number
+- =\dayLetterColor= -- Color applied to the day-of-week letter row
+- =\dayLetterFmt= -- Font and size for day-of-week letters (M, T, W...)
+- =\dayTextFmt= -- Font and size for the day numbers in the calendar
+- =\quoteFmt= -- Formatting applied to the quote area
+- =\headingFmt= -- Alignment for the month/year heading (e.g. =\centering=)
+- =\calendarFmt= -- Alignment for the calendar area
+- =\eventsFmt= -- Formatting for the events text below the calendar
+
+See the \hyperref[sec:translations-tutorial]{Translations tutorial} for an example of renewing =\fullPageFmt= to use a
+Japanese font.
+
+\clearpage
+
+** Formatting Hooks: =\smallLandscapeFmt=
+
+The =small landscape= layout calls =\smallLandscapeFmt=. In addition to the
+same hooks as =\fullPageFmt=, it also sets lengths that control the calendar
+grid dimensions.
+
+The default definition is:
+
+#+begin_src tex
+\newcommand\smallLandscapeFmt{%
+  \renewcommand*\monthFmt{\LARGE}%
+  \renewcommand*\yearFmt{\LARGE}%
+  \renewcommand*\dayLetterColor{}%
+  \renewcommand*\dayLetterFmt{\tiny}%
+  \renewcommand*\dayTextFmt{\small}%
+  \renewcommand*\quoteFmt{\centering}%
+  \renewcommand*\headingFmt{\centering}%
+  \renewcommand*\calendarFmt{\centering}%
+  \renewcommand*\eventsFmt{%
+    \setlength{\parindent}{0pt}\raggedright\footnotesize%
+  }%
+  \setlength{\@t@calendar@minimumHeight}{85mm}%
+  \setlength{\@t@calendar@hmargin}{20pt}%
+  \setlength{\@t@calendar@verticalSpacing}{20mm + 5mm + 6.5mm}%
+}
+#+end_src
+
+The additional lengths are:
+
+- =\@t@calendar@minimumHeight= -- Minimum height of the calendar grid area
+- =\@t@calendar@hmargin= -- Horizontal margin inside the calendar grid
+- =\@t@calendar@verticalSpacing= -- Vertical space reserved for the day headings, events area, and white space below the grid
+
+** Formatting Hooks: =\photoAndNotesFmt=
+
+The =photo and notes= layout calls =\photoAndNotesFmt=. See the \hyperref[sec:photo-and-notes-title-page]{Example: Photo and Notes with Title page} section for details on customizing this layout,
+including how to disable the notepad area.
+
+#+latex: \clearpage
+
 * Contact
 
 Github: <https://github.com/profound-labs/wallcalendar/>
 
-Email: =Gambhīro Bhikkhu <gambhiro.bhikkhu.85@gmail.com>=
+Contact: <https://gambhiro.github.io/>

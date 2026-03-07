@@ -1,8 +1,8 @@
-% Created 2020-10-03 Sat 13:59
+% Created 2026-03-07 Sat 13:28
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,oneside]{memoir-article}
 \usepackage{local}
-\renewcommand{\docVersion}{v1.5.0}
+\renewcommand{\docVersion}{v1.6.0}
 \renewcommand{\docUrl}{\href{https://github.com/profound-labs/wallcalendar/}{link}}
 \hypersetup{ pdfauthor={Gambhīro Bhikkhu}, }
 \author{Gambhīro Bhikkhu}
@@ -13,15 +13,14 @@
  pdftitle={Wallcalendar User Manual},
  pdfkeywords={},
  pdfsubject={},
- pdfcreator={Emacs 28.0.50 (Org mode 9.3)}, 
+ pdfcreator={Emacs 30.2 (Org mode 9.7.11)}, 
  pdflang={English}}
 \begin{document}
 
 \maketitle
 \input{frontpage.tex}
-
 \chapter{Tutorial: Forest Calendar}
-\label{sec:orge60428a}
+\label{sec:org643bafe}
 
 In this tutorial we will produce the three example pages seen in the summary.
 
@@ -52,9 +51,8 @@ The month page will be typeset with:
 \begin{verbatim}
 \MonthPage[ options ]{ month }
 \end{verbatim}
-
 \section{Documentclass}
-\label{sec:org7a14ab0}
+\label{sec:orgca377b0}
 
 To start, load the documentclass and set \texttt{year}, \texttt{language} and the \texttt{imageFolder}:
 
@@ -71,9 +69,8 @@ Let's start the preamble with \texttt{\textbackslash{}makeatletter} to be safe.
 \begin{verbatim}
 \makeatletter
 \end{verbatim}
-
 \section{Font settings}
-\label{sec:orgc44970a}
+\label{sec:org8dd1aac}
 
 For this example we'll use \TeX{} Gyre Pagella as the main typeface. We also load
 DejaVu Sans to use a particular glyph as a mark in the calendar (\texttt{U+263C} white
@@ -87,9 +84,8 @@ sun with rays).
 \end{verbatim}
 
 \clearpage
-
 \section{June}
-\label{sec:org81d307e}
+\label{sec:org52270c3}
 
 \twocol{%
   \frame{\includegraphics[width=5cm]{cal-plain-01}}%
@@ -160,9 +156,8 @@ Events for particular days are printed under the calendar.
 {\dejaVuSans\char"263C} June 21: Summer Solstice
 }
 \end{verbatim}
-
 \section{July}
-\label{sec:org29661c3}
+\label{sec:org2a0b2b3}
 
 \twocol{%
   \frame{\includegraphics[width=5cm]{cal-plain-02}}%
@@ -175,6 +170,8 @@ add a transparent background for the quote.
 
 This layout is a good option when the top or the bottom of the photo has to be
 cropped, and you can't use the full page aspect ratio for the photo.
+
+\clearpage
 
 \begin{verbatim}
 \SetPhoto[bleed=3mm, file={obscure-crop}]{July}
@@ -216,8 +213,9 @@ But I shall be gone.
 }
 \end{verbatim}
 
+\clearpage
 \section{August}
-\label{sec:orgc68efec}
+\label{sec:org8b1ef47}
 
 \twocol{%
   \frame{\includegraphics[width=5cm]{cal-plain-03}}%
@@ -262,9 +260,8 @@ End of the preamble.
 \begin{verbatim}
 \makeatother
 \end{verbatim}
-
 \section{The document}
-\label{sec:org9a0ed47}
+\label{sec:orgdb98380}
 
 Typesetting the month pages in the document is now just this much:
 
@@ -281,9 +278,9 @@ Typesetting the month pages in the document is now just this much:
 \end{verbatim}
 
 \clearpage
-
 \chapter{Tutorial: Translations}
-\label{sec:org6bde892}
+\label{sec:orgb51bee6}
+\label{sec:translations-tutorial}
 
 In this tutorial we will produce the same calendar in three languages: Japanese,
 English and Hungarian.
@@ -314,9 +311,8 @@ We are going to use \texttt{IPAPMincho} font for the Japanese.
 \hfill\mbox{}
 
 \end{extrafullwidth}
-
 \section{Files}
-\label{sec:org7ba98cc}
+\label{sec:org27e7823}
 
 The main document files:
 
@@ -350,9 +346,8 @@ Setup month pages (same across translations):
 \begin{verbatim}
 frog.tex
 \end{verbatim}
-
 \section{Translations setup}
-\label{sec:org3cd3efb}
+\label{sec:orgc7f0051}
 
 Create the \texttt{frog-english.tex} file and use the \texttt{\textbackslash{}SetTxt\{ key \}\{ content \}}
 command to set text content for translation keys.
@@ -450,9 +445,8 @@ Put the calendar marks in a command instead, as above with \texttt{\textbackslas
 \txt{Sept Events}
 }
 \end{verbatim}
-
 \section{Document setup}
-\label{sec:org04c70fa}
+\label{sec:orgbcc2ae1}
 
 Load the documentclass. We are setting the \texttt{translations} option to define the
 file where translation keys are set. This file is loaded by the documentclass as
@@ -541,6 +535,8 @@ an \texttt{\textbackslash{}input}.
 \newfontfamily\dejaVuSans{DejaVu Sans}
 \end{verbatim}
 
+\clearpage
+
 \texttt{cal-translations-hungarian.tex}
 
 \begin{verbatim}
@@ -607,9 +603,8 @@ Calendar settings for the month, using \texttt{\textbackslash{}txt} to access tr
 \end{verbatim}
 
 \clearpage
-
 \chapter{Tutorial: Load Events from CSV}
-\label{sec:orgf2615f4}
+\label{sec:org03d306b}
 
 \begin{fullwidth}
 \begin{minipage}{\linewidth}
@@ -619,9 +614,8 @@ Calendar settings for the month, using \texttt{\textbackslash{}txt} to access tr
 
 \end{minipage}%
 \end{fullwidth}
-
 \section{CSV files}
-\label{sec:orgba084c9}
+\label{sec:org16738b6}
 
 Events in the CSV should be already sorted by date.
 
@@ -637,9 +631,8 @@ We're going to use the following csv files, see in the \texttt{./doc/examples/da
 \texttt{moonphases.csv}
 
 \texttt{mark\_defaults.csv}
-
 \section{Event formatting}
-\label{sec:org2df4aae}
+\label{sec:orgbe3d1de}
 
 You can format the event output by setting the \texttt{format cmd} key:
 
@@ -669,9 +662,8 @@ end
 \begin{verbatim}
 \parseMonthEvents[format func = eventFmtCustom]%
 \end{verbatim}
-
 \section{Document setup}
-\label{sec:orgbbc0cf0}
+\label{sec:orgfe2a864}
 
 \texttt{cal-marks.tex}
 
@@ -729,9 +721,9 @@ not even a sound
 \end{verbatim}
 
 \clearpage
-
 \chapter{Example: Photo and Notes with Title page}
-\label{sec:org35d9e02}
+\label{sec:org7c654b0}
+\label{sec:photo-and-notes-title-page}
 
 \begin{extrafullwidth}
 
@@ -757,9 +749,8 @@ not even a sound
 \end{extrafullwidth}
 
 See \texttt{doc/examples/cal-photo-and-notes.tex}.
-
 \section{Title page}
-\label{sec:org530fd2d}
+\label{sec:org58d3c0d}
 
 A title page with a full page photo can be produced with:
 
@@ -774,9 +765,8 @@ crop.
 
 It also helps to put guides on the edges by selecting all (Ctrl + A) and using
 Image > Guides > New Guides from Selection.
-
 \section{Adding background photos to the calendar days}
-\label{sec:org7c766bf}
+\label{sec:orge648ea2}
 
 This can be done by positioning a \texttt{\textbackslash{}node} over the day.
 
@@ -844,9 +834,8 @@ The spacing has to be adjusted for precise positioning, see below.
 \parseMonthInlineNotes%
 }{}
 \end{verbatim}
-
 \section{Disabling the notepad area}
-\label{sec:orge3914d7}
+\label{sec:org638ae8f}
 
 Formatting commands and sizes have to renewed in \texttt{\textbackslash{}photoAndNotesFmt} (add it to
 the preamble), because every month page first runs a command which resets them
@@ -868,9 +857,8 @@ experiment by changing \texttt{\textbackslash{}@t@calendar@minimumHeight} and
 \end{verbatim}
 
 \clearpage
-
 \chapter{Example: Year Planner Page}
-\label{sec:orgfa5ee63}
+\label{sec:orge3449a5}
 
 \begin{fullwidth}
 \begin{minipage}{0.31\linewidth}
@@ -880,9 +868,8 @@ experiment by changing \texttt{\textbackslash{}@t@calendar@minimumHeight} and
 
 \end{minipage}%
 \end{fullwidth}
-
 \section{Document setup}
-\label{sec:orgeb50e53}
+\label{sec:orgd608ce8}
 
 \texttt{cal-year-planner.tex}
 
@@ -910,9 +897,8 @@ monthMarksDayText(\luastring{#1}, nil, \luastring{./data/moonphases.csv})
 tex.sprint(';')
 }}
 \end{verbatim}
-
 \section{\textbackslash YearPlannerPage}
-\label{sec:org988b84a}
+\label{sec:org19d2950}
 
 \begin{verbatim}
 \newcommand\plannerYearFmt{\fontsize{26}{26}\selectfont\color{orangegold}}
@@ -962,9 +948,8 @@ tex.sprint(';')
 
 \makeatother
 \end{verbatim}
-
 \section{Use it}
-\label{sec:orga9f63da}
+\label{sec:org9c17835}
 
 \begin{verbatim}
 \begin{document}
@@ -975,9 +960,9 @@ tex.sprint(';')
 \end{verbatim}
 
 \clearpage
-
 \chapter{Example: Photo Thumbnails Page}
-\label{sec:orgc4adc26}
+\label{sec:orgc4efd0d}
+\label{sec:photo-thumbnails-page}
 
 \begin{fullwidth}
 \begin{minipage}{0.31\linewidth}
@@ -987,9 +972,8 @@ tex.sprint(';')
 
 \end{minipage}%
 \end{fullwidth}
-
 \section{Document setup}
-\label{sec:orgddc6c5c}
+\label{sec:orga7ffe2f}
 
 \texttt{cal-thumbnails.tex}
 
@@ -1009,11 +993,12 @@ tex.sprint(';')
 \newlength\@wall@tmp@a
 \newlength\@wall@tmp@b
 \end{verbatim}
-
 \section{\textbackslash ThumbWithCaptionLeftSide}
-\label{sec:orga95af82}
+\label{sec:orgcf5cab7}
 
 Typesets the photo thumb image with its caption text on the left side.
+
+\enlargethispage{\baselineskip}
 
 \begin{verbatim}
 \ThumbWithCaptionLeftSide{January}
@@ -1062,11 +1047,12 @@ Typesets the photo thumb image with its caption text on the left side.
 \end{minipage}%
 }
 \end{verbatim}
-
 \section{\textbackslash ThumbWithCaptionRightSide}
-\label{sec:orgfbac599}
+\label{sec:orgbaf3848}
 
 Typesets the photo thumb image with its caption text on the right side.
+
+\enlargethispage{\baselineskip}
 
 \begin{verbatim}
 \ThumbWithCaptionRightSide{January}
@@ -1101,9 +1087,8 @@ Typesets the photo thumb image with its caption text on the right side.
 \fi%
 }
 \end{verbatim}
-
 \section{\textbackslash ThumbsPage}
-\label{sec:orgf6841cf}
+\label{sec:org09112c8}
 
 \begin{verbatim}
 \newlength{\thumbColumnWidth}
@@ -1203,9 +1188,8 @@ Typesets the photo thumb image with its caption text on the right side.
 \end{minipage}%
 }
 \end{verbatim}
-
 \section{Setup the photo keys}
-\label{sec:orgea432da}
+\label{sec:orga5dc33f}
 
 \begin{verbatim}
 \SetPhoto[file={frog-crop}, thumbFile={frog-crop-thumb}, caption={Let the frog jump}]{January}
@@ -1223,9 +1207,10 @@ Typesets the photo thumb image with its caption text on the right side.
 
 \makeatother
 \end{verbatim}
-
 \section{Use it}
-\label{sec:orgc06727d}
+\label{sec:org0395b26}
+
+\enlargethispage{\baselineskip}
 
 \begin{verbatim}
 \begin{document}
@@ -1234,40 +1219,90 @@ Typesets the photo thumb image with its caption text on the right side.
 
 \end{document}
 \end{verbatim}
-
 \chapter{Examples from doc/examples folder}
-\label{sec:org1988e11}
-\section{Portrait page}
-\label{sec:orgaf15c0b}
+\label{sec:orge741f0f}
+\section{Portrait page layouts}
+\label{sec:org345052e}
 
-\texttt{doc/examples/cal-plain.tex}
-
+\texttt{doc/examples/cal-plain.tex} demonstrates three different \texttt{\textbackslash{}MonthPage} layouts
+using portrait-oriented pages. Each month in the example uses a different layout
+and photo placement option.
 \subsection{Full page photo, calendar days overlaid with opacity}
-\label{sec:org7b7e9ca}
+\label{sec:orgab906fe}
+
+\texttt{\textbackslash{}MonthPage[layout=full page, put photo=full page]\{June\}}
+
+\begin{multicols}{2}
 
 \frame{\includegraphics[width=5cm]{./examples/cal-burst/cal-plain-01.pdf}}
 
+\columnbreak
+
+The photo covers the entire page (with bleed). Calendar days are overlaid at the
+bottom with a semi-transparent background.
+
+\end{multicols}
 \subsection{Full page photo, photo above the calendar days}
-\label{sec:org5f31527}
+\label{sec:org4948aa4}
+
+\begin{fullwidth}
+
+\texttt{\textbackslash{}MonthPage[layout=full page, put photo=full width above calendar]\{July\}}
+
+\end{fullwidth}
+
+\begin{multicols}{2}
 
 \frame{\includegraphics[width=5cm]{./examples/cal-burst/cal-plain-02.pdf}}
 
+\columnbreak
+
+The photo fills the width of the page and sits above the calendar row. The
+calendar days are drawn on a solid (opaque) background below the photo.
+
+\end{multicols}
+
+\clearpage
 \subsection{Small landscape photo, with a calendar grid}
-\label{sec:orgaae01d7}
+\label{sec:org8571fb9}
+
+\texttt{\textbackslash{}MonthPage[layout=small landscape, put photo=full width]\{August\}}
+
+\begin{multicols}{2}
 
 \frame{\includegraphics[width=5cm]{./examples/cal-burst/cal-plain-03.pdf}}
 
-\subsection{Thumbnails and captions page}
-\label{sec:orgf7a5422}
+\columnbreak
 
-\texttt{doc/examples/cal-thumbnails.tex}
+A landscape-oriented photo is placed at the top, scaled to the full page width.
+Below it, a calendar grid shows the month with day-of-week headers and room for
+events.
+
+\end{multicols}
+\subsection{Thumbnails and captions page}
+\label{sec:orgd4056ab}
+
+\texttt{doc/examples/cal-thumbnails.tex} 
+
+\begin{multicols}{2}
 
 \frame{\includegraphics[width=5cm]{./examples/cal-thumbnails.pdf}}
 
+\columnbreak
+
+A standalone page showing thumbnail images
+for all twelve months arranged in two columns, with captions alongside each
+thumbnail. See the \hyperref[sec:photo-thumbnails-page]{Example: Photo Thumbnails Page} section for details.
+
+\end{multicols}
+
+\clearpage
 \section{Landscape photo and notes on two pages}
-\label{sec:orgc0d5d03}
+\label{sec:org4585556}
 
 \texttt{doc/examples/cal-photo-and-notes.tex}
+
+\begin{multicols}{2}
 
 \frame{\includegraphics[width=5cm]{./examples/cal-photo-and-notes-titlepage.pdf}}
 
@@ -1275,138 +1310,297 @@ Typesets the photo thumb image with its caption text on the right side.
 
 \frame{\includegraphics[width=5cm]{./examples/cal-photo-and-notes-calendar.pdf}}
 
+\columnbreak
+
+This layout uses the \texttt{layout=photo and notes} option.
+Each month produces two pages: a landscape photo page and a facing calendar page
+with a grid, event marks, and a notepad area. The example also includes a title
+page using \texttt{\textbackslash{}TitlePage}.
+
+\end{multicols}
 \subsection{No photos, with notes area}
-\label{sec:org9f7d5ed}
+\label{sec:orgaa89a34}
 
 \texttt{doc/examples/cal-no-photos.tex}
 
+\begin{multicols}{2}
+
 \frame{\includegraphics[width=5cm]{./examples/cal-burst/cal-no-photos-01.pdf}}
 
-\section{Year planners}
-\label{sec:org3c8f201}
+\columnbreak
 
+This uses the same \texttt{photo and notes} layout but with
+\texttt{disabled = true} on all photos. This produces calendar-only pages with a grid,
+event marks and notepad area -- suitable for a desk planner or scheduling tool.
+
+\end{multicols}
+
+\clearpage
+\section{Year planners}
+\label{sec:orgca17c38}
+
+The planners support event marks from CSV files and moon phase symbols via the
+\texttt{eventsCsv}, \texttt{moonsCsv} and \texttt{markDefaultsCsv} class options.
 \subsection{Portrait year planner}
-\label{sec:org061de3f}
+\label{sec:org8126b2d}
 
 \texttt{doc/examples/cal-year-planner.tex}
 
+\begin{multicols}{2}
+
 \frame{\includegraphics[width=5cm]{./examples/cal-year-planner.pdf}}
 
+\columnbreak
+
+Uses \texttt{\textbackslash{}YearPlannerPortrait} to render a 3-column, 4-row grid of monthly
+calendars in portrait orientation. This example defines a custom
+\texttt{\textbackslash{}YearPlannerPage} command that wraps \texttt{\textbackslash{}YearPlannerPortrait} with a title and
+\texttt{\textbackslash{}plannerEvents} footer. The \texttt{\textbackslash{}plannerEvents} command prints all events from the
+CSV that have a footnote marker.
+
+\end{multicols}
 \subsection{Landscape year planner with dates in rows}
-\label{sec:org00b8092}
+\label{sec:orgb5b0654}
 
 \texttt{doc/examples/cal-year-planner-rows.tex}
 
-\frame{\includegraphics[width=5cm]{./examples/cal-year-planner-rows.pdf}}
+\frame{\includegraphics[width=\linewidth]{./examples/cal-year-planner-rows.pdf}}
 
+Uses \texttt{\textbackslash{}YearPlannerLandscape} to render the entire year as a continuous row-based
+layout in landscape orientation. Event footnotes are printed below in a
+\texttt{multicols} environment using \texttt{\textbackslash{}parseYearEvents}.
+
+\clearpage
 \subsection{Landscape year planner with grid}
-\label{sec:orga117d88}
+\label{sec:orgc7bcda1}
 
 \texttt{doc/examples/cal-year-planner-grid.tex}
 
-\frame{\includegraphics[width=5cm]{./examples/cal-year-planner-grid.pdf}}
+\frame{\includegraphics[width=\linewidth]{./examples/cal-year-planner-grid.pdf}}
 
-\subsection{Compact year planner}
-\label{sec:orgbcf12f2}
+Uses \texttt{\textbackslash{}YearPlannerLandscapeGridPage} which renders a grid-style planner in
+landscape orientation. The layout includes event footnotes at the bottom.
+
+Uses the \texttt{a4PaperLandscape} page preset with the \texttt{dateAnnotations = false}
+option to disable annotation superscripts on dates (event footnotes are shown
+separately).
+\subsection{Compact year planner with weekly notes}
+\label{sec:org13fa554}
 
 \texttt{doc/examples/cal-year-planner-compact.tex}
 
-\frame{\includegraphics[width=5cm]{./examples/cal-year-planner-compact.pdf}}
+\begin{multicols}{2}
 
-\section{Class Options}
-\label{sec:org4aa9d39}
+\frame{\includegraphics[width=\linewidth]{./examples/cal-year-planner-compact.pdf}}
 
+\columnbreak
+
+Uses \texttt{\textbackslash{}YearPlannerCompact} to render a compact year planner in portrait (A4)
+orientation with the calendar dates on the left side of the page and annotated
+weekly notes alongside. This layout also supports weekly images positioned next
+to the notes using \texttt{\textbackslash{}plannerWeeklyNotes} and \texttt{\textbackslash{}plannerWeeklyImages}.
+
+Uses the \texttt{a4Paper} page preset. The \texttt{\textbackslash{}plannerMoonFormat} and \texttt{\textbackslash{}monthMarkFmt}
+commands can be renewed to customize moon phase symbol size and event mark
+formatting.
+
+\end{multicols}
+
+\clearpage
+\section{Class options for printing and debugging}
+\label{sec:org731b252}
 \subsection{Showtrims}
-\label{sec:org98fdab4}
-
-Cropmarks for printing and trimming bleeded images.
+\label{sec:orgd745540}
 
 \texttt{doc/examples/cal-showtrims.tex}
 
+\begin{multicols}{2}
+
 \frame{\includegraphics[width=5cm]{./examples/cal-burst/cal-showtrims-01.pdf}}
 
-\subsection{Varnishmask}
-\label{sec:org7fdcbcc}
+\columnbreak
 
-Varnishmask (or UV mask) file for applying gloss varnish on the photo when printing.
+The \texttt{showtrims} class option adds cropmarks around the page, showing where the
+paper should be trimmed after printing. This is essential when using bleeded images that extend beyond the trim area.
+
+\end{multicols}
+\subsection{Varnishmask}
+\label{sec:org857911a}
 
 \texttt{doc/examples/cal-varnishmask.tex}
 
+\begin{multicols}{2}
+
 \frame{\includegraphics[width=5cm]{./examples/cal-burst/cal-varnishmask-03.pdf}}
 
-\subsection{Showframe}
-\label{sec:orgd059985}
+\columnbreak
 
-Useful option for debugging layout positioning.
+The \texttt{varnishmask} class option generates a UV mask (varnish mask) file. This
+produces black shapes where the photos are, on a white background. The mask file
+is used by the print shop to apply selective gloss varnish on the photo areas.
+
+\end{multicols}
+
+\clearpage
+\subsection{Showframe}
+\label{sec:orga6d07c1}
 
 \texttt{doc/examples/cal-showframe.tex}
 
+\begin{multicols}{2}
+
 \frame{\includegraphics[width=5cm]{./examples/cal-burst/cal-showframe-01.pdf}}
 
+\columnbreak
+
+The \texttt{showframe} class option draws the page structure: margins, text area, and
+content box boundaries. Useful for debugging layout positioning when designing
+custom formatting or adjusting element placement.
+
+\end{multicols}
+
+\clearpage
 \chapter{Documentclass Options}
-\label{sec:org5a87f73}
+\label{sec:orgc07b4f3}
+
+Options are set as key-value pairs in the \texttt{\textbackslash{}documentclass} call:
 
 \begin{verbatim}
-year
+\documentclass[
+  year = 2018,
+  language = english,
+  imageFolder = ./photos/,
+  eventsCsv = ./data/holidays.csv,
+  moonsCsv = ./data/moonphases-2018.csv,
+  markDefaultsCsv = ./data/mark_defaults.csv,
+  a4Paper,
+  hMargin = 7mm,
+  topMargin = 7mm,
+  bottomMargin = 7mm,
+]{wallcalendar}
 \end{verbatim}
 
+\begin{fullwidth}
+\raggedright
 
-\begin{verbatim}
-language
-\end{verbatim}
+\begin{description}
+\item[{\texttt{year = 2018}}] The calendar year (e.g. 2018)
+\item[{\texttt{language = english}}] Language for translations (e.g. english, japanese, hungarian)
+\item[{\texttt{imageFolder = ./photos/}}] Path to the folder containing photo images
+\item[{\texttt{eventsCsv = ./data/holidays.csv}}] Path to the CSV file with calendar events
+\item[{\texttt{moonsCsv = ./data/moonphases-2018.csv}}] Path to the CSV file with moon phase data
+\item[{\texttt{markDefaultsCsv = ./data/mark\_defaults.csv}}] Path to the CSV file with default mark styles
+\item[{\texttt{translationsInputFile = frog-english.tex}}] Path to a file with \texttt{\textbackslash{}SetTxt\{\}} translation keys
+\item[{\texttt{paperWidth = 11in - 15mm}}] Custom paper width (default: US Letter landscape width)
+\item[{\texttt{paperHeight = 8.5in - 15mm}}] Custom paper height (default: US Letter landscape height)
+\item[{\texttt{hMargin = 7mm}}] Horizontal margin on both sides (default: 17mm)
+\item[{\texttt{topMargin = 15mm}}] Top margin (default: 20.5mm)
+\item[{\texttt{bottomMargin = 7mm}}] Bottom margin (default: 10mm)
+\item[{\texttt{trimSpace = 15mm}}] Extra stock size for trim marks (default: 35mm)
+\item[{\texttt{a4Paper}}] Preset for A4 portrait (210mm x 297mm)
+\item[{\texttt{a4PaperLandscape}}] Preset for A4 landscape (297mm x 210mm)
+\item[{\texttt{showframe}}] Show page structure for debugging layout (boolean, default: false)
+\item[{\texttt{showtrims}}] Show crop marks for printing (memoir class option, omit to disable)
+\item[{\texttt{varnishmask}}] Generate UV varnish mask pages (boolean, default: false)
+\item[{\texttt{gridSurround}}] Draw grid lines around calendar day cells (boolean, default: false)
+\item[{\texttt{dateAnnotations = true}}] Enable/disable date annotation superscripts (string, default: true)
+\end{description}
 
+Note: \texttt{dateAnnotations} is stored as a string (not a \TeX{} boolean) because its
+value is passed to Lua code via \texttt{\textbackslash{}luadirect} where it is compared as
+\texttt{isEqual(..., "true")}. This means it only recognizes the literal string \texttt{"true"}
+to enable annotations; any other value (including \texttt{"false"}) disables them.
 
-\begin{verbatim}
-imageFolder
-\end{verbatim}
+\end{fullwidth}
 
-
-\begin{verbatim}
-showframe
-\end{verbatim}
-
-
-\begin{verbatim}
-showtrims
-\end{verbatim}
-
-
-\begin{verbatim}
-varnishmask
-\end{verbatim}
-
+\clearpage
 \chapter{User Commands}
-\label{sec:org57ff3bf}
+\label{sec:orgc567437}
 
 \begin{verbatim}
 \SetPhoto[ options ]{ month }
 \end{verbatim}
 
 
+Set the photo for a given month. Options include \texttt{file} (image filename without
+extension), \texttt{bleed} (bleed amount), \texttt{thumbFile} (thumbnail image for the
+thumbnails page), \texttt{caption} (caption text), \texttt{disabled} (skip the photo), and
+\texttt{yOffset} (vertical offset).
+
+\begin{verbatim}
+\SetPhoto[bleed=3mm, file={obscure-crop}]{June}
+\SetPhoto[bleed=3mm, file={frog-crop}, thumbFile={frog-crop-thumb}, caption={Let the frog jump}]{January}
+\SetPhoto[disabled = true]{September}
+\end{verbatim}
+
 \begin{verbatim}
 \SetQuote[ options ]{ month }{ quote text }
 \end{verbatim}
 
+
+Set a quote overlay for a given month. Options include \texttt{xOffset} and \texttt{yOffset}
+to position the quote minipage relative to the top-left corner of the page.
+
+\begin{verbatim}
+\SetQuote[xOffset=-5mm, yOffset=-20mm]{June}{%
+  \raggedright\Large\color{white}%
+  I shall be gone.%
+}
+\end{verbatim}
 
 \begin{verbatim}
 \SetCalendar[ options ]{ month }
 \end{verbatim}
 
 
+Set calendar rendering options for a given month. The main option is \texttt{bg/.style}
+which controls the TikZ style of the calendar background.
+
+\begin{verbatim}
+\SetCalendar[bg/.style={opacity=0.8}]{June}
+\SetCalendar[]{September}
+\end{verbatim}
+
 \begin{verbatim}
 \SetEvents[ options ]{ month }{ calendar tikz marks }{ events text }
 \end{verbatim}
 
+
+Set event marks and event text for a given month. The second argument contains
+TikZ calendar mark expressions. The third argument contains the text to display
+in the events area.
+
+\begin{verbatim}
+\SetEvents{June}{%
+  if (equals=2018-06-21)
+    [day text={\dejaVuSans\char"263C}];% U+263C white sun with rays
+}{%
+  \raggedleft
+  {\dejaVuSans\char"263C} June 21: Summer Solstice
+}
+\end{verbatim}
+
+\clearpage
 
 \begin{verbatim}
 \MonthPage[ options ]{ month }
 \end{verbatim}
 
 
-\clearpage
+Typeset a month page. The \texttt{layout} option selects the layout handler (\texttt{full
+page}, \texttt{small landscape}, or \texttt{photo and notes}). The \texttt{put photo} option controls
+photo placement (\texttt{full page}, \texttt{full width above calendar}, or \texttt{full width}).
 
+\begin{verbatim}
+\MonthPage[layout=full page, put photo=full page]{June}
+\MonthPage[layout=full page, put photo=full width above calendar]{July}
+\MonthPage[layout=small landscape, put photo=full width]{August}
+\MonthPage[layout=photo and notes, put photo=full page]{September}
+\end{verbatim}
+
+\clearpage
 \chapter{Page Layout}
-\label{sec:org11229bc}
+\label{sec:orgf30ab1c}
 
 We will review how the page layout happens when we call \texttt{\textbackslash{}MonthPage}.
 
@@ -1448,10 +1642,97 @@ portrait photos that can be scaled to cover the entire page. The \texttt{small
 landscape} layout is for landscape photos which can be scaled horizontally,
 possibly bleeding into the side margins.
 
+\clearpage
+\section{Formatting Hooks: \texttt{\textbackslash{}fullPageFmt}}
+\label{sec:org600c980}
+
+Each layout runs a formatting command before typesetting the page. The \texttt{full
+page} layout calls \texttt{\textbackslash{}fullPageFmt}, which sets hooks for fonts, sizes, colors
+and alignment. You can \texttt{\textbackslash{}renewcommand} it in your preamble to customize
+the appearance.
+
+The default definition is:
+
+\begin{verbatim}
+\newcommand\fullPageFmt{%
+  \renewcommand*\monthFmt{\LARGE}%
+  \renewcommand*\yearFmt{\LARGE}%
+  \renewcommand*\dayLetterColor{}%
+  \renewcommand*\dayLetterFmt{\tiny}%
+  \renewcommand*\dayTextFmt{\small}%
+  \renewcommand*\quoteFmt{}%
+  \renewcommand*\headingFmt{\centering}%
+  \renewcommand*\calendarFmt{\centering}%
+  \renewcommand*\eventsFmt{%
+    \setlength{\parindent}{0pt}\raggedleft\footnotesize%
+  }%
+}
+\end{verbatim}
+
+The hooks control the following elements:
+
+\begin{itemize}
+\item \texttt{\textbackslash{}monthFmt} -- Font and size for the month name
+\item \texttt{\textbackslash{}yearFmt} -- Font and size for the year number
+\item \texttt{\textbackslash{}dayLetterColor} -- Color applied to the day-of-week letter row
+\item \texttt{\textbackslash{}dayLetterFmt} -- Font and size for day-of-week letters (M, T, W\ldots{})
+\item \texttt{\textbackslash{}dayTextFmt} -- Font and size for the day numbers in the calendar
+\item \texttt{\textbackslash{}quoteFmt} -- Formatting applied to the quote area
+\item \texttt{\textbackslash{}headingFmt} -- Alignment for the month/year heading (e.g. \texttt{\textbackslash{}centering})
+\item \texttt{\textbackslash{}calendarFmt} -- Alignment for the calendar area
+\item \texttt{\textbackslash{}eventsFmt} -- Formatting for the events text below the calendar
+\end{itemize}
+
+See the \hyperref[sec:translations-tutorial]{Translations tutorial} for an example of renewing \texttt{\textbackslash{}fullPageFmt} to use a
+Japanese font.
+
+\clearpage
+\section{Formatting Hooks: \texttt{\textbackslash{}smallLandscapeFmt}}
+\label{sec:org6a2e565}
+
+The \texttt{small landscape} layout calls \texttt{\textbackslash{}smallLandscapeFmt}. In addition to the
+same hooks as \texttt{\textbackslash{}fullPageFmt}, it also sets lengths that control the calendar
+grid dimensions.
+
+The default definition is:
+
+\begin{verbatim}
+\newcommand\smallLandscapeFmt{%
+  \renewcommand*\monthFmt{\LARGE}%
+  \renewcommand*\yearFmt{\LARGE}%
+  \renewcommand*\dayLetterColor{}%
+  \renewcommand*\dayLetterFmt{\tiny}%
+  \renewcommand*\dayTextFmt{\small}%
+  \renewcommand*\quoteFmt{\centering}%
+  \renewcommand*\headingFmt{\centering}%
+  \renewcommand*\calendarFmt{\centering}%
+  \renewcommand*\eventsFmt{%
+    \setlength{\parindent}{0pt}\raggedright\footnotesize%
+  }%
+  \setlength{\@t@calendar@minimumHeight}{85mm}%
+  \setlength{\@t@calendar@hmargin}{20pt}%
+  \setlength{\@t@calendar@verticalSpacing}{20mm + 5mm + 6.5mm}%
+}
+\end{verbatim}
+
+The additional lengths are:
+
+\begin{itemize}
+\item \texttt{\textbackslash{}@t@calendar@minimumHeight} -- Minimum height of the calendar grid area
+\item \texttt{\textbackslash{}@t@calendar@hmargin} -- Horizontal margin inside the calendar grid
+\item \texttt{\textbackslash{}@t@calendar@verticalSpacing} -- Vertical space reserved for the day headings, events area, and white space below the grid
+\end{itemize}
+\section{Formatting Hooks: \texttt{\textbackslash{}photoAndNotesFmt}}
+\label{sec:org93f5183}
+
+The \texttt{photo and notes} layout calls \texttt{\textbackslash{}photoAndNotesFmt}. See the \hyperref[sec:photo-and-notes-title-page]{Example: Photo and Notes with Title page} section for details on customizing this layout,
+including how to disable the notepad area.
+
+\clearpage
 \chapter{Contact}
-\label{sec:org7eac7a4}
+\label{sec:org445fc76}
 
 Github: \url{https://github.com/profound-labs/wallcalendar/}
 
-Email: \texttt{Gambhīro Bhikkhu <gambhiro.bhikkhu.85@gmail.com>}
+Contact: \url{https://gambhiro.github.io/}
 \end{document}

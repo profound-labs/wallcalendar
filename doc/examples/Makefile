@@ -10,7 +10,7 @@ test: ./diff-cal.sh
 
 calendars: cal-translations cal-plain.pdf cal-showtrims.pdf cal-showframe.pdf cal-varnishmask.pdf cal-marks.pdf cal-photo-and-notes.pdf cal-year-planner.pdf cal-year-planner-rows.pdf cal-year-planner-grid.pdf cal-year-planner-compact.pdf cal-thumbnails.pdf
 
-bursts: cal-plain-burst cal-showtrims-burst cal-showframe-burst cal-varnishmask-burst cal-no-photos-burst
+bursts: cal-plain-burst cal-showtrims-burst cal-showframe-burst cal-varnishmask-burst cal-no-photos-burst cal-photo-and-notes-burst
 
 jpg: cal-marks.jpg
 
@@ -34,6 +34,9 @@ cal-varnishmask-burst:
 
 cal-no-photos-burst:
 	pdftk cal-no-photos.pdf burst output ./cal-burst/cal-no-photos-%02d.pdf
+
+cal-photo-and-notes-burst:
+	pdftk cal-photo-and-notes.pdf burst output ./cal-burst/cal-photo-and-notes-%02d.pdf
 
 cal-translations: cal-translations-japanese.pdf cal-translations-english.pdf cal-translations-hungarian.pdf
 
