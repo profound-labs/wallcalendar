@@ -1403,6 +1403,58 @@ formatting.
 
 \clearpage
 
+** Generating moon phase data
+<<sec:generating-moon-phases>>
+
+The year planner examples include pre-generated moon phase CSV files (e.g.
+=data/moonphases-2018.csv=). To generate moon phases for an arbitrary year, use
+the =generate_moon_phases.py= script in =doc/examples/scripts/=.
+
+The script uses [[https://rhodesmill.org/pyephem/][PyEphem]] for astronomically accurate moon phase calculations
+and outputs a CSV file in the =moonsCsv= format expected by wallcalendar (with
+=date=, =day_text=, and =footnote= columns).
+
+*** Setup
+
+The script uses [[https://python-poetry.org/][Poetry]] for dependency management. From the =scripts= directory:
+
+#+begin_example
+cd doc/examples/scripts
+poetry install
+#+end_example
+
+The =poetry.toml= file has =virtualenvs.in-project = true= so the virtual
+environment is created as =scripts/.venv/=.
+
+*** Usage
+
+#+begin_example
+poetry run python generate_moon_phases.py YEAR [OUTPUT_FILE]
+#+end_example
+
+To generate moon phases for use with the year planner examples:
+
+#+begin_example
+cd doc/examples/scripts
+poetry run python generate_moon_phases.py 2026 ../data/moonphases-2026.csv
+#+end_example
+
+Then reference the generated file in your =.tex= document:
+
+#+begin_example
+\documentclass[
+  year = 2026,
+  eventsCsv = ./data/holidays-compact.csv,
+  moonsCsv = ./data/moonphases-2026.csv,
+  markDefaultsCsv = ./data/mark_defaults.csv,
+]{wallcalendar}
+#+end_example
+
+If no output file is specified, the script writes to =moonphases-YEAR.csv= in the
+current directory.
+
+\clearpage
+
 ** Class options for printing and debugging
 *** Showtrims
 

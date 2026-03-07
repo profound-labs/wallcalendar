@@ -1,0 +1,17 @@
+[project]
+name = "wallcalendar-scripts"
+version = "0.1.0"
+description = "Helper scripts for wallcalendar examples"
+authors = [
+    {name = "wallcalendar"}
+]
+readme = "README.md"
+requires-python = "^3.10"
+dependencies = [
+    "ephem (>=4.2.1,<5.0.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
