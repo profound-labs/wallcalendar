@@ -14,6 +14,7 @@ A wall calendar class with custom layouts and support for internationalization.
             - [Full page photo, photo above the calendar days](#full-page-photo-photo-above-the-calendar-days)
             - [Small landscape photo, with a calendar grid](#small-landscape-photo-with-a-calendar-grid)
             - [Thumbnails and captions page](#thumbnails-and-captions-page)
+        - [Sunday-first week layout](#sunday-first-week-layout)
         - [Landscape photo and notes on two pages](#landscape-photo-and-notes-on-two-pages)
             - [No photos, with notes area](#no-photos-with-notes-area)
         - [Year planners](#year-planners)
@@ -88,6 +89,14 @@ Files are in the [doc/examples](https://github.com/profound-labs/wallcalendar/tr
 [cal-thumbnails.tex](doc/examples/cal-thumbnails.tex) | [cal-thumbnails.pdf](https://raw.githubusercontent.com/profound-labs/wallcalendar/master/doc/examples/cal-thumbnails.pdf)
 
 ![cal-thumbnails](doc/examples/cal-thumbnails.jpg)
+
+### Sunday-first week layout
+
+The `sundayFirst` class option shifts the week to start on Sunday instead of Monday. All layouts respect this option.
+
+[cal-photo-and-notes-sunday.tex](doc/examples/cal-photo-and-notes-sunday.tex) | [cal-photo-and-notes-sunday.pdf](https://raw.githubusercontent.com/profound-labs/wallcalendar/master/doc/examples/cal-photo-and-notes-sunday.pdf)
+
+![cal-photo-and-notes-sunday](doc/examples/cal-photo-and-notes-sunday.jpg)
 
 ### Landscape photo and notes on two pages
 

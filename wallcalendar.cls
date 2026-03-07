@@ -41,6 +41,7 @@
 \newif\iftranslationsAutoload
 \newif\ifloadBabel
 \newif\ifgridSurround
+\newif\ifsundayFirst
 
 \pgfkeys{
   /wall/.is family, /wall,
@@ -76,6 +77,7 @@
   varnishmask/.is if = varnishmask,
   showframe/.is if = showframe,
   gridSurround/.is if = gridSurround,
+  sundayFirst/.is if = sundayFirst,
   dateAnnotations/.store in = \@wall@dateAnnotationsStr,
   dateAnnotations/.initial = true,
   imageFolder/.store in = \@wall@imageFolder,
@@ -109,6 +111,14 @@
 \pgfkeys{/wall, defaults}
 \ProcessPgfOptions{/wall}
 \ProcessOptions\relax
+
+% Set the week list style based on sundayFirst option.
+% This macro is used in TikZ style definitions to avoid TeX conditional nesting issues.
+\ifsundayFirst
+  \def\@wall@weekListStyle{week list sunday}
+\else
+  \def\@wall@weekListStyle{week list}
+\fi
 
 \LoadClass[11pt,oneside]{memoir}
 
@@ -291,20 +301,42 @@
 \sixrowsmonthfalse
 
 \pgfkeys{/pgf/calendar/six rows month/.code={%
-  \ifnum\pgfcalendarifdateday=30\relax
-    % Monday
-    \ifnum\pgfcalendarifdateweekday=0\relax
-      \pgfcalendarmatchestrue
+  % Monday-first: new week starts on Monday (weekday 0).
+  % Sunday-first: new week starts on Sunday (weekday 6).
+  \ifsundayFirst
+    \ifnum\pgfcalendarifdateday=30\relax
+      % Sunday (start of new week in Sunday-first)
+      \ifnum\pgfcalendarifdateweekday=6\relax
+        \pgfcalendarmatchestrue
+      \fi
+    \else
+      \ifnum\pgfcalendarifdateday=31\relax
+        % Sunday
+        \ifnum\pgfcalendarifdateweekday=6\relax
+          \pgfcalendarmatchestrue
+        \fi
+        % Monday (day 30 was Sunday = new row, day 31 is Monday)
+        \ifnum\pgfcalendarifdateweekday=0\relax
+          \pgfcalendarmatchestrue
+        \fi
+      \fi
     \fi
   \else
-    \ifnum\pgfcalendarifdateday=31\relax
+    \ifnum\pgfcalendarifdateday=30\relax
       % Monday
       \ifnum\pgfcalendarifdateweekday=0\relax
         \pgfcalendarmatchestrue
       \fi
-      % Tuesday
-      \ifnum\pgfcalendarifdateweekday=1\relax
-        \pgfcalendarmatchestrue
+    \else
+      \ifnum\pgfcalendarifdateday=31\relax
+        % Monday
+        \ifnum\pgfcalendarifdateweekday=0\relax
+          \pgfcalendarmatchestrue
+        \fi
+        % Tuesday
+        \ifnum\pgfcalendarifdateweekday=1\relax
+          \pgfcalendarmatchestrue
+        \fi
       \fi
     \fi
   \fi%
@@ -1741,7 +1773,7 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
         \pgftransformxshift{\pgf@xa}%
         \pgftransformyshift{\pgf@ya}%
         \pgftransformyshift{4pt}%
-        \node (d\d) [anchor=base, day heading] {\dayLetterFmt\@tr@dayLetter{\d}};%
+        \node (d\d) [anchor=base, day heading] {\dayLetterFmt\@tr@columnDayLetter{\d}};%
       };%
     }{}%
   },%
@@ -1758,7 +1790,7 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
         \pgftransformxshift{\pgf@xa}%
         \pgftransformyshift{\pgf@ya}%
         \pgftransformyshift{4pt}%
-        \node (d\d) [anchor=base, day heading] {\dayLetterTextFmt{\@tr@dayName{\d}}};%
+        \node (d\d) [anchor=base, day heading] {\dayLetterTextFmt{\@tr@columnDayName{\d}}};%
       };%
     }{}%
   },%
@@ -1776,26 +1808,48 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
       %
       % 31 day months
       \ifdate{between=01-01 and 01-31, between=03-01 and 03-31, between=05-01 and 05-31, between=07-01 and 07-31, between=08-01 and 08-31, between=10-01 and 10-31, between=12-01 and 12-31}{%
-        \ifdate{Saturday,Sunday}{%
-          \gridRows=6%
-          \setlength\@t@calendar@gridHeight{\@t@calendar@gridHeightSixRows}%
-        }{%
-          \gridRows=5%
-          \setlength\@t@calendar@gridHeight{\@t@calendar@gridHeightFiveRows}%
-        }
-      }{
-      % 30 day months and February
-        \ifdate{between=02-01 and 02-last}{%
-          \gridRows=5%
-          \setlength\@t@calendar@gridHeight{\@t@calendar@gridHeightFiveRows}%
-        }{%
-          \ifdate{Sunday}{%
+        % Monday-first: 6 rows if 1st is Sat or Sun. Sunday-first: 6 rows if 1st is Fri or Sat.
+        \ifsundayFirst
+          \ifdate{Friday,Saturday}{%
             \gridRows=6%
             \setlength\@t@calendar@gridHeight{\@t@calendar@gridHeightSixRows}%
           }{%
             \gridRows=5%
             \setlength\@t@calendar@gridHeight{\@t@calendar@gridHeightFiveRows}%
           }
+        \else
+          \ifdate{Saturday,Sunday}{%
+            \gridRows=6%
+            \setlength\@t@calendar@gridHeight{\@t@calendar@gridHeightSixRows}%
+          }{%
+            \gridRows=5%
+            \setlength\@t@calendar@gridHeight{\@t@calendar@gridHeightFiveRows}%
+          }
+        \fi
+      }{
+      % 30 day months and February
+        \ifdate{between=02-01 and 02-last}{%
+          \gridRows=5%
+          \setlength\@t@calendar@gridHeight{\@t@calendar@gridHeightFiveRows}%
+        }{%
+          % Monday-first: 6 rows if 1st is Sun. Sunday-first: 6 rows if 1st is Sat.
+          \ifsundayFirst
+            \ifdate{Saturday}{%
+              \gridRows=6%
+              \setlength\@t@calendar@gridHeight{\@t@calendar@gridHeightSixRows}%
+            }{%
+              \gridRows=5%
+              \setlength\@t@calendar@gridHeight{\@t@calendar@gridHeightFiveRows}%
+            }
+          \else
+            \ifdate{Sunday}{%
+              \gridRows=6%
+              \setlength\@t@calendar@gridHeight{\@t@calendar@gridHeightSixRows}%
+            }{%
+              \gridRows=5%
+              \setlength\@t@calendar@gridHeight{\@t@calendar@gridHeightFiveRows}%
+            }
+          \fi
         }
       }
       %
@@ -1887,9 +1941,38 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
   background rule/.style={black!20, line width=10pt, yshift={0.3\@t@calendar@dayYshift +3.5pt}},
 ]
 
+% week list sunday: a variant of TikZ's week list that starts weeks on Sunday.
+% Based on https://texample.net/tikz/examples/changing-the-default-calendar-layout/
+\tikzstyle{week list sunday}=[
+  execute before day scope={%
+    \ifdate{day of month=1}{\ifdate{equals=\pgfcalendarbeginiso}{}{%
+      \pgfmathsetlength{\pgf@y}{\tikz@lib@cal@month@yshift}%
+      \pgftransformyshift{-\pgf@y}%
+    }}{}%
+  },
+  execute at begin day scope={%
+    \pgfmathsetlength\pgf@x{\tikz@lib@cal@xshift}%
+    \ifnum\pgfcalendarcurrentweekday=6
+      \c@pgf@counta=0
+    \else
+      \c@pgf@counta=\pgfcalendarcurrentweekday
+      \advance\c@pgf@counta by 1
+    \fi
+    \pgf@x=\c@pgf@counta\pgf@x
+    \pgftransformxshift{\pgf@x}%
+  },
+  execute after day scope={%
+    \ifdate{Saturday}{%
+      \pgfmathsetlength{\pgf@y}{\tikz@lib@cal@yshift}%
+      \pgftransformyshift{-\pgf@y}%
+    }{}%
+  },
+  tikz@lib@cal@width=7
+]
+
 \tikzstyle{betelgeuse}=[
   days grid,
-  week list,
+  \@wall@weekListStyle,
   day xshift=\@t@calendar@dayXshift,
   day yshift=\@t@calendar@dayYshift,
   headings background bar,
@@ -1912,7 +1995,7 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
 
 \tikzstyle{rigel}=[
   days grid,
-  week list,
+  \@wall@weekListStyle,
   day xshift=\@t@calendar@dayXshift,
   day yshift=\@t@calendar@dayYshift,
   day fullday headings,
@@ -1935,7 +2018,7 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
 
 \tikzstyle{aldebaran}=[
   days grid,
-  week list,
+  \@wall@weekListStyle,
   day xshift=\@t@calendar@dayXshift,
   day yshift=\@t@calendar@dayYshift,
   day letter headings,
@@ -1979,7 +2062,7 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
 \newcommand\plannerPortraitDayFmt{\fontsize{12}{12}\selectfont\color{plannerdatenum}}
 
 \tikzstyle{year planner portrait}=[
-  week list,
+  \@wall@weekListStyle,
   day xshift=20pt,
   day yshift=18pt,
   month text={\plannerPortraitMonthFmt\@tr@monthNumName{\pgfcalendarcurrentmonth}},
@@ -2045,8 +2128,10 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
   month label left,
   execute at begin day scope={
     \plannerLandscapeBeginDayScopeHook
-    % Week divider line on Sunday as a thin rectangle
-    \ifdate{Sunday}{%
+    % Week divider line at end of week as a thin rectangle
+    % Sunday-first: divider after Saturday (weekday 5). Monday-first: after Sunday (weekday 6).
+    \ifsundayFirst \n=5\else \n=6\fi
+    \ifnum\pgfcalendarcurrentweekday=\n
       \node[
         rectangle,
         inner sep=0pt,
@@ -2057,7 +2142,7 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
         draw=none,
         fill=black!80,
         ]{};%
-    }{}%
+    \fi
     % Weekday headers in January
     \ifdate{between=01-01 and 01-31}{
       \def\l{\ifcase\pgfcalendarcurrentweekday M\or T\or W\or T\or F\or S\or S\fi}%
@@ -2156,19 +2241,23 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
       yshift = 4.5pt,
     ] {};%
     %
-    \ifdate{Monday}{%
+    % Week start marker (left triangle). Monday-first: Monday (0). Sunday-first: Sunday (6).
+    \ifsundayFirst \n=6\else \n=0\fi
+    \ifnum\pgfcalendarcurrentweekday=\n
       \node (a) [above left = 10pt and -3.5pt of cell.west] {};
       \node (b) [below left = 10pt and -3.5pt of cell.west] {};
       \node (c) [right = 5pt of cell.west] {};
       \path [on layer = one, fill = pagebgcolor] (a.south) -- (b.north) -- (c.west) -- (a.south);%
-    }{}%
+    \fi
     %
-    \ifdate{Sunday}{%
+    % Week end marker (right triangle). Monday-first: Sunday (6). Sunday-first: Saturday (5).
+    \ifsundayFirst \n=5\else \n=6\fi
+    \ifnum\pgfcalendarcurrentweekday=\n
       \node (a) [above left = 10pt and {-3.5pt + 0.6pt} of cell.east] {};
       \node (b) [below left = 10pt and {-3.5pt + 0.6pt} of cell.east] {};
       \node (c) [right = {5pt - 0.6pt} of cell.east] {};
       \path [on layer = two, fill = white] (a.south) -- (b.north) -- (c.west) -- (a.south);%
-    }{}%
+    \fi
     %
     \plannerGridBeginDayScopeHook%
   },
@@ -2195,7 +2284,7 @@ require("wallcalendar-helpers.lua")
 setStartsWithLastYear(\luastring{\CalendarYear})}
 
 \tikzstyle{year planner compact}=[
-  week list,
+  \@wall@weekListStyle,
   month yshift=0pt,
   day text={\plannerCompactDayFmt\%d-},
   every day/.style={anchor=mid},%
@@ -2230,13 +2319,27 @@ setStartsWithLastYear(\luastring{\CalendarYear})}
         \pgftransformyshift{\pgf@ya}%
         \pgftransformyshift{4pt}%
         \node (d\d) [anchor=base, inner sep=0pt] {%
-          \ifnum\d=5
-            \plannerCompactDateDayFormat{\color{weekend}\@tr@dayLetter{\d}}%
-          \else
-            \ifnum\d=6
-              \plannerCompactDateDayFormat{\color{weekend}\@tr@dayLetter{\d}}%
+          \ifsundayFirst
+            % Sunday-first: column 0 = Sunday (weekend), column 6 = Saturday (weekend)
+            \ifnum\d=0
+              \plannerCompactDateDayFormat{\color{weekend}\@tr@columnDayLetter{\d}}%
             \else
-              \plannerCompactDateDayFormat{\@tr@dayLetter{\d}}%
+              \ifnum\d=6
+                \plannerCompactDateDayFormat{\color{weekend}\@tr@columnDayLetter{\d}}%
+              \else
+                \plannerCompactDateDayFormat{\@tr@columnDayLetter{\d}}%
+              \fi
+            \fi
+          \else
+            % Monday-first: columns 5,6 = Saturday,Sunday (weekend)
+            \ifnum\d=5
+              \plannerCompactDateDayFormat{\color{weekend}\@tr@columnDayLetter{\d}}%
+            \else
+              \ifnum\d=6
+                \plannerCompactDateDayFormat{\color{weekend}\@tr@columnDayLetter{\d}}%
+              \else
+                \plannerCompactDateDayFormat{\@tr@columnDayLetter{\d}}%
+              \fi
             \fi
           \fi
         };%
@@ -2244,8 +2347,9 @@ setStartsWithLastYear(\luastring{\CalendarYear})}
     }{}%
     %
     % Week number
-    %
-    \ifnum\pgfcalendarcurrentweekday=0
+    % Determine the weekday that starts a new week row
+    \ifsundayFirst \n=6\else \n=0\fi
+    \ifnum\pgfcalendarcurrentweekday=\n
       \node [
         anchor = east,
         xshift = -13pt,
@@ -2254,9 +2358,9 @@ setStartsWithLastYear(\luastring{\CalendarYear})}
       ] {\parbox{6mm}{\centering\plannerCompactWeekNumFmt \the\weeknum.}};
       \advance\weeknum by 1
     \fi
-    % When first week doesn't start on Monday
+    % When first week doesn't start on the first day of the week
     \ifdate{equals=01-01}{%
-      \ifnum\pgfcalendarcurrentweekday=0\relax
+      \ifnum\pgfcalendarcurrentweekday=\n\relax
       \else
         \ifstartswithlastyear
           \node [
@@ -2302,12 +2406,19 @@ setStartsWithLastYear(\luastring{\CalendarYear})}
         \pgfmathsetlength\pgf@xa{\tikz@lib@cal@xshift}
         \pgfmathsetlength\pgf@ya{\tikz@lib@cal@yshift}
         %
-        % No bottom and left edge on Mondays
-        \ifnum\pgfcalendarcurrentweekday=0\relax
+        % Compute column index from weekday
+        \ifsundayFirst
+          \ifnum\pgfcalendarcurrentweekday=6 \n=0\else
+            \n=\pgfcalendarcurrentweekday \advance\n by 1
+          \fi
+        \else
+          \n=\pgfcalendarcurrentweekday
+        \fi
+        % No bottom and left edge when day is in the first column
+        \ifnum\n=0\relax
         \else
           %
           % Bottom border, from left side to the number
-          \n=\pgfcalendarcurrentweekday
           \draw [
             gridcolor,
             line width = 0.5pt,
@@ -2719,6 +2830,24 @@ plannerWeeklyImages(tonumber(\CalendarYear), nil, \luastring{\plannerMarksDayTex
 \newcommand*\@tr@dayName[1]{%
 \ifcase#1 \xMonday\or \xTuesday\or \xWednesday\or
 \xThursday\or \xFriday\or \xSaturday\or \xSunday\fi}
+
+% Column-to-day mapping for headings. When sundayFirst is active, column 0 is
+% Sunday; otherwise column 0 is Monday (matching TikZ weekday numbering).
+\newcommand*\@tr@columnDayLetter[1]{%
+\ifsundayFirst
+  \ifcase#1 \xSundayDayLetter\or \xMondayDayLetter\or \xTuesdayDayLetter\or \xWednesdayDayLetter\or
+  \xThursdayDayLetter\or \xFridayDayLetter\or \xSaturdayDayLetter\fi
+\else
+  \@tr@dayLetter{#1}%
+\fi}
+
+\newcommand*\@tr@columnDayName[1]{%
+\ifsundayFirst
+  \ifcase#1 \xSunday\or \xMonday\or \xTuesday\or \xWednesday\or
+  \xThursday\or \xFriday\or \xSaturday\fi
+\else
+  \@tr@dayName{#1}%
+\fi}
 
 \newcommand*{\monthToNum}[1]{%
 \luadirect{
