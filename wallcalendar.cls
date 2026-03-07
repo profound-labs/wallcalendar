@@ -1271,7 +1271,7 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
 };
 
 \node (events) [
-  above right=10mm and {\@t@rightOffset} of bg.south west,
+  above right=9mm and {\@t@rightOffset} of bg.south west,
   anchor=south west,
 ] {%
 \placeholder[fill=events-frame]{}{%

@@ -5,7 +5,7 @@
 *.lof
 *.fls
 *.fdb_latexmk
-.auctex-auto/
+*.out
 
 # Project output
 wallcalendar.zip
@@ -30,6 +30,7 @@ mwe.pdf
 
 # Emacs temp files
 auto/
+.auctex-auto/
 *~
 \#*\#
 *.elc
