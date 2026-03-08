@@ -71,6 +71,23 @@ make calendars
 
 This compiles all example `.tex` files with LuaLaTeX. A successful build (all PDFs produced without errors) confirms the package is working correctly. Any LaTeX or Lua error during compilation indicates a regression.
 
+### Visual Regression Testing
+
+`doc/examples/diff-cal.py` compares compiled PDFs against their last committed versions to detect layout changes. It checks out the committed PDF, rebuilds with `make`, splits multi-page PDFs into per-page files, and uses ImageMagick `compare` to find pixel differences.
+
+```bash
+cd doc/examples
+
+# Test all calendars listed in the Makefile
+./diff-cal.py
+
+# Test a single calendar
+./diff-cal.py --cal cal-plain
+./diff-cal.py --cal cal-plain.pdf
+```
+
+Requires: `pdfinfo`, `pdftk`, ImageMagick `compare`.
+
 ## Examples
 
 All examples are in `doc/examples/`. Key ones:
