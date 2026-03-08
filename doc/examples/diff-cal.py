@@ -30,6 +30,13 @@ Saving and reusing PDFs:
                 --new-commit-pdf-rebuild <hash> --new-pdf-save-to-folder <path>
       Rebuild both and save burst pages.
 
+  ./diff-cal.py --old-commit-pdf-rebuild <hash> --old-worktree-path <path>
+      Rebuild old PDFs and keep the worktree at <path> for inspection.
+
+  ./diff-cal.py --old-commit-pdf-rebuild <hash> --old-worktree-path <path> \\
+                --new-commit-pdf-rebuild <hash> --new-worktree-path <path>
+      Rebuild both and keep both worktrees.
+
   ./diff-cal.py --old-pdf-from-folder <path>
       Use previously saved burst pages as old PDFs.
 
@@ -53,8 +60,8 @@ from pathlib import Path
 DIFF_DIRS = ["diff-old", "diff-new", "diff-compare"]
 
 # Resolved once in main(), used by worktree helpers.
-REPO_ROOT = None
-EXAMPLES_REL = None
+REPO_ROOT: Path | None = None
+EXAMPLES_REL: str | None = None
 
 
 def clean_diff_folders():
@@ -145,11 +152,21 @@ def restore_pdf(name):
 # Git worktree helpers
 # ---------------------------------------------------------------------------
 
-def worktree_add(commit_hash):
+def worktree_add(commit_hash, worktree_path=None):
     """Create a detached worktree for commit_hash, return its Path.
 
-    The worktree is registered for cleanup via atexit.
+    If worktree_path is given, the worktree is created there and NOT cleaned
+    up on exit.  Otherwise a temporary directory is used and registered for
+    automatic cleanup via atexit.
     """
+    if worktree_path:
+        wt = str(Path(worktree_path).resolve())
+        subprocess.run(
+            ["git", "-C", str(REPO_ROOT), "worktree", "add",
+             "--detach", wt, commit_hash],
+            check=True, capture_output=True, text=True,
+        )
+        return Path(wt)
     tmp = tempfile.mkdtemp(prefix="diffcal-wt-")
     subprocess.run(
         ["git", "-C", str(REPO_ROOT), "worktree", "add",
@@ -227,17 +244,33 @@ def get_old_committed(cal_names, dest_dir, commit=None):
     return skipped
 
 
-def get_rebuilt(cal_names, dest_dir, commit_hash):
+def get_rebuilt(dest_dir, commit_hash, cal_filter=None, worktree_path=None):
     """Rebuild calendars from a specific commit using a worktree, burst into dest_dir.
 
-    Returns list of skipped names.
+    The calendar list is read from the worktree's own Makefile so that only
+    targets that actually exist at that commit are attempted.
+
+    cal_filter:    if set, only build this single calendar (must exist in the
+                   worktree Makefile).
+    worktree_path: if set, create the worktree at this path and keep it after
+                   the script exits.
+
+    Returns (built_names, skipped_names).
     """
     print(f"  Creating worktree for {commit_hash[:10]}...")
-    wt = worktree_add(commit_hash)
-    built, skipped = build_in_worktree(wt, cal_names)
+    wt = worktree_add(commit_hash, worktree_path=worktree_path)
+    assert EXAMPLES_REL is not None
+    wt_makefile = wt / EXAMPLES_REL / "Makefile"
+    wt_cals = calendars_from_makefile(str(wt_makefile))
+    if cal_filter:
+        if cal_filter in wt_cals:
+            wt_cals = [cal_filter]
+        else:
+            return [], [f"{cal_filter} (not in Makefile at {commit_hash[:10]})"]
+    built, skipped = build_in_worktree(wt, wt_cals)
     for name, pdf_path in built.items():
         burst_pdf(pdf_path, dest_dir, name)
-    return skipped
+    return list(built.keys()), skipped
 
 
 def get_new_from_working_tree(cal_names, dest_dir):
@@ -315,7 +348,8 @@ def compare_pages():
 
         out_jpg = cmp_dir / f"{old_page.stem}.jpg"
         result = subprocess.run(
-            ["compare", "-metric", "AE",
+            ["compare", "-density", "150",
+             "-metric", "AE",
              str(old_page), str(new_page),
              "-compose", "src", "-alpha", "off",
              str(out_jpg)],
@@ -379,6 +413,16 @@ def main():
         "--new-pdf-save-to-folder", metavar="PATH",
         help="Save new burst pages to this folder for later reuse.",
     )
+    parser.add_argument(
+        "--old-worktree-path", metavar="PATH",
+        help="Create the old worktree at this path and keep it after exit "
+             "(requires --old-commit-pdf-rebuild).",
+    )
+    parser.add_argument(
+        "--new-worktree-path", metavar="PATH",
+        help="Create the new worktree at this path and keep it after exit "
+             "(requires --new-commit-pdf-rebuild).",
+    )
 
     args = parser.parse_args()
 
@@ -399,6 +443,16 @@ def main():
             "mutually exclusive"
         )
 
+    if args.old_worktree_path and not args.old_commit_pdf_rebuild:
+        parser.error(
+            "--old-worktree-path requires --old-commit-pdf-rebuild"
+        )
+
+    if args.new_worktree_path and not args.new_commit_pdf_rebuild:
+        parser.error(
+            "--new-worktree-path requires --new-commit-pdf-rebuild"
+        )
+
     # Resolve paths.
     examples_dir = Path(__file__).resolve().parent
     os.chdir(examples_dir)
@@ -411,10 +465,17 @@ def main():
     EXAMPLES_REL = str(examples_dir.relative_to(REPO_ROOT))
 
     # Determine which calendars to process.
+    # For rebuild-from-commit modes the worktree's Makefile is used instead,
+    # but we still need cal_names for non-rebuild paths and --cal validation.
+    cal_filter = None
+    both_rebuild = args.old_commit_pdf_rebuild and args.new_commit_pdf_rebuild
     if args.cal:
         name = args.cal.removesuffix(".pdf")
         name = re.sub(r"-\d{1,2}$", "", name)
-        if not validate_calendar(name):
+        cal_filter = name
+        # Skip current-Makefile validation when both sides rebuild from
+        # commits — the target may not exist in the current tree.
+        if not both_rebuild and not validate_calendar(name):
             print(f"Calendar '{name}' not found in Makefile", file=sys.stderr)
             sys.exit(1)
         cal_names = [name]
@@ -431,12 +492,13 @@ def main():
         sk = load_from_folder(args.old_pdf_from_folder, "diff-old")
         skipped.extend(sk)
     elif args.old_commit_pdf_rebuild:
-        for name in cal_names:
-            print(f"  {name}... ", end="", flush=True)
-        sk = get_rebuilt(cal_names, "diff-old", args.old_commit_pdf_rebuild)
-        for name in cal_names:
-            status = "SKIPPED (build failed)" if name in sk else "done"
-            print(f"  {name}: {status}")
+        built, sk = get_rebuilt("diff-old", args.old_commit_pdf_rebuild,
+                                cal_filter=cal_filter,
+                                worktree_path=args.old_worktree_path)
+        for name in built:
+            print(f"  {name}: done")
+        for name in sk:
+            print(f"  {name}: SKIPPED (build failed)")
         skipped.extend(sk)
     elif args.old_commit_pdf:
         for name in cal_names:
@@ -460,12 +522,13 @@ def main():
         sk = load_from_folder(args.new_pdf_from_folder, "diff-new")
         skipped.extend(sk)
     elif args.new_commit_pdf_rebuild:
-        for name in cal_names:
-            print(f"  {name}... ", end="", flush=True)
-        sk = get_rebuilt(cal_names, "diff-new", args.new_commit_pdf_rebuild)
-        for name in cal_names:
-            status = "SKIPPED (build failed)" if name in sk else "done"
-            print(f"  {name}: {status}")
+        built, sk = get_rebuilt("diff-new", args.new_commit_pdf_rebuild,
+                                cal_filter=cal_filter,
+                                worktree_path=args.new_worktree_path)
+        for name in built:
+            print(f"  {name}: done")
+        for name in sk:
+            print(f"  {name}: SKIPPED (build failed)")
         skipped.extend(sk)
     else:
         for name in cal_names:

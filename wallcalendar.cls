@@ -846,7 +846,7 @@
 \def\@t@formatCmd{}
 \def\@t@minEvents{}
 
-\newcommand\monthMarkFmt{\fontsize{10}{10}\selectfont\color{textbody}}
+\newcommand\monthMarkFmt{\fontsize{7}{7}\selectfont\color{textbody}}
 
 \newcommand\symbolSpace{\thinspace}
 \newcommand\symbolSeparator{,\symbolSpace}
@@ -1047,7 +1047,7 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
   \setlength{\@t@calendar@gridHeightFiveRows}{0pt}%
   \setlength{\@t@calendar@gridHeightSixRows}{0pt}%
   \def\@wall@markNodeSuffix{}%
-  \renewcommand\monthMarkFmt{\fontsize{10}{10}\selectfont\color{textbody}}%
+  \renewcommand\monthMarkFmt{\fontsize{7}{7}\selectfont\color{textbody}}%
 }
 
 \newcommand\fullPageFmt{%
@@ -1337,7 +1337,7 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
 };
 
 \node (events) [
-  above right=9mm and {\@t@rightOffset} of bg.south west,
+  above right=10mm and {\@t@rightOffset} of bg.south west,
   anchor=south west,
 ] {%
 \placeholder[fill=events-frame]{}{%
@@ -1425,8 +1425,8 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
   \renewcommand*\headingFmt{\centering}%
   \renewcommand*\calendarFmt{\centering}%
   \renewcommand*\eventsFmt{\setlength{\parindent}{0pt}\raggedright\fontsize{6}{8}\selectfont}%
-  \renewcommand\monthMarkFmt{\fontsize{7}{7}\selectfont\color{textbody}}%
   \def\@wall@markNodeSuffix{-daynumber}%
+  \setlength{\markNumberAbove}{-6pt}%
   \setlength{\@t@calendar@minimumHeight}{\calPaperHeight - 30mm}%
   \setlength{\@t@calendar@hmargin}{20pt}%
   % white space to allow:
@@ -1573,8 +1573,8 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
 };
 
 \node (events) [
-  above right=10mm and {\@t@rightOffset} of bg.south west,
-  anchor=south west,
+  below right=5pt and 0pt of calendar.south west,
+  anchor=north west,
 ] {%
 \placeholder[fill=events-frame]{}{%
 \begin{minipage}{\@t@minipageWidth}%
