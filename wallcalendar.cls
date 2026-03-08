@@ -297,8 +297,11 @@
   \fi%
 }
 
-\newif\ifsixrowsmonth  
+\newif\ifsixrowsmonth
 \sixrowsmonthfalse
+
+\newif\iffourrowsmonth
+\fourrowsmonthfalse
 
 \pgfkeys{/pgf/calendar/six rows month/.code={%
   % Monday-first: new week starts on Monday (weekday 0).
@@ -337,6 +340,25 @@
         \ifnum\pgfcalendarifdateweekday=1\relax
           \pgfcalendarmatchestrue
         \fi
+      \fi
+    \fi
+  \fi%
+}}
+
+% Four rows month: February with exactly 28 days where the 1st falls on the
+% week-start day (Monday for monday-first, Sunday for sunday-first).
+% We detect this by checking if day 28 falls on the last column of the week.
+\pgfkeys{/pgf/calendar/four rows month/.code={%
+  \ifnum\pgfcalendarifdateday=28\relax
+    \ifsundayFirst
+      % Sunday-first: last column is Saturday (weekday 5)
+      \ifnum\pgfcalendarifdateweekday=5\relax
+        \pgfcalendarmatchestrue
+      \fi
+    \else
+      % Monday-first: last column is Sunday (weekday 6)
+      \ifnum\pgfcalendarifdateweekday=6\relax
+        \pgfcalendarmatchestrue
       \fi
     \fi
   \fi%
@@ -898,6 +920,13 @@ yearEvents(
 \setlength{\markDayTextAbove}{-10pt}
 \setlength{\markDayTextRight}{-3pt}
 
+% Suffix appended to the calendar day node name when positioning event marks.
+% Empty by default (marks reference the day node itself). Layouts with
+% separate day-number nodes (e.g.\ rigel / photo-and-notes) set this to
+% {-daynumber} so marks are positioned relative to the day number, avoiding
+% overflow on the last grid column.
+\def\@wall@markNodeSuffix{}
+
 \newcommand\parseMonthMarksDayText{%
 \luadirect{
 require("wallcalendar-helpers.lua")
@@ -933,13 +962,13 @@ monthMarksDayTextInline(\luastring{\theMonthName}, nil, \luastring{#1})
 \newcommand*\parseMonthMarksNote{%
 \luadirect{
 require("wallcalendar-helpers.lua")
-monthMarksNote(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \luastring{\@wall@markDefaultsCsv})
+monthMarksNote(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \luastring{\@wall@markDefaultsCsv}, \luastring{\@wall@markNodeSuffix})
 }}
 
 \newcommand*\parseMonthMarksNoteUsing[1]{%
 \luadirect{
 require("wallcalendar-helpers.lua")
-monthMarksNote(\luastring{\theMonthName}, nil, \luastring{#1}, \luastring{\@wall@markDefaultsCsv})
+monthMarksNote(\luastring{\theMonthName}, nil, \luastring{#1}, \luastring{\@wall@markDefaultsCsv}, \luastring{\@wall@markNodeSuffix})
 }}
 
 \newcommand*\parseMonthInlineNotes{%
@@ -975,6 +1004,7 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
 \newlength\@t@calendar@dayYshift
 \newlength\@t@calendar@dayXshift
 \newlength\@t@calendar@gridHeight
+\newlength\@t@calendar@gridHeightFourRows
 \newlength\@t@calendar@gridHeightFiveRows
 \newlength\@t@calendar@gridHeightSixRows
 \newlength\@t@xOffset
@@ -1013,8 +1043,11 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
   \setlength{\@t@xOffset}{0pt}%
   \setlength{\@t@yOffset}{0pt}%
   \setlength{\@t@calendar@gridHeight}{0pt}%
+  \setlength{\@t@calendar@gridHeightFourRows}{0pt}%
   \setlength{\@t@calendar@gridHeightFiveRows}{0pt}%
   \setlength{\@t@calendar@gridHeightSixRows}{0pt}%
+  \def\@wall@markNodeSuffix{}%
+  \renewcommand\monthMarkFmt{\fontsize{10}{10}\selectfont\color{textbody}}%
 }
 
 \newcommand\fullPageFmt{%
@@ -1224,6 +1257,7 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
 
 \setlength{\@t@calendar@gridHeightSixRows}{\@tmp@b}
 \setlength{\@t@calendar@gridHeightFiveRows}{\@tmp@b -0.1666\@tmp@b}
+\setlength{\@t@calendar@gridHeightFourRows}{\@tmp@b -0.3332\@tmp@b}
 
 % NOTE: the -4pt and -2pt offset is somehow necessary for the sides to align
 % with the edges
@@ -1362,10 +1396,19 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
       \dotfill\par
       \dotfill\par
     \else
-      \dotfill\par
-      \dotfill\par
-      \dotfill\par
-      \dotfill\par
+      \iffourrowsmonth
+        \dotfill\par
+        \dotfill\par
+        \dotfill\par
+        \dotfill\par
+        \dotfill\par
+        \dotfill\par
+      \else
+        \dotfill\par
+        \dotfill\par
+        \dotfill\par
+        \dotfill\par
+      \fi
     \fi
 
   \end{minipage}%
@@ -1382,6 +1425,8 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
   \renewcommand*\headingFmt{\centering}%
   \renewcommand*\calendarFmt{\centering}%
   \renewcommand*\eventsFmt{\setlength{\parindent}{0pt}\raggedright\fontsize{6}{8}\selectfont}%
+  \renewcommand\monthMarkFmt{\fontsize{7}{7}\selectfont\color{textbody}}%
+  \def\@wall@markNodeSuffix{-daynumber}%
   \setlength{\@t@calendar@minimumHeight}{\calPaperHeight - 30mm}%
   \setlength{\@t@calendar@hmargin}{20pt}%
   % white space to allow:
@@ -1410,6 +1455,8 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
     dates=\CalendarYear-\@t@monthnum-01 to \CalendarYear-\@t@monthnum-last,
     execute at begin day scope={
       \ifdate{six rows month}{\global\sixrowsmonthtrue}{\global\sixrowsmonthfalse}
+      \ifdate{four rows month}{\global\fourrowsmonthtrue}{}
+      \ifdate{day of month=29}{\global\fourrowsmonthfalse}{}
     },
   ];
 \end{tikzpicture}
@@ -1430,6 +1477,7 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
 
 \setlength{\@t@calendar@gridHeightSixRows}{\@tmp@b}
 \setlength{\@t@calendar@gridHeightFiveRows}{\@tmp@b -0.1666\@tmp@b}
+\setlength{\@t@calendar@gridHeightFourRows}{\@tmp@b -0.3332\@tmp@b}
 
 % NOTE: the -4pt and -2pt offset is somehow necessary for the sides to align
 % with the edges
@@ -1619,6 +1667,8 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
     dates=\CalendarYear-\@t@monthnum-01 to \CalendarYear-\@t@monthnum-last,
     execute at begin day scope={
       \ifdate{six rows month}{\global\sixrowsmonthtrue}{\global\sixrowsmonthfalse}
+      \ifdate{four rows month}{\global\fourrowsmonthtrue}{}
+      \ifdate{day of month=29}{\global\fourrowsmonthfalse}{}
     },
   ];
 \end{tikzpicture}
@@ -1639,6 +1689,7 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
 
 \setlength{\@t@calendar@gridHeightSixRows}{\@tmp@b}
 \setlength{\@t@calendar@gridHeightFiveRows}{\@tmp@b -0.1666\@tmp@b}
+\setlength{\@t@calendar@gridHeightFourRows}{\@tmp@b -0.3332\@tmp@b}
 
 % NOTE: the -4pt and -2pt offset is somehow necessary for the sides to align
 % with the edges
@@ -1829,8 +1880,41 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
       }{
       % 30 day months and February
         \ifdate{between=02-01 and 02-last}{%
-          \gridRows=5%
-          \setlength\@t@calendar@gridHeight{\@t@calendar@gridHeightFiveRows}%
+          % 4-row February: non-leap year where Feb 1 is the week-start day.
+          % Monday-first: 4 rows if 1st is Mon. Sunday-first: 4 rows if 1st is Sun.
+          \ifsundayFirst
+            \ifdate{Sunday}{%
+              \luadirect{
+                local date = require("wallcalendar-date.lua")
+                if not date.isleapyear(\CalendarYear) then
+                  tex.sprint("\\gridRows=4\\relax")
+                  tex.sprint("\\setlength\\@t@calendar@gridHeight{\\@t@calendar@gridHeightFourRows}")
+                else
+                  tex.sprint("\\gridRows=5\\relax")
+                  tex.sprint("\\setlength\\@t@calendar@gridHeight{\\@t@calendar@gridHeightFiveRows}")
+                end
+              }%
+            }{%
+              \gridRows=5%
+              \setlength\@t@calendar@gridHeight{\@t@calendar@gridHeightFiveRows}%
+            }%
+          \else
+            \ifdate{Monday}{%
+              \luadirect{
+                local date = require("wallcalendar-date.lua")
+                if not date.isleapyear(\CalendarYear) then
+                  tex.sprint("\\gridRows=4\\relax")
+                  tex.sprint("\\setlength\\@t@calendar@gridHeight{\\@t@calendar@gridHeightFourRows}")
+                else
+                  tex.sprint("\\gridRows=5\\relax")
+                  tex.sprint("\\setlength\\@t@calendar@gridHeight{\\@t@calendar@gridHeightFiveRows}")
+                end
+              }%
+            }{%
+              \gridRows=5%
+              \setlength\@t@calendar@gridHeight{\@t@calendar@gridHeightFiveRows}%
+            }%
+          \fi
         }{%
           % Monday-first: 6 rows if 1st is Sun. Sunday-first: 6 rows if 1st is Sat.
           \ifsundayFirst

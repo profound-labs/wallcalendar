@@ -8,9 +8,9 @@ all:
 
 test: ./diff-cal.sh
 
-calendars: cal-translations cal-plain.pdf cal-photo-and-notes-sunday.pdf cal-showtrims.pdf cal-showframe.pdf cal-varnishmask.pdf cal-marks.pdf cal-photo-and-notes.pdf cal-year-planner.pdf cal-year-planner-rows.pdf cal-year-planner-grid.pdf cal-year-planner-compact.pdf cal-thumbnails.pdf
+calendars: cal-translations cal-plain.pdf cal-photo-and-notes-sunday.pdf cal-showtrims.pdf cal-showframe.pdf cal-varnishmask.pdf cal-marks.pdf cal-photo-and-notes.pdf cal-year-planner.pdf cal-year-planner-rows.pdf cal-year-planner-grid.pdf cal-year-planner-compact.pdf cal-thumbnails.pdf cal-four-row-february.pdf cal-four-row-february-leapyear.pdf
 
-bursts: cal-plain-burst cal-photo-and-notes-sunday-burst cal-showtrims-burst cal-showframe-burst cal-varnishmask-burst cal-no-photos-burst cal-photo-and-notes-burst
+bursts: cal-plain-burst cal-photo-and-notes-sunday-burst cal-showtrims-burst cal-showframe-burst cal-varnishmask-burst cal-no-photos-burst cal-photo-and-notes-burst cal-four-row-february-burst cal-four-row-february-leapyear-burst
 
 jpg: cal-marks.jpg
 
@@ -40,6 +40,12 @@ cal-no-photos-burst:
 
 cal-photo-and-notes-burst:
 	pdftk cal-photo-and-notes.pdf burst output ./cal-burst/cal-photo-and-notes-%02d.pdf
+
+cal-four-row-february-burst:
+	pdftk cal-four-row-february.pdf burst output ./cal-burst/cal-four-row-february-%02d.pdf
+
+cal-four-row-february-leapyear-burst:
+	pdftk cal-four-row-february-leapyear.pdf burst output ./cal-burst/cal-four-row-february-leapyear-%02d.pdf
 
 cal-translations: cal-translations-japanese.pdf cal-translations-english.pdf cal-translations-hungarian.pdf
 

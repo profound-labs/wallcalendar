@@ -1,0 +1,76 @@
+% Test that leap year February does NOT get 4-row treatment.
+%
+% 2032: Feb 1 is Sunday, leap year -> should be 5 rows even with sundayFirst.
+% Although Feb 1 is on the week-start day (Sunday), the 29th day pushes
+% the grid to 5 rows.
+%
+% This verifies the leap year guard in the 4-row detection logic.
+
+\documentclass[
+  year = 2032,
+  language = english,
+  sundayFirst,
+  eventsCsv = ./data/four-row-test-2032.csv,
+  imageFolder = ./photos/,
+]{wallcalendar}
+
+\makeatletter
+
+\usepackage{fontspec}
+\defaultfontfeatures{Ligatures={TeX}}
+\setmainfont{TeX Gyre Pagella}
+
+% === February (leap year, sunday-first: should be 5 rows) ==================
+
+\SetPhoto[bleed=3mm, file={obscure-crop}]{February}
+
+\SetQuote[xOffset=0pt, yOffset=-15mm]{February}{%
+\raggedleft\setlength{\parskip}{10pt}\Large\color{black!85}%
+Leap year February test (sundayFirst).\\
+Feb 1, 2032 is Sunday, but it's a leap year\\
+so Feb 29 exists and this needs 5 rows.
+}
+
+\SetCalendar[]{February}
+
+\SetEvents{February}{%
+\semicolonEndTikzCalendar%
+\parseMonthMarksNote%
+}{%
+\raggedright
+\parseMonthEvents%
+}
+
+% === March (normal month for comparison) ===================================
+
+\SetPhoto[bleed=3mm, file={obscure-crop}]{March}
+
+\SetQuote[xOffset=0pt, yOffset=-15mm]{March}{%
+\raggedleft\setlength{\parskip}{10pt}\Large\color{black!85}%
+Normal month for comparison.
+}
+
+\SetCalendar[]{March}
+
+\SetEvents{March}{%
+\semicolonEndTikzCalendar%
+\parseMonthMarksNote%
+}{%
+\raggedright
+\parseMonthEvents%
+}
+
+\makeatother
+
+\begin{document}
+
+% Small landscape layout - Feb should be 5 rows (not 4)
+\MonthPage[layout=small landscape, put photo=full width]{February}
+
+% Photo and notes layout - Feb should be 5 rows (not 4)
+\MonthPage[layout=photo and notes, put photo=full page]{February}
+
+% Comparison month
+\MonthPage[layout=small landscape, put photo=full width]{March}
+
+\end{document}

@@ -396,10 +396,15 @@ function plannerWeeklyImages(yearNum, filterPred, eventsCsv)
   end
 end
 
-function formatMarksNote(events, filterPred, markDefaultsCsv, isOneCalendar)
+function formatMarksNote(events, filterPred, markDefaultsCsv, isOneCalendar, markNodeSuffix)
   local markDefaults = nil
   if ok(markDefaultsCsv) then
     markDefaults = loadCsv(markDefaultsCsv)
+  end
+
+  local suffix = ""
+  if ok(markNodeSuffix) then
+    suffix = markNodeSuffix
   end
 
   local alreadyMarkedDates = {}
@@ -412,17 +417,19 @@ function formatMarksNote(events, filterPred, markDefaultsCsv, isOneCalendar)
       local mark = getCombinedMark(idx, events, markDefaults)
 
       if ok(isOneCalendar) and isOneCalendar == true then
-        tsp(string.format(" \\draw node [above right=%s and %s of cal-%s.north east] {\\monthMarkFmt %s}; ",
+        tsp(string.format(" \\draw node [above right=%s and %s of cal-%s%s.north east] {\\monthMarkFmt %s}; ",
                           mark.above_offset,
                           mark.right_offset,
                           event.date,
+                          suffix,
                           mark.symbol))
       else
-        tsp(string.format(" \\draw node [above right=%s and %s of cal%s-%s.north east] {\\monthMarkFmt %s}; ",
+        tsp(string.format(" \\draw node [above right=%s and %s of cal%s-%s%s.north east] {\\monthMarkFmt %s}; ",
                           mark.above_offset,
                           mark.right_offset,
                           d:fmt("%m"),
                           event.date,
+                          suffix,
                           mark.symbol))
       end
     end
@@ -451,7 +458,7 @@ function formatInlineNotes(events, filterPred, markDefaultsCsv)
 end
 
 -- monthName is better for argument than monthNum
-function monthMarksNote(monthName, filterPred, eventsCsv, markDefaultsCsv)
+function monthMarksNote(monthName, filterPred, eventsCsv, markDefaultsCsv, markNodeSuffix)
   if not ok(eventsCsv) then
     return
   end
@@ -463,7 +470,7 @@ function monthMarksNote(monthName, filterPred, eventsCsv, markDefaultsCsv)
 
   local events = eventsInMonth(loadCsv(eventsCsv), monthNum, filterPred);
 
-  formatMarksNote(events, filterPred, markDefaultsCsv, false)
+  formatMarksNote(events, filterPred, markDefaultsCsv, false, markNodeSuffix)
 end
 
 -- monthName is better for argument than monthNum
@@ -482,7 +489,7 @@ function monthInlineNotes(monthName, filterPred, eventsCsv, markDefaultsCsv)
   formatInlineNotes(events, filterPred, markDefaultsCsv)
 end
 
-function yearMarksNote(yearNum, filterPred, eventsCsv, markDefaultsCsv, isOneCalendar)
+function yearMarksNote(yearNum, filterPred, eventsCsv, markDefaultsCsv, isOneCalendar, markNodeSuffix)
   if not ok(eventsCsv) then
     return
   end
@@ -492,5 +499,5 @@ function yearMarksNote(yearNum, filterPred, eventsCsv, markDefaultsCsv, isOneCal
 
   local events = eventsInYear(loadCsv(eventsCsv), yearNum, filterPred);
 
-  formatMarksNote(events, filterPred, markDefaultsCsv, isOneCalendar)
+  formatMarksNote(events, filterPred, markDefaultsCsv, isOneCalendar, markNodeSuffix)
 end
