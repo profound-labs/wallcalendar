@@ -73,17 +73,23 @@ This compiles all example `.tex` files with LuaLaTeX. A successful build (all PD
 
 ### Visual Regression Testing
 
-`doc/examples/diff-cal.py` compares compiled PDFs against their last committed versions to detect layout changes. It checks out the committed PDF, rebuilds with `make`, splits multi-page PDFs into per-page files, and uses ImageMagick `compare` to find pixel differences.
+`doc/examples/diff-cal.py` compares example calendar PDFs between two versions of the library. It splits multi-page PDFs into per-page files and uses ImageMagick `compare` to detect pixel differences. For rebuild-from-commit modes it uses `git worktree` to build in an isolated checkout.
 
 ```bash
 cd doc/examples
 
-# Test all calendars listed in the Makefile
+# Default: committed PDFs (old) vs rebuild from working tree (new)
 ./diff-cal.py
+./diff-cal.py --cal cal-plain            # single calendar
 
-# Test a single calendar
-./diff-cal.py --cal cal-plain
-./diff-cal.py --cal cal-plain.pdf
+# Old PDFs from a specific commit, new from working tree rebuild
+./diff-cal.py --old-commit-pdf abc123
+
+# Rebuild old from library state at a commit, new from working tree
+./diff-cal.py --old-commit-pdf-rebuild abc123
+
+# Rebuild both old and new from specific commits
+./diff-cal.py --old-commit-pdf-rebuild abc123 --new-commit-pdf-rebuild def456
 ```
 
 Requires: `pdfinfo`, `pdftk`, ImageMagick `compare`.

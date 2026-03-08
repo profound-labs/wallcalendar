@@ -1,25 +1,60 @@
 #!/usr/bin/env python3
-"""Compare compiled example calendar PDFs against their last committed versions.
+"""Compare example calendar PDFs between two versions of the library.
 
-Checks out the committed PDF, rebuilds it with make, splits multi-page PDFs into
-individual pages, and uses ImageMagick 'compare' to detect pixel differences.
+Modes of operation:
 
-Usage:
-    ./diff-cal.py                        # test all calendars from Makefile
-    ./diff-cal.py --cal cal-plain        # test a single calendar (name or .pdf)
-    ./diff-cal.py --cal cal-plain.pdf
+  ./diff-cal.py
+      Old: committed PDFs (HEAD). New: rebuild from working tree.
+
+  ./diff-cal.py --cal cal-showframe
+      Same, but only for one calendar.
+
+  ./diff-cal.py --old-commit-pdf <hash>
+      Old: PDFs from the given commit. New: rebuild from working tree.
+
+  ./diff-cal.py --old-commit-pdf-rebuild <hash>
+      Old: rebuild from library state at <hash>. New: rebuild from working tree.
+
+  ./diff-cal.py --old-commit-pdf-rebuild <hash> --new-commit-pdf-rebuild <hash>
+      Old: rebuild from first hash. New: rebuild from second hash.
+
+Saving and reusing PDFs:
+
+  ./diff-cal.py --old-commit-pdf <hash> --old-pdf-save-to-folder <path>
+      Save old burst pages to <path> for later reuse.
+
+  ./diff-cal.py --old-commit-pdf-rebuild <hash> --old-pdf-save-to-folder <path>
+      Rebuild old PDFs and save burst pages to <path>.
+
+  ./diff-cal.py --old-commit-pdf-rebuild <hash> --old-pdf-save-to-folder <path> \\
+                --new-commit-pdf-rebuild <hash> --new-pdf-save-to-folder <path>
+      Rebuild both and save burst pages.
+
+  ./diff-cal.py --old-pdf-from-folder <path>
+      Use previously saved burst pages as old PDFs.
+
+  ./diff-cal.py --new-pdf-from-folder <path>
+      Use previously saved burst pages as new PDFs.
+
+All flags can be combined with --cal to limit to a single calendar.
 """
 
 import argparse
+import atexit
 import os
 import re
 import shutil
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 
 DIFF_DIRS = ["diff-old", "diff-new", "diff-compare"]
+
+# Resolved once in main(), used by worktree helpers.
+REPO_ROOT = None
+EXAMPLES_REL = None
 
 
 def clean_diff_folders():
@@ -29,31 +64,29 @@ def clean_diff_folders():
         for f in p.iterdir():
             if f.name != ".gitkeep":
                 f.unlink()
-        gitkeep = p / ".gitkeep"
-        gitkeep.touch()
+        (p / ".gitkeep").touch()
 
 
-def calendars_from_makefile():
-    """Parse the Makefile to get the list of calendar base names."""
-    makefile = Path("Makefile").read_text()
+# ---------------------------------------------------------------------------
+# Makefile parsing
+# ---------------------------------------------------------------------------
 
+def calendars_from_makefile(makefile_path="Makefile"):
+    """Parse a Makefile to get the list of calendar base names."""
+    makefile = Path(makefile_path).read_text()
     cals = []
-
-    # calendars: cal-translations cal-plain.pdf ...
     m = re.search(r"^calendars:\s*(.+)$", makefile, re.MULTILINE)
     if m:
         for token in m.group(1).split():
             if token.endswith(".pdf"):
                 cals.append(token.removesuffix(".pdf"))
             elif token.startswith("cal-"):
-                # inline target like cal-translations — expand it
                 sub = re.search(
                     rf"^{re.escape(token)}:\s*(.+)$", makefile, re.MULTILINE
                 )
                 if sub:
                     for t in sub.group(1).split():
                         cals.append(t.removesuffix(".pdf"))
-
     return cals
 
 
@@ -61,18 +94,18 @@ def validate_calendar(name):
     """Check that a calendar target exists in the Makefile."""
     result = subprocess.run(
         ["make", "-qp", f"{name}.pdf"],
-        capture_output=True,
-        text=True,
+        capture_output=True, text=True,
     )
-    pattern = rf"^{re.escape(name)}\.pdf:"
-    if re.search(pattern, result.stdout, re.MULTILINE):
-        return True
-    return False
+    return bool(re.search(rf"^{re.escape(name)}\.pdf:", result.stdout, re.MULTILINE))
 
+
+# ---------------------------------------------------------------------------
+# PDF helpers
+# ---------------------------------------------------------------------------
 
 def get_page_count(pdf_path):
     result = subprocess.run(
-        ["pdfinfo", str(pdf_path)], capture_output=True, text=True
+        ["pdfinfo", str(pdf_path)], capture_output=True, text=True,
     )
     for line in result.stdout.splitlines():
         if line.startswith("Pages:"):
@@ -82,15 +115,17 @@ def get_page_count(pdf_path):
 
 def burst_pdf(pdf_path, dest_dir, name):
     """Split a PDF into per-page files in dest_dir."""
+    pdf_path = Path(pdf_path)
+    if not pdf_path.exists():
+        return
     pages = get_page_count(pdf_path)
     if pages > 1:
         subprocess.run(
             ["pdftk", str(pdf_path), "burst", "output",
              str(Path(dest_dir) / f"{name}-%02d.pdf")],
-            check=True,
-            capture_output=True,
+            check=True, capture_output=True,
         )
-    elif pdf_path.exists():
+    else:
         shutil.copy2(pdf_path, Path(dest_dir) / f"{name}-01.pdf")
 
 
@@ -98,8 +133,7 @@ def restore_pdf(name):
     """Restore a PDF to its committed version, or remove if untracked."""
     pdf = f"{name}.pdf"
     result = subprocess.run(
-        ["git", "ls-files", "--error-unmatch", pdf],
-        capture_output=True,
+        ["git", "ls-files", "--error-unmatch", pdf], capture_output=True,
     )
     if result.returncode == 0:
         subprocess.run(["git", "checkout", pdf], capture_output=True)
@@ -107,8 +141,165 @@ def restore_pdf(name):
         Path(pdf).unlink(missing_ok=True)
 
 
+# ---------------------------------------------------------------------------
+# Git worktree helpers
+# ---------------------------------------------------------------------------
+
+def worktree_add(commit_hash):
+    """Create a detached worktree for commit_hash, return its Path.
+
+    The worktree is registered for cleanup via atexit.
+    """
+    tmp = tempfile.mkdtemp(prefix="diffcal-wt-")
+    subprocess.run(
+        ["git", "-C", str(REPO_ROOT), "worktree", "add",
+         "--detach", tmp, commit_hash],
+        check=True, capture_output=True, text=True,
+    )
+    atexit.register(worktree_remove, tmp)
+    return Path(tmp)
+
+
+def worktree_remove(path):
+    """Remove a git worktree (best-effort)."""
+    subprocess.run(
+        ["git", "-C", str(REPO_ROOT), "worktree", "remove", "--force", str(path)],
+        capture_output=True,
+    )
+    # Belt-and-suspenders in case worktree remove didn't clean up.
+    shutil.rmtree(path, ignore_errors=True)
+
+
+def build_in_worktree(worktree_path, cal_names):
+    """Build calendars inside a worktree. Returns {name: pdf_path} for successes
+    and a list of skipped names."""
+    examples_dir = worktree_path / EXAMPLES_REL
+    built = {}
+    skipped = []
+    for name in cal_names:
+        pdf = examples_dir / f"{name}.pdf"
+        result = subprocess.run(
+            ["make", str(pdf.name), "-B"],
+            cwd=str(examples_dir),
+            capture_output=True, text=True,
+        )
+        if result.returncode != 0:
+            skipped.append(name)
+        elif pdf.exists():
+            built[name] = pdf
+    return built, skipped
+
+
+# ---------------------------------------------------------------------------
+# Strategies for obtaining old / new PDFs
+# ---------------------------------------------------------------------------
+
+def get_old_committed(cal_names, dest_dir, commit=None):
+    """Get old PDFs from a git commit (default HEAD) and burst into dest_dir.
+
+    Returns list of names that were skipped (not found at that commit).
+    """
+    skipped = []
+    for name in cal_names:
+        pdf_name = f"{name}.pdf"
+
+        if commit:
+            # Extract PDF from a specific commit.
+            ref = f"{commit}:{EXAMPLES_REL}/{pdf_name}"
+            result = subprocess.run(
+                ["git", "-C", str(REPO_ROOT), "show", ref],
+                capture_output=True,
+            )
+            if result.returncode != 0:
+                skipped.append(f"{name} (not found at {commit})")
+                continue
+            pdf_path = Path(pdf_name)
+            pdf_path.write_bytes(result.stdout)
+        else:
+            # Restore the working-tree copy to HEAD.
+            restore_pdf(name)
+            pdf_path = Path(pdf_name)
+            if not pdf_path.exists():
+                skipped.append(f"{name} (not committed)")
+                continue
+
+        burst_pdf(pdf_path, dest_dir, name)
+    return skipped
+
+
+def get_rebuilt(cal_names, dest_dir, commit_hash):
+    """Rebuild calendars from a specific commit using a worktree, burst into dest_dir.
+
+    Returns list of skipped names.
+    """
+    print(f"  Creating worktree for {commit_hash[:10]}...")
+    wt = worktree_add(commit_hash)
+    built, skipped = build_in_worktree(wt, cal_names)
+    for name, pdf_path in built.items():
+        burst_pdf(pdf_path, dest_dir, name)
+    return skipped
+
+
+def get_new_from_working_tree(cal_names, dest_dir):
+    """Rebuild calendars from the current working tree, burst into dest_dir.
+
+    Returns list of skipped names.
+    """
+    skipped = []
+    for name in cal_names:
+        pdf = Path(f"{name}.pdf")
+        result = subprocess.run(
+            ["make", str(pdf), "-B"],
+            capture_output=True, text=True,
+        )
+        if result.returncode != 0:
+            skipped.append(name)
+            continue
+        if pdf.exists():
+            burst_pdf(pdf, dest_dir, name)
+    return skipped
+
+
+# ---------------------------------------------------------------------------
+# Save / load burst pages
+# ---------------------------------------------------------------------------
+
+def save_to_folder(diff_dir, dest_folder):
+    """Copy burst page PDFs from diff_dir to dest_folder."""
+    dest = Path(dest_folder)
+    dest.mkdir(parents=True, exist_ok=True)
+    count = 0
+    for f in sorted(Path(diff_dir).glob("*.pdf")):
+        shutil.copy2(f, dest / f.name)
+        count += 1
+    print(f"  Saved {count} page(s) to {dest}")
+
+
+def load_from_folder(src_folder, diff_dir):
+    """Copy burst page PDFs from src_folder into diff_dir.
+
+    Returns list of problems (empty on success).
+    """
+    src = Path(src_folder)
+    if not src.is_dir():
+        print(f"  Folder not found: {src}", file=sys.stderr)
+        return [f"folder not found: {src}"]
+    pdfs = sorted(src.glob("*.pdf"))
+    if not pdfs:
+        print(f"  No PDFs found in {src}", file=sys.stderr)
+        return [f"no PDFs in {src}"]
+    for f in pdfs:
+        shutil.copy2(f, Path(diff_dir) / f.name)
+    print(f"  Loaded {len(pdfs)} page(s) from {src}")
+    return []
+
+
+# ---------------------------------------------------------------------------
+# Comparison
+# ---------------------------------------------------------------------------
+
 def compare_pages():
-    """Compare old vs new page images, return (skipped, differ) lists."""
+    """Compare old vs new page images. Returns (missing, differ) lists."""
     differ = []
     missing = []
 
@@ -128,10 +319,8 @@ def compare_pages():
              str(old_page), str(new_page),
              "-compose", "src", "-alpha", "off",
              str(out_jpg)],
-            capture_output=True,
-            text=True,
+            capture_output=True, text=True,
         )
-        # ImageMagick writes the metric to stderr
         metric = result.stderr.strip()
         ae_value = metric.split()[0] if metric else "0"
         if ae_value != "0":
@@ -140,23 +329,90 @@ def compare_pages():
     return missing, differ
 
 
+# ---------------------------------------------------------------------------
+# Main
+# ---------------------------------------------------------------------------
+
 def main():
+    global REPO_ROOT, EXAMPLES_REL
+
     parser = argparse.ArgumentParser(
-        description="Compare compiled calendar PDFs against committed versions."
+        description="Compare example calendar PDFs between two versions.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=__doc__,
     )
     parser.add_argument(
-        "--cal",
-        metavar="NAME",
+        "--cal", metavar="NAME",
         help="Calendar to test (base name or .pdf). Tests all if omitted.",
     )
+
+    old_group = parser.add_mutually_exclusive_group()
+    old_group.add_argument(
+        "--old-commit-pdf", metavar="HASH",
+        help="Use the committed PDF from this git commit as the old version.",
+    )
+    old_group.add_argument(
+        "--old-commit-pdf-rebuild", metavar="HASH",
+        help="Rebuild the old PDF from the library state at this git commit.",
+    )
+    old_group.add_argument(
+        "--old-pdf-from-folder", metavar="PATH",
+        help="Use previously saved burst pages from this folder as old PDFs.",
+    )
+
+    new_group = parser.add_mutually_exclusive_group()
+    new_group.add_argument(
+        "--new-commit-pdf-rebuild", metavar="HASH",
+        help="Rebuild the new PDF from the library state at this git commit "
+             "(default: rebuild from working tree).",
+    )
+    new_group.add_argument(
+        "--new-pdf-from-folder", metavar="PATH",
+        help="Use previously saved burst pages from this folder as new PDFs.",
+    )
+
+    parser.add_argument(
+        "--old-pdf-save-to-folder", metavar="PATH",
+        help="Save old burst pages to this folder for later reuse.",
+    )
+    parser.add_argument(
+        "--new-pdf-save-to-folder", metavar="PATH",
+        help="Save new burst pages to this folder for later reuse.",
+    )
+
     args = parser.parse_args()
 
-    os.chdir(Path(__file__).resolve().parent)
+    if args.new_commit_pdf_rebuild and not args.old_commit_pdf_rebuild:
+        parser.error(
+            "--new-commit-pdf-rebuild requires --old-commit-pdf-rebuild"
+        )
 
-    # Determine which calendars to process
+    if args.old_pdf_from_folder and args.old_pdf_save_to_folder:
+        parser.error(
+            "--old-pdf-from-folder and --old-pdf-save-to-folder are "
+            "mutually exclusive"
+        )
+
+    if args.new_pdf_from_folder and args.new_pdf_save_to_folder:
+        parser.error(
+            "--new-pdf-from-folder and --new-pdf-save-to-folder are "
+            "mutually exclusive"
+        )
+
+    # Resolve paths.
+    examples_dir = Path(__file__).resolve().parent
+    os.chdir(examples_dir)
+    REPO_ROOT = Path(
+        subprocess.run(
+            ["git", "rev-parse", "--show-toplevel"],
+            capture_output=True, text=True, check=True,
+        ).stdout.strip()
+    )
+    EXAMPLES_REL = str(examples_dir.relative_to(REPO_ROOT))
+
+    # Determine which calendars to process.
     if args.cal:
         name = args.cal.removesuffix(".pdf")
-        # Strip trailing page-number suffix like -1, -02
         name = re.sub(r"-\d{1,2}$", "", name)
         if not validate_calendar(name):
             print(f"Calendar '{name}' not found in Makefile", file=sys.stderr)
@@ -169,41 +425,83 @@ def main():
 
     skipped = []
 
-    for name in cal_names:
-        pdf = Path(f"{name}.pdf")
-        print(f"Processing {name}... ", end="", flush=True)
+    # --- Old version ---
+    print("Preparing old PDFs...")
+    if args.old_pdf_from_folder:
+        sk = load_from_folder(args.old_pdf_from_folder, "diff-old")
+        skipped.extend(sk)
+    elif args.old_commit_pdf_rebuild:
+        for name in cal_names:
+            print(f"  {name}... ", end="", flush=True)
+        sk = get_rebuilt(cal_names, "diff-old", args.old_commit_pdf_rebuild)
+        for name in cal_names:
+            status = "SKIPPED (build failed)" if name in sk else "done"
+            print(f"  {name}: {status}")
+        skipped.extend(sk)
+    elif args.old_commit_pdf:
+        for name in cal_names:
+            print(f"  {name}... ", end="", flush=True)
+        sk = get_old_committed(cal_names, "diff-old", commit=args.old_commit_pdf)
+        for name in cal_names:
+            found = not any(name in s for s in sk)
+            status = "done" if found else "SKIPPED"
+            print(f"  {name}: {status}")
+        skipped.extend(sk)
+    else:
+        sk = get_old_committed(cal_names, "diff-old")
+        skipped.extend(sk)
 
-        # Restore committed version and burst into old pages
-        if pdf.exists():
-            restore_pdf(name)
-            burst_pdf(pdf, "diff-old", name)
+    if args.old_pdf_save_to_folder:
+        save_to_folder("diff-old", args.old_pdf_save_to_folder)
 
-        # Rebuild
-        result = subprocess.run(
-            ["make", str(pdf), "-B"],
-            capture_output=True,
-            text=True,
-        )
-        if result.returncode != 0:
-            print("SKIPPED (build failed)")
-            skipped.append(name)
-            continue
+    # --- New version ---
+    print("Preparing new PDFs...")
+    if args.new_pdf_from_folder:
+        sk = load_from_folder(args.new_pdf_from_folder, "diff-new")
+        skipped.extend(sk)
+    elif args.new_commit_pdf_rebuild:
+        for name in cal_names:
+            print(f"  {name}... ", end="", flush=True)
+        sk = get_rebuilt(cal_names, "diff-new", args.new_commit_pdf_rebuild)
+        for name in cal_names:
+            status = "SKIPPED (build failed)" if name in sk else "done"
+            print(f"  {name}: {status}")
+        skipped.extend(sk)
+    else:
+        for name in cal_names:
+            print(f"  {name}... ", end="", flush=True)
+            pdf = Path(f"{name}.pdf")
+            result = subprocess.run(
+                ["make", str(pdf), "-B"],
+                capture_output=True, text=True,
+            )
+            if result.returncode != 0:
+                print("SKIPPED (build failed)")
+                skipped.append(name)
+                continue
+            if pdf.exists():
+                burst_pdf(pdf, "diff-new", name)
+            print("done")
 
-        # Burst new build into new pages
-        if pdf.exists():
-            burst_pdf(pdf, "diff-new", name)
+    if args.new_pdf_save_to_folder:
+        save_to_folder("diff-new", args.new_pdf_save_to_folder)
 
-        print("done")
-
-    # Compare
+    # --- Compare ---
+    print("Comparing...")
     missing, differ = compare_pages()
 
-    # Restore all PDFs to committed versions
-    print("Restoring PDFs to committed versions...")
-    for name in cal_names:
-        restore_pdf(name)
+    # Restore working-tree PDFs to committed versions.
+    if not args.new_commit_pdf_rebuild and not args.new_pdf_from_folder:
+        print("Restoring PDFs to committed versions...")
+        for name in cal_names:
+            restore_pdf(name)
 
-    # Report
+    # Also restore any PDFs we overwrote for --old-commit-pdf.
+    if args.old_commit_pdf:
+        for name in cal_names:
+            restore_pdf(name)
+
+    # --- Report ---
     all_skipped = skipped + missing
     if all_skipped:
         print("\nSkipped:")
