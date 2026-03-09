@@ -1159,7 +1159,7 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
 \placeholder[fill=calendar-frame]{}{%
 \begin{minipage}{\@t@minipageWidth}%
 \calendarFmt
-\tikz{\tikzMonthCalendar@fullpage{\@t@monthnum};}%
+\hspace*{-2pt}\tikz{\tikzMonthCalendar@fullpage{\@t@monthnum};}%
 \end{minipage}%
 }%
 };
@@ -2116,22 +2116,21 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
   day list right,
   day xshift={0pt},
   every month/.append style={anchor=base, inner xsep=0pt, yshift=4mm, xshift=-\widthof{\space}},
-  day text={\makebox[\widthof{\dayTextFmt 00}][c]{\dayTextFmt\%d-}},
+  day text={\dayTextFmt\%d-},
   every day/.append style={anchor=base, inner xsep=0pt},
   execute before day scope={
     %
     % === Moving the day number ===
     %
-    % Each day is placed at the center of a uniform cell of width linewidth/lastday.
-    % The makebox in day text ensures each number has the same visual width.
-    \pgfcalendarjuliantodate{\pgfcalendarendjulian}{\currentyear}{\currentmonth}{\lastday}
-    \ifnum\pgfcalendarcurrentday=1\relax
-      \pgfmathparse{\linewidth / \lastday / 2}
-      \pgftransformxshift{\pgfmathresult}
-    \else
-      \pgfmathparse{\linewidth / \lastday}
-      \pgftransformxshift{\pgfmathresult}
-    \fi
+    % Uniform cell width with half-cell negative offset so days reach closer
+    % to the bounding box edges. Cell width = linewidth / (lastday - 0.5).
+    \pgfcalendarjuliantodate{\pgfcalendarendjulian}{\currentyear}{\currentmonth}{\lastday}%
+    \pgfmathparse{\linewidth / (\lastday - 0.5)}%
+    \ifnum\pgfcalendarcurrentday=1\relax%
+      \pgftransformxshift{0}%
+    \else%
+      \pgftransformxshift{\pgfmathresult}%
+    \fi%
     %
     % === Weekday letter above the day ===
     %

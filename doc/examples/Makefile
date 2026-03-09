@@ -6,7 +6,7 @@ all:
 
 #all: calendars bursts
 
-test: ./diff-cal.sh
+test: ./diff-cal.py
 
 calendars: cal-translations cal-plain.pdf cal-photo-and-notes-sunday.pdf cal-showtrims.pdf cal-showframe.pdf cal-varnishmask.pdf cal-marks.pdf cal-photo-and-notes.pdf cal-year-planner.pdf cal-year-planner-rows.pdf cal-year-planner-grid.pdf cal-year-planner-compact.pdf cal-thumbnails.pdf cal-four-row-february.pdf cal-four-row-february-leapyear.pdf
 
