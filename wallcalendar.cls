@@ -846,6 +846,7 @@
 \def\@t@formatCmd{}
 \def\@t@minEvents{}
 
+% Font format for event mark numbers (footnote-index style) placed above day numbers in calendars
 \newcommand\monthMarkFmt{\fontsize{7}{7}\selectfont\color{textbody}}
 
 \newcommand\symbolSpace{\thinspace}
