@@ -2116,23 +2116,22 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
   day list right,
   day xshift={0pt},
   every month/.append style={anchor=base, inner xsep=0pt, yshift=4mm, xshift=-\widthof{\space}},
-  day text={\dayTextFmt\%d-},
+  day text={\makebox[\widthof{\dayTextFmt 00}][c]{\dayTextFmt\%d-}},
   every day/.append style={anchor=base, inner xsep=0pt},
   execute before day scope={
     %
     % === Moving the day number ===
     %
-    % A small offset seems to improve the result, the last day gets closer to the end of the linewidth
-    \pgftransformxshift{0.01em}
+    % Each day is placed at the center of a uniform cell of width linewidth/lastday.
+    % The makebox in day text ensures each number has the same visual width.
     \pgfcalendarjuliantodate{\pgfcalendarendjulian}{\currentyear}{\currentmonth}{\lastday}
-    % Width of month day digits from 1 - 28
-    \setlength{\@tmp@a}{\widthof{12345678910111213141516171819202122232425262728}}
-    \setlength{\@tmp@b}{\widthof{30}}
-    \pgfmathparse{(\linewidth - \@tmp@a - \@tmp@b * (\lastday-28)) / \lastday}
-    \pgftransformxshift{\pgfmathresult}
-    \let\%=\pgfcalendarshorthand
-    \setlength{\@tmp@a}{\widthof{\%d-}}
-    \pgftransformxshift{\@tmp@a}
+    \ifnum\pgfcalendarcurrentday=1\relax
+      \pgfmathparse{\linewidth / \lastday / 2}
+      \pgftransformxshift{\pgfmathresult}
+    \else
+      \pgfmathparse{\linewidth / \lastday}
+      \pgftransformxshift{\pgfmathresult}
+    \fi
     %
     % === Weekday letter above the day ===
     %
