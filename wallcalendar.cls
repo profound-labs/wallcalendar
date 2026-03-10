@@ -1,8 +1,5 @@
 % wallcalendar.cls
 %
-% NOTE Don't edit this file directly. Edit doc/wallcalendar-code.org with emacs
-% org-mode and run 'make wallcalendar.cls'.
-%
 % Wall Calendar
 %
 % A wall calendar document class with custom layouts and support for internationalization.
@@ -14,6 +11,8 @@
 
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{wallcalendar}[2026/03/08 v1.6.0 A wall calendar document class with custom layouts and support for internationalization.]
+
+% * Preliminary Declarations
 
 \RequirePackage{pgfopts}
 \RequirePackage{calc}
@@ -35,6 +34,19 @@
 \def\@wall@translationsInputFile{}
 
 \newcommand*\theMonthName{}
+
+% * Options
+%
+% Paper sizes and ratios.
+%
+% : Choral Octavo = 6.75in x 10.5in = 171.45mm x 266.7mm , r = 1.5555
+% : The calendar row is 40mm (without bleed) = 1.5748in
+%
+% : When photo is above the calendar row, it has only three side bleed.
+% : So aspect ratio:
+% : (10.5in - 40mm + 3mm) / (6.75in + 6mm) =
+% : (266.7 - 40 + 3) / (171.45 + 6) =
+% : = 1.2944
 
 \newif\ifvarnishmask
 \newif\ifshowframe
@@ -120,7 +132,12 @@
   \def\@wall@weekListStyle{week list}
 \fi
 
+% * More Declarations
+% ** Load memoir
+
 \LoadClass[11pt,oneside]{memoir}
+
+% ** Temp variables
 
 \newlength\@tmp@a
 \newlength\@tmp@b
@@ -128,6 +145,8 @@
 \newlength\@tmp@z
 \newlength\@tmp@width
 \newlength\@tmp@height
+
+% ** Require packages
 
 \ifloadBabel
 \RequirePackage[\@wall@calendarLanguage]{babel}
@@ -180,6 +199,8 @@
   }
 }
 
+% ** Colors
+
 \definecolor{textbody}{gray}{0}
 
 % pantone 1245C, RGB 191,145,12 HEX: #BF910C
@@ -205,6 +226,8 @@
 \definecolor{gridcolor}{gray}{0.5}
 \colorlet{pagebgcolor}{gridcolor!60}
 
+% =showframe= option colors:
+
 \colorlet{photo-frame}{blue}
 \colorlet{quote-frame}{red}
 \colorlet{heading-frame}{brown}
@@ -217,12 +240,12 @@
   \colorlet{calendarbg}{white}
 \fi
 
+% ** Page Size and Trim Marks
+
 \ifshowtrims
   \setstocksize{\calPaperHeight + \@wall@trimSpace}{\calPaperWidth + \@wall@trimSpace}
   \setlength{\paperheight}{\calPaperHeight}
   \setlength{\paperwidth}{\calPaperWidth}
-  \trimXmarks
-  \trimLmarks
   \quarkmarks
   \settrims{0.5\stockheight - 0.5\paperheight}{0.5\stockwidth - 0.5\paperwidth}
   \settrimmedsize{\calPaperHeight}{\calPaperWidth}{*}
@@ -246,6 +269,8 @@
 \setlength{\calTextWidth}{\calPaperWidth - \@wall@leftMargin - \@wall@rightMargin}
 \setlength{\calTextHeight}{\calPaperHeight - \@wall@topMargin - \@wall@bottomMargin}
 
+% ** Base font sizes and indents
+
 \def\@wall@fontSize{11}
 \def\@wall@lineHeight{13.6}
 
@@ -268,6 +293,12 @@
 
 \setlength{\fboxsep}{0pt}
 
+% ** Helpers
+%
+% The =varnishmask= and =showframe= class options are handled by the same =\placeholder=
+% helper command to avoid having to use two commands and repeating the content
+% argument.
+
 \definecolor{varnishmask}{gray}{0}
 
 % http://tex.stackexchange.com/a/59571/831
@@ -281,6 +312,9 @@
   \def\@spacer{\rule{\@tmp@width}{0pt}\rule{0pt}{\@tmp@height}}%
 }
 
+% #1 -- [fill=red, opacity=0.2], additional options used for showframe
+% #2 -- "hasvarnish", to indicate varnishmask color replacement when =varnishmask= option is used
+% #3 -- the content to hold the place for
 \newcommand\placeholder[3][]{%
   \ifvarnishmask%
     \ifstrequal{#2}{hasvarnish}{%
@@ -364,6 +398,9 @@
   \fi%
 }}
 
+% * Keys setup
+% ** /put photo
+
 \def\@wall@photo@putPhoto#1{#1}
 \def\@wall@photo@setYOffset{}
 
@@ -436,6 +473,8 @@
   },
 }
 
+% ** /put quote
+
 \def\@wall@quote@putQuote#1{#1}
 
 \pgfkeys{
@@ -477,6 +516,8 @@
   },
 }
 
+% ** /Photo
+
 \newif\ifPhotoEnabled
 \PhotoEnabledtrue
 
@@ -494,6 +535,8 @@
   },
 }
 
+% ** /Quote
+
 \pgfkeys{
   /Quote/.is family, /Quote,
   init/.style = {
@@ -505,6 +548,8 @@
   },
 }
 
+% ** /Calendar
+
 \pgfkeys{
   /Calendar/.is family, /Calendar,
   init/.style = {
@@ -513,6 +558,8 @@
     minimum height/.initial = {},
   },
 }
+
+% ** /Events
 
 \pgfkeys{
   /Events/.is family, /Events,
@@ -524,6 +571,8 @@
   },
 }
 
+% ** /Txt
+
 \pgfkeys{
   /Txt/.is family, /Txt,
   init/.style = {
@@ -531,6 +580,8 @@
     text/.initial = {},
   },
 }
+
+% ** /parseMonthEvents
 
 \def\eIdx{}
 \def\eMaxIdx{}
@@ -564,6 +615,8 @@
   },
 }
 
+% ** /parseYearEvents
+
 \pgfkeys{
   /parseYearEvents/.is family, /parseYearEvents,
   year/.initial = {},
@@ -584,9 +637,20 @@
   },
 }
 
+% * Event Marks
+% ** Star
+
 \newcommand\StarMark{*}
 
 \newcommand\NoteStarMark{*}
+
+% ** Kite
+%
+% A kite mark that is the same height as the =\StarMark=. Note that the star (*)
+% character is usually higher than the x-height, so it is not in the vertical
+% center of its glyph box (i.e. not at the center of the character x):
+%
+% #+latex: \frame{x} \frame{*}
 
 \newlength\@wall@starHeight
 
@@ -621,6 +685,8 @@
   ] {};%
 \end{tikzpicture}%
 }}
+
+% ** Moons
 
 \tikzstyle{moon circle}=[
   circle,
@@ -694,6 +760,8 @@
 }
 
 \@wall@useDefaultMoons
+
+% ** Date Annotations
 
 % #1 = (opt) color
 % #2 = date as '2018-09-14'
@@ -771,6 +839,10 @@
   \draw [color={#1}] (#2-rec.south west) -- (#2-rec.south east);
 }
 
+% * User Commands
+% ** \textbackslash SetPhoto
+
+% \SetPhoto[bleed=3mm]{June}
 \newcommand\SetPhoto[2][]{%
   \pgfkeys{%
     /Photo/#2/.is family, /Photo/#2,
@@ -780,6 +852,9 @@
   }%
 }
 
+% ** \textbackslash SetCalendar
+
+% \SetCalendar[bg={opacity=0.8}]{June}
 \newcommand\SetCalendar[2][]{%
   \pgfkeys{%
     /Calendar/#2/.is family, /Calendar/#2,
@@ -789,6 +864,14 @@
   }%
 }
 
+% ** \textbackslash SetQuote
+
+% \SetQuote[position=top right, text align=right]{June}{%
+% first line\\
+% second line\\
+% third line\\
+% fourth line
+% }
 \newcommand\SetQuote[3][]{%
   \pgfkeys{%
     /Quote/#2/.is family, /Quote/#2,
@@ -798,6 +881,20 @@
   }%
 }
 
+% ** \textbackslash SetEvents
+
+% FIXME: Needs at least a =\SetEvents{#2}= to set defaults.
+
+% \SetEvents[yshift={10pt}]{August}{%
+% marks
+% }{%
+% text
+% }
+%
+% #1 : options
+% #2 : month name
+% #3 : marks
+% #4 : text
 \newcommand\SetEvents[4][]{%
   \pgfkeys{%
     /Events/#2/.is family, /Events/#2,
@@ -807,6 +904,9 @@
   }%
 }
 
+% ** \textbackslash MonthPage
+
+% The =/MonthPage= key is set in-place for each page, not collecting options per month.
 \pgfkeys{
   /MonthPage/.is family, /MonthPage,
   layout/.style = {layout handlers/#1/.get = \@wall@month@doLayout},
@@ -820,11 +920,31 @@
     large calendar/.initial = \@wall@largeCalendarLayout,
 }
 
+% FIXME: handle case when no =\SetPhoto{#2}= was called, and so options are not
+% initialized. This happens for example when bleed value is missing, and =.get=
+% returns =\@val=:
+%
+% : ! Missing number, treated as zero.
+% : <to be read again>
+% : \@val
+% : l.30 \MonthPage[layout=full page]{August}
+%
+% For now, just make sure there is a =\SetPhoto{August}= before =\MonthPage{August}=.
+%
+% \MonthPage[layout=full page]{June}
 \newcommand\MonthPage[2][]{%
   \pgfkeys{/MonthPage, defaults, #1}%
   \@wall@month@doLayout{#2}%
 }
 
+% ** \textbackslash SetTxt
+
+% \SetTxt{August Quote}{%
+% The text of the quote.
+% }
+%
+% #1 : key
+% #2 : text
 \newcommand\SetTxt[2]{%
   \pgfkeys{%
     /Txt/#1/.is family, /Txt/#1,
@@ -833,10 +953,17 @@
   }%
 }
 
+% ** \textbackslash txt
+
+% \txt{August Quote}
+%
+% #1: text key
 \newcommand\txt[1]{%
 \pgfkeys{/Txt/#1/text/.get=\@val}%
 \@val%
 }
+
+% ** \textbackslash parseMonthEvents
 
 \def\@t@monthName{}
 \def\@t@eventsCsv{}
@@ -881,6 +1008,8 @@ monthEvents(
   \@t@minEvents
 )}}
 
+% ** \textbackslash parseYearEvents
+
 \def\@t@yearNum{}
 
 % #1 = option keys
@@ -905,6 +1034,12 @@ yearEvents(
   \luastring{\@t@markDefaultsCsv},
   \@t@minEvents
 )}}
+
+% ** \textbackslash parseMonthMarksDayText
+%
+% NOTE: Tikz will not work with parsing options as with =\parseMonthEvents=.
+%
+% It will parse the CSV file set with the =eventsCsv= class option.
 
 \newlength\dayTextXshift
 \newlength\dayTextYshift
@@ -942,6 +1077,8 @@ monthMarksDayText(\luastring{#1}, nil, \luastring{\@wall@eventsCsv})
 tex.sprint(';')
 }}
 
+% ** \textbackslash parseMonthMarksDayTextUsing
+
 \newcommand*\parseMonthMarksDayTextUsing[1]{%
 \luadirect{
 require("wallcalendar-helpers.lua")
@@ -954,11 +1091,15 @@ require("wallcalendar-helpers.lua")
 monthMarksDayText(\luastring{#1}, nil, \luastring{#2})
 }}
 
+% ** \textbackslash parseMonthMarksDayTextInlineUsing
+
 \newcommand*\parseMonthMarksDayTextInlineUsing[1]{%
 \luadirect{
 require("wallcalendar-helpers.lua")
 monthMarksDayTextInline(\luastring{\theMonthName}, nil, \luastring{#1})
 }}
+
+% ** \textbackslash parseMonthMarksNote
 
 \newcommand*\parseMonthMarksNote{%
 \luadirect{
@@ -966,17 +1107,27 @@ require("wallcalendar-helpers.lua")
 monthMarksNote(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \luastring{\@wall@markDefaultsCsv}, \luastring{\@wall@markNodeSuffix})
 }}
 
+% ** \textbackslash parseMonthMarksNoteUsing
+
 \newcommand*\parseMonthMarksNoteUsing[1]{%
 \luadirect{
 require("wallcalendar-helpers.lua")
 monthMarksNote(\luastring{\theMonthName}, nil, \luastring{#1}, \luastring{\@wall@markDefaultsCsv}, \luastring{\@wall@markNodeSuffix})
 }}
 
+% ** \textbackslash parseMonthInlineNotes
+
 \newcommand*\parseMonthInlineNotes{%
 \luadirect{
 require("wallcalendar-helpers.lua")
 monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \luastring{\@wall@markDefaultsCsv})
 }}
+
+% * Page Layouts
+% ** Initial setup
+%
+% Applying a blank, bare pagestyle, the layout macro should position the parts of
+% the page.
 
 \makepagestyle{month}
 \makeoddhead{month}{}{}{}
@@ -986,6 +1137,14 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
 
 \pagestyle{month}
 
+% These elements are common to all layouts. One Coffin for each part of the
+% page:
+%
+% - Photo
+% - Quote
+% - Calendar
+% - Events
+
 \NewCoffin\@wall@pageWrap
 \NewCoffin\@wall@photo
 \NewCoffin\@wall@quote
@@ -994,6 +1153,8 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
 \NewCoffin\@wall@notepad
 \NewCoffin\@wall@photoPageWrap
 \NewCoffin\@wall@notesPageWrap
+
+% ** Formatting hooks and temp vars
 
 \newlength\@t@bleed
 \newlength\@t@rightOffset
@@ -1023,6 +1184,11 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
 \newcommand*\eventsFmt{}%
 \newcommand*\dayLetterTextFmt[1]{#1}
 
+% ** Layout Reset, \textbackslash @wall@layout@reset
+%
+% A reset macro for the beginning of a layout, to make sure parameters are not
+% carried from one layout to the next.
+
 \newcommand\@wall@layout@reset{%
   \renewcommand*\monthFmt{}%
   \renewcommand*\yearFmt{}%
@@ -1051,6 +1217,14 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
   \renewcommand\monthMarkFmt{\fontsize{7}{7}\selectfont\color{textbody}}%
 }
 
+% ** Full Page, \textbackslash @wall@fullPageLayout
+% *** Setup formatting hooks
+%
+% Renew this in your document when customizing the variables for this layout.
+%
+% This must not introduce paragraph breaks or whitespace characters, so follow
+% everything with =%=.
+
 \newcommand\fullPageFmt{%
   \renewcommand*\monthFmt{\LARGE}%
   \renewcommand*\yearFmt{\LARGE}%
@@ -1063,6 +1237,8 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
   \renewcommand*\eventsFmt{\setlength{\parindent}{0pt}\raggedleft\footnotesize}%
 }
 
+% *** Init
+
 \newcommand\@wall@fullPageLayout[2][]{%
 \makeatletter
 \renewcommand*\theMonthName{#2}
@@ -1072,11 +1248,16 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
 \colorlet{weekday}{black}
 \colorlet{weekend}{black!70}
 
+% *** Lengths and sizes
+
+% Bleed:
 \pgfkeys{/Photo/#2/bleed/.get=\@val}
 \setlength{\@t@bleed}{\@val}
 
 \def\@t@monthnum{\monthToNum{#2}}
 
+% Calendar height:
+%
 % 40mm = 1.5748 inch
 % 43mm = 1.6929 inch
 \setlength{\@t@calendar@height}{40mm + \@t@bleed}
@@ -1088,18 +1269,28 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
   \setlength{\@t@calendar@height}{\@val + \@t@bleed}
 \fi
 
+% Calendar horizontal margin:
+
 \setlength{\@t@calendar@hmargin}{20pt}
+
+% Calculate offsets:
 
 % NOTE: the -4pt and -2pt offset is somehow necessary for the sides to align
 % with the edges
 \setlength{\@t@rightOffset}{\@t@bleed +\@t@calendar@hmargin -4pt}
 \setlength{\@t@minipageWidth}{\calPaperWidth -2\@t@calendar@hmargin -2pt}
 
+% *** Set the coffin contents
+
+% Page wrap:
+
 \SetHorizontalCoffin\@wall@pageWrap{%
   \color{white}%
   \rule{\textwidth}{0pt}%
   \rule{0pt}{\textheight}%
 }
+
+% Photo:
 
 \pgfkeys{/Photo/#2/file/.get=\@t@file}
 
@@ -1108,6 +1299,8 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
     \@wall@photo@putPhoto{\@t@file}%
   }%
 }
+
+% Quote:
 
 \SetHorizontalCoffin\@wall@quote{%
   \placeholder[fill=quote-frame]{}{%
@@ -1118,6 +1311,8 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
     \end{minipage}%
   }%
 }
+
+% Calendar:
 
 \SetHorizontalCoffin\@wall@calendar{%
 \ifvarnishmask\relax
@@ -1181,6 +1376,8 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
 \fi
 }% \SetHorizontalCoffin
 
+% *** Join the coffins
+
 \@wall@photo@setYOffset
 
 \pgfkeys{/Photo/#2/xOffset/.get=\@val}
@@ -1202,14 +1399,27 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
 
 \makeatother
 
+% *** Typeset
+
 \clearpage
 \TypesetCoffin\@wall@pageWrap%
 }% \@wall@fullPageLayout
 
+% *** Tikz calendar
+
+% #1 = number of the month with leading zero
 \newcommand*{\tikzMonthCalendar@fullpage}[1]{%
 \pgfkeys{/Events/\monthName{#1}/marks/.get=\@eventmarks}%
 \calendar (cal#1) [alnitak, dates=\CalendarYear-#1-01 to \CalendarYear-#1-last] \@eventmarks;%
 }
+
+% ** Small Landscape, \textbackslash @wall@smallLandscapeLayout
+% *** Setup formatting hooks
+%
+% Renew this in your document when customizing the variables for this layout.
+%
+% This must not introduce paragraph breaks or whitespace characters, so follow
+% everything with =%=.
 
 \newcommand\smallLandscapeFmt{%
   \renewcommand*\monthFmt{\LARGE}%
@@ -1229,6 +1439,8 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
   \setlength{\@t@calendar@verticalSpacing}{20mm + 5mm + 6.5mm}%
 }
 
+% *** Init
+
 \newcommand\@wall@smallLandscapeLayout[2][]{%
 \makeatletter
 \renewcommand*\theMonthName{#2}
@@ -1238,10 +1450,22 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
 \colorlet{weekday}{black}
 \colorlet{weekend}{black!70}
 
+% *** Lengths and sizes
+
+% Bleed:
 \pgfkeys{/Photo/#2/bleed/.get=\@val}
 \setlength{\@t@bleed}{\@val}
 
 \def\@t@monthnum{\monthToNum{#2}}
+
+% Calendar height:
+%
+% Default height to fit:
+%
+% - day headings
+% - days in a grid, 6 rows
+% - events
+% - bottom bleed
 
 \setlength{\@t@calendar@height}{\@t@calendar@minimumHeight + \@t@bleed}
 
@@ -1251,6 +1475,8 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
 \else
   \setlength{\@t@calendar@height}{\@val + \@t@bleed}
 \fi
+
+% Calculate offsets:
 
 \setlength{\@tmp@a}{\@t@calendar@verticalSpacing}
 \setlength{\@tmp@b}{\@t@calendar@height -\@tmp@a}
@@ -1267,11 +1493,16 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
 
 \setlength{\@t@calendar@dayXshift}{0.1428\@t@minipageWidth}% 1/7 = 0.1428
 
+% *** Set the coffin contents
+
+% Page wrap:
 \SetHorizontalCoffin\@wall@pageWrap{%
   \color{white}%
   \rule{\textwidth}{0pt}%
   \rule{0pt}{\textheight}%
 }
+
+% Photo:
 
 \pgfkeys{/Photo/#2/file/.get=\@t@file}
 
@@ -1280,6 +1511,8 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
     \@wall@photo@putPhoto{\@t@file}%
   }%
 }
+
+% Quote:
 
 \SetHorizontalCoffin\@wall@quote{%
   \placeholder[fill=quote-frame]{}{%
@@ -1290,6 +1523,8 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
     \end{minipage}%
   }%
 }
+
+% Calendar:
 
 \SetHorizontalCoffin\@wall@calendar{%
 \ifvarnishmask\relax
@@ -1354,6 +1589,14 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
 \fi
 }% \SetHorizontalCoffin
 
+% *** Join the coffins
+%
+% Only using =yOffset=. The quote should be centered on the x axis.
+%
+% Join coffins so that the photo is in a fixed position, i.e. relative to the
+% pageWrap, not relative to other coffins. It prevents accidental shifts when the
+% other coffins are empty (when =varnishmask= is on) or have too much content.
+
 % The quote has to be centered between the photo and the calendar with manual tweaking.
 % The height of the quote is not known, the height of the calendar plus its heading is not known.
 
@@ -1378,14 +1621,22 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
 
 \makeatother
 
+% *** Typeset
+
 \clearpage
 \TypesetCoffin\@wall@pageWrap%
 }% \@wall@smallLandscapeLayout
 
+% *** Tikz calendar
+
+% #1 = number of the month with leading zero
 \newcommand*{\tikzMonthCalendar@smallLandscape}[1]{%
 \pgfkeys{/Events/\monthName{#1}/marks/.get=\@eventmarks}%
 \calendar (cal#1) [betelgeuse, dates=\CalendarYear-#1-01 to \CalendarYear-#1-last] \@eventmarks;%
 }
+
+% ** Photo And Notes, \textbackslash @wall@photoAndNotesLayout
+% *** Setup formatting hooks
 
 \newcommand\notepadContent{%
   \begin{minipage}{\@t@minipageWidth}%
@@ -1437,6 +1688,8 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
   \setlength{\@t@calendar@verticalSpacing}{30mm}%
 }
 
+% *** Init
+
 \newcommand\@wall@photoAndNotesLayout[2][]{%
 \makeatletter
 \renewcommand*\theMonthName{#2}
@@ -1445,10 +1698,16 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
 \pgfkeys{/Photo/#2/disabled/.get=\@val}
 \ifdefstring{\@val}{true}{\PhotoEnabledfalse}{\PhotoEnabledtrue}
 
+% *** Lengths and sizes
+%
+% Bleed:
+
 \pgfkeys{/Photo/#2/bleed/.get=\@val}
 \setlength{\@t@bleed}{\@val}
 
 \def\@t@monthnum{\monthToNum{#2}}
+
+% Determine if this month needs six rows:
 
 \settowidth{\@tmp@z}{%
 \begin{tikzpicture}
@@ -1463,6 +1722,15 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
 \end{tikzpicture}
 }
 
+% Calendar height:
+%
+% Default height to fit:
+%
+% - day headings
+% - days in a grid, 6 rows
+% - events
+% - bottom bleed
+
 \setlength{\@t@calendar@height}{\@t@calendar@minimumHeight + \@t@bleed}
 
 % See if there was a height given in the options
@@ -1471,6 +1739,8 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
 \else
   \setlength{\@t@calendar@height}{\@val + \@t@bleed}
 \fi
+
+% Calculate offsets:
 
 \setlength{\@tmp@a}{\@t@calendar@verticalSpacing}
 \setlength{\@tmp@b}{\@t@calendar@height -\@tmp@a}
@@ -1487,17 +1757,25 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
 
 \setlength{\@t@calendar@dayXshift}{0.1428\@t@minipageWidth}% 1/7 = 0.1428
 
+% *** Set the coffin contents
+
+% Photo page wrap:
+
 \SetHorizontalCoffin\@wall@photoPageWrap{%
   \color{white}%
   \rule{\textwidth}{0pt}%
   \rule{0pt}{\textheight}%
 }
 
+% Notes page wrap:
+
 \SetHorizontalCoffin\@wall@notesPageWrap{%
   \color{white}%
   \rule{\textwidth}{0pt}%
   \rule{0pt}{\textheight}%
 }
+
+% Photo:
 
 \ifPhotoEnabled
 \pgfkeys{/Photo/#2/file/.get=\@t@file}
@@ -1508,6 +1786,8 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
   }%
 }
 \fi
+
+% Quote:
 
 \ifPhotoEnabled
 \SetHorizontalCoffin\@wall@quote{%
@@ -1521,11 +1801,15 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
 }
 \fi
 
+% Notepad:
+
 \SetHorizontalCoffin\@wall@notepad{%
   \placeholder[fill=quote-frame]{}{%
     \notepadContent%
   }%
 }
+
+% Calendar:
 
 \SetHorizontalCoffin\@wall@calendar{%
 \ifvarnishmask\relax
@@ -1590,6 +1874,8 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
 \fi
 }% \SetHorizontalCoffin
 
+% *** Join the coffins
+
 \ifPhotoEnabled
 \@wall@photo@setYOffset
 
@@ -1618,6 +1904,8 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
 
 \makeatother
 
+% *** Typeset
+
 \ifPhotoEnabled
 \clearpage
 \TypesetCoffin\@wall@photoPageWrap%
@@ -1626,10 +1914,16 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
 \TypesetCoffin\@wall@notesPageWrap%
 }% \@wall@photoAndNotesLayout
 
+% *** Tikz calendar
+
+% #1 = number of month with leading zero
 \newcommand*{\tikzMonthCalendar@photoAndNotes}[1]{%
 \pgfkeys{/Events/\monthName{#1}/marks/.get=\@eventmarks}%
 \calendar (cal#1) [rigel, dates=\CalendarYear-#1-01 to \CalendarYear-#1-last] \@eventmarks;%
 }
+
+% ** Large Calendar, \textbackslash @wall@largeCalendarLayout
+% *** Setup formatting hooks
 
 \newcommand\largeCalendarFmt{%
   \renewcommand*\monthFmt{\LARGE}%
@@ -1651,16 +1945,24 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
   \setlength{\@t@calendar@verticalSpacing}{30mm}%
 }
 
+% *** Init
+
 \newcommand\@wall@largeCalendarLayout[2][]{%
 \makeatletter
 \renewcommand*\theMonthName{#2}
 \@wall@layout@reset
 \largeCalendarFmt
 
+% *** Lengths and sizes
+
+% Bleed:
+
 \pgfkeys{/Photo/#2/bleed/.get=\@val}
 \setlength{\@t@bleed}{\@val}
 
 \def\@t@monthnum{\monthToNum{#2}}
+
+% Determine if this month needs six rows:
 
 \settowidth{\@tmp@z}{%
 \begin{tikzpicture}
@@ -1675,6 +1977,15 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
 \end{tikzpicture}
 }
 
+% Calendar height:
+%
+% Default height to fit:
+%
+% - day headings
+% - days in a grid, 6 rows
+% - events
+% - bottom bleed
+
 \setlength{\@t@calendar@height}{\@t@calendar@minimumHeight + \@t@bleed}
 
 % See if there was a height given in the options
@@ -1683,6 +1994,8 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
 \else
   \setlength{\@t@calendar@height}{\@val + \@t@bleed}
 \fi
+
+% Calculate offsets:
 
 \setlength{\@tmp@a}{\@t@calendar@verticalSpacing}
 \setlength{\@tmp@b}{\@t@calendar@height -\@tmp@a}
@@ -1699,11 +2012,17 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
 
 \setlength{\@t@calendar@dayXshift}{0.1428\@t@minipageWidth}% 1/7 = 0.1428
 
+% *** Set the coffin contents
+
+% Photo wrap:
+
 \SetHorizontalCoffin\@wall@pageWrap{%
   \color{white}%
   \rule{\textwidth}{0pt}%
   \rule{0pt}{\textheight}%
 }
+
+% Photo:
 
 \pgfkeys{/Photo/#2/file/.get=\@t@file}
 
@@ -1711,6 +2030,8 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
   % Varnishmask placeholder is in 'put photo/left' and 'put photo/right'.
   \@wall@photo@putPhoto{\@t@file}%
 }
+
+% Quote:
 
 \SetHorizontalCoffin\@wall@quote{%
 \ifvarnishmask\relax
@@ -1721,6 +2042,8 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
   }%
 \fi
 }
+
+% Calendar:
 
 \SetHorizontalCoffin\@wall@calendar{%
 \ifvarnishmask\relax
@@ -1785,6 +2108,8 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
 \fi
 }% \SetHorizontalCoffin
 
+% *** Join the coffins
+
 \@wall@photo@setYOffset
 
 \pgfkeys{/Photo/#2/xOffset/.get=\@val}
@@ -1805,14 +2130,22 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
                                                           
 \makeatother
 
+% *** Typeset
+
 \clearpage
 \TypesetCoffin\@wall@pageWrap%
 }% \@wall@largeCalendarLayout
 
+% *** Tikz calendar
+
+% #1 = number of month with leading zero
 \newcommand*{\tikzMonthCalendar@largeCalendar}[1]{%
 \pgfkeys{/Events/\monthName{#1}/marks/.get=\@eventmarks}%
 \calendar (cal#1) [rigel, dates=\CalendarYear-#1-01 to \CalendarYear-#1-last] \@eventmarks;%
 }
+
+% ** Tikz styles
+% *** day letter headings
 
 \tikzstyle{day letter headings}=[%
   day heading/.style={black!90},
@@ -1831,6 +2164,8 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
   },%
 ]
 
+% *** day fullday headings
+
 \tikzstyle{day fullday headings}=[%
   day heading/.style={black!90},
   execute before day scope={%
@@ -1847,6 +2182,8 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
     }{}%
   },%
 ]
+
+% *** days grid
 
 \newcount\gridRows
 \newcount\gridLines
@@ -2008,6 +2345,8 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
   }
 ]
 
+% *** headings background rule
+
 \tikzstyle{headings background rule}=[
   background rule/.style={black!90, line width=0.3pt, yshift={0.3\@t@calendar@dayYshift -3pt}},
   execute before day scope={%
@@ -2021,13 +2360,22 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
   }
 ]
 
+% *** headings background bar
+
 \tikzstyle{headings background bar}=[
   headings background rule,
   background rule/.style={black!20, line width=10pt, yshift={0.3\@t@calendar@dayYshift +3.5pt}},
 ]
 
-% week list sunday: a variant of TikZ's week list that starts weeks on Sunday.
+% ** week list sunday
+%
+% A variant of TikZ's =week list= that starts weeks on Sunday instead of Monday.
+% Sunday (weekday 6 in TikZ) is placed in column 0, Monday to Saturday in columns
+% 1 to 6. The row advances after Saturday.
+%
 % Based on https://texample.net/tikz/examples/changing-the-default-calendar-layout/
+
+% week list sunday: a variant of TikZ's week list that starts weeks on Sunday.
 \tikzstyle{week list sunday}=[
   execute before day scope={%
     \ifdate{day of month=1}{\ifdate{equals=\pgfcalendarbeginiso}{}{%
@@ -2055,6 +2403,11 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
   tikz@lib@cal@width=7
 ]
 
+% ** Tikz calendar styles
+% *** Betelgeuse, days in a grid
+
+% (Betelgeuse is Alpha Orionis)
+
 \tikzstyle{betelgeuse}=[
   days grid,
   \@wall@weekListStyle,
@@ -2067,6 +2420,12 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
   day text={\dayTextFmt\%d-},
 ]
 
+% *** Rigel, days in a grid, inline notes
+%
+% (Rigel is Beta Orionis)
+
+% Command to print day number, so that it can be reused outside the day code block:
+%
 % #1 : day node name to position at, \pgfcalendarsuggestedname in the day code block
 % #2 : this node name postfix, -daynumber in the day code block
 % #3 : day number, use \tikzdaytext in the day code block
@@ -2101,6 +2460,8 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
   },
 ]
 
+% *** Aldebaran, like Rigel but without heading bg bar
+
 \tikzstyle{aldebaran}=[
   days grid,
   \@wall@weekListStyle,
@@ -2111,6 +2472,10 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
   every day/.append style={anchor=base, inner xsep=0pt, yshift={-0.25\baselineskip}},
   day text={\dayTextFmt\%d-},
 ]
+
+% *** Alnitak, days in one line
+%
+% (Alnitak is Zeta Orionis)
 
 \tikzstyle{alnitak}=[
   day list right,
@@ -2141,6 +2506,10 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
   },
 ]
 
+% * Year Planner
+% ** Tikz calendar styles
+% *** Year Planner Portrait
+
 \newcommand\plannerPortraitMonthFmt{\fontsize{13}{13}\selectfont\color{darkgold}}
 \newcommand\plannerPortraitDayFmt{\fontsize{12}{12}\selectfont\color{plannerdatenum}}
 
@@ -2161,6 +2530,8 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
   month label above centered,
   every day/.style={anchor=mid},
 ]
+
+% *** Year Planner Landscape
 
 \newcommand\plannerLandscapeDateDayFont{}
 \newcommand\plannerLandscapeDayFont{}
@@ -2241,6 +2612,8 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
     }{}
   }
 ]
+
+% *** Year Planner Landscape Grid
 
 \newcommand\plannerGridMonthFont{}
 \newcommand\plannerGridDateDayFont{}
@@ -2345,6 +2718,8 @@ monthInlineNotes(\luastring{\theMonthName}, nil, \luastring{\@wall@eventsCsv}, \
     \plannerGridBeginDayScopeHook%
   },
 ]
+
+% *** Year Planner Compact
 
 \newcommand\pf{\fontsize{8}{8}\selectfont}
 \newcommand\plannerCompactDayFmt{\fontsize{9}{9}\selectfont}
@@ -2526,6 +2901,8 @@ setStartsWithLastYear(\luastring{\CalendarYear})}
   },
 ]
 
+% ** Helpers
+
 \newcommand\plannerMarksDayTextCSV{\@wall@eventsCsv}
 \newcommand\plannerMarksNoteCSV{\@wall@eventsCsv}
 \newcommand\plannerMoonsCSV{\@wall@moonsCsv}
@@ -2678,6 +3055,8 @@ plannerWeeklyImages(tonumber(\CalendarYear), nil, \luastring{\plannerMarksDayTex
   };%
 }
 
+% ** \textbackslash YearPlannerPortrait
+
 \newcommand\YearPlannerPortrait{%
 \@wall@useDefaultMoons%
 \begin{tikzpicture}[every calendar/.style={year planner portrait}]%
@@ -2699,6 +3078,8 @@ plannerWeeklyImages(tonumber(\CalendarYear), nil, \luastring{\plannerMarksDayTex
 \end{tikzpicture}%
 }
 
+% ** \textbackslash YearPlannerLandscape
+
 \newcommand\YearPlannerLandscape{%
 \@wall@usePlannerMoons%
 \begin{tikzpicture}%
@@ -2709,6 +3090,8 @@ plannerWeeklyImages(tonumber(\CalendarYear), nil, \luastring{\plannerMarksDayTex
   \@wall@plNotesOneCalendar
 \end{tikzpicture}%
 }
+
+% ** \textbackslash YearPlannerLandscapeGrid
 
 \newcommand\YearPlannerLandscapeGrid{%
 \@wall@usePlannerMoons%
@@ -2819,6 +3202,8 @@ plannerWeeklyImages(tonumber(\CalendarYear), nil, \luastring{\plannerMarksDayTex
 \end{tikzpicture}%
 }
 
+% ** \textbackslash YearPlannerLandscapeGridPage
+
 \newcommand{\YearPlannerLandscapeGridPage}{%
 \pagecolor{pagebgcolor}%
 \AddToShipoutPictureFG*{\put(\LenToUnit{\@wall@leftMargin},\LenToUnit{\@wall@bottomMargin})%
@@ -2836,6 +3221,8 @@ plannerWeeklyImages(tonumber(\CalendarYear), nil, \luastring{\plannerMarksDayTex
 \end{minipage}%
 }}}
 
+% ** \textbackslash YearPlannerCompact
+
 \newcommand\YearPlannerCompact{%
 \@wall@usePlannerMoons%
 \begin{tikzpicture}%
@@ -2846,6 +3233,10 @@ plannerWeeklyImages(tonumber(\CalendarYear), nil, \luastring{\plannerMarksDayTex
   \@wall@plNotesOneCalendar
 \end{tikzpicture}%
 }
+
+% * Title page
+%
+% ** \textbackslash TitlePage
 
 % #1 : image path
 % #3 : background overlay height
@@ -2889,6 +3280,8 @@ plannerWeeklyImages(tonumber(\CalendarYear), nil, \luastring{\plannerMarksDayTex
 
 }
 
+% * Translation keys
+
 % Load internal translations
 \InputIfFileExists{i18n/wallcalendar-\@wall@calendarLanguage.tex}{}%
 {\ClassError{wallcalendar}{File Not Found: i18n/wallcalendar-\@wall@calendarLanguage.tex}{}}
@@ -2902,10 +3295,15 @@ plannerWeeklyImages(tonumber(\CalendarYear), nil, \luastring{\plannerMarksDayTex
 \notblank{\@wall@translationsInputFile}{%
 \iftranslationsAutoload \LoadTranslations \fi}
 
+% Use =\ifcase= instead of a =\luadirect= array lookup, otherwise Portuguese day
+% headings such as =\def\xMondayDayLetter{{2\textsuperscript{a}}}= cause an error.
+
+% #1 : month number, returns the translation
 \newcommand*\@tr@monthNumName[1]{%
 \ifcase#1 \relax\or \xJanuary\or \xFebruary\or \xMarch\or \xApril\or \xMay\or \xJune\or
 \xJuly\or \xAugust\or \xSeptember\or \xOctober\or \xNovember\or \xDecember\fi}
 
+% #1 : weekday number, returns the one letter translation
 \newcommand*\@tr@dayLetter[1]{%
 \ifcase#1 \xMondayDayLetter\or \xTuesdayDayLetter\or \xWednesdayDayLetter\or
 \xThursdayDayLetter\or \xFridayDayLetter\or \xSaturdayDayLetter\or \xSundayDayLetter\fi}
@@ -2913,6 +3311,11 @@ plannerWeeklyImages(tonumber(\CalendarYear), nil, \luastring{\plannerMarksDayTex
 \newcommand*\@tr@dayName[1]{%
 \ifcase#1 \xMonday\or \xTuesday\or \xWednesday\or
 \xThursday\or \xFriday\or \xSaturday\or \xSunday\fi}
+
+% Column-to-day mapping for headings. When =sundayFirst= is active, column 0 is
+% Sunday; otherwise column 0 is Monday (matching TikZ weekday numbering). These
+% are used by heading styles where the loop variable is a column index, not a
+% weekday number.
 
 % Column-to-day mapping for headings. When sundayFirst is active, column 0 is
 % Sunday; otherwise column 0 is Monday (matching TikZ weekday numbering).
@@ -2932,6 +3335,10 @@ plannerWeeklyImages(tonumber(\CalendarYear), nil, \luastring{\plannerMarksDayTex
   \@tr@dayName{#1}%
 \fi}
 
+% * Helper macros
+
+% Doing this in Lua to make blasted sure the result is just a string
+% #1 : month name in English, returns zero padded number
 \newcommand*{\monthToNum}[1]{%
 \luadirect{
   local monthToNum = {
@@ -2952,6 +3359,7 @@ plannerWeeklyImages(tonumber(\CalendarYear), nil, \luastring{\plannerMarksDayTex
   tex.sprint(monthToNum[key])
 }}
 
+% #1 : month number, returns the name in English
 \newcommand*\monthName[1]{%
 % \ifcase might be just fine here
 \luadirect{
@@ -2962,6 +3370,25 @@ plannerWeeklyImages(tonumber(\CalendarYear), nil, \luastring{\plannerMarksDayTex
   local key = tonumber('#1')
   tex.sprint(monthName[key])
 }}
+
+% * Epilogue
+%
+% Running the calendar commands with empty arguments to make sure necessary
+% pgfkeys are defined.
+%
+% This also avoids the problem that the user doesn't have to remember to declare
+% empty parts, such as having to call =\SetQuote{January}{}= when he doesn't have
+% a quote.
+%
+% Otherwise results in =Missing number= error when the user is building up the
+% calendar piece by piece.
+%
+% : ! Missing number, treated as zero.
+% : <to be read again>
+% : \@val
+% : l.19 ...out=full page, put photo=full page]{January}
+%
+% Repeating the months manually, =\foreach= doesn't seem to work to set the month keys.
 
 \SetPhoto{January}
 \SetCalendar{January}
@@ -3022,5 +3449,14 @@ plannerWeeklyImages(tonumber(\CalendarYear), nil, \luastring{\plannerMarksDayTex
 \SetCalendar{December}
 \SetQuote{December}{}
 \SetEvents{December}{}{}
+
+% Set the time so that showtrims headers print the same date and time.
+\newcommand\setTestDateTime{%
+\day=01%
+\month=01%
+\year=2016%
+% \time is minutes since midnight, so 14:30 = 14*60 + 30 = 870
+\time=870%
+}
 
 % End of wallcalendar.cls

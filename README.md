@@ -51,8 +51,7 @@ The documentclass comes with the following layouts:
 
 There is also support for loading event marks from a CSV file.
 
-See `wallcalendar.pdf` for the user manual, and `wallcalendar-code.pdf` for the
-commented code documentation.
+See `wallcalendar.pdf` for the user manual.
 
 The manual includes examples and tutorials, but you may also want to see the [doc/examples][examples] folder on Github.
 
@@ -208,7 +207,7 @@ cp -r doc/examples/photos .
 cp -r doc/examples/fonts .
 
 rm doc/ -r
-rm LICENSE.txt Makefile README.md wallcalendar-code.pdf wallcalendar-layouts.png wallcalendar.pdf
+rm LICENSE.txt Makefile README.md wallcalendar-layouts.png wallcalendar.pdf
 
 lualatex -interaction=nonstopmode -halt-on-error ./new-calendar.tex
 ```

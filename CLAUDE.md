@@ -16,9 +16,8 @@ lualatex -interaction=nonstopmode -halt-on-error cal-plain.tex
 # Build the class file from literate source (requires Emacs org-mode)
 make wallcalendar.cls
 
-# Build user manual and code docs
+# Build user manual
 make wallcalendar.pdf
-make wallcalendar-code.pdf
 
 # Package for CTAN
 make ctan
@@ -28,10 +27,6 @@ make local-install
 ```
 
 ## Architecture
-
-### Source of Truth
-
-The class file `wallcalendar.cls` is **generated** from `doc/wallcalendar-code.org` via Emacs org-babel tangle. Do not edit `wallcalendar.cls` directly for permanent changes — edit the org source instead. (For per-project tweaks when cloning, direct edits are fine.)
 
 ### Core Files
 

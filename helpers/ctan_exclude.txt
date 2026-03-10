@@ -7,11 +7,7 @@ wallcalendar/i18n/auto/*
 wallcalendar/doc/layout-images/
 wallcalendar/doc/layout-images/*
 wallcalendar/doc/wallcalendar.pdf
-wallcalendar/doc/wallcalendar-code.pdf
-wallcalendar/doc/_minted-wallcalendar/
-wallcalendar/doc/_minted-wallcalendar/*
-wallcalendar/doc/_minted-wallcalendar-code/
-wallcalendar/doc/_minted-wallcalendar-code/*
+wallcalendar/doc/_minted/
 wallcalendar/doc/examples/auto/
 wallcalendar/doc/examples/auto/*
 wallcalendar/doc/examples/i18n/

@@ -3,7 +3,6 @@ wallcalendar/wallcalendar-csv.lua
 wallcalendar/wallcalendar-date.lua
 wallcalendar/wallcalendar-helpers.lua
 wallcalendar/wallcalendar.pdf
-wallcalendar/wallcalendar-code.pdf
 wallcalendar/README.md
 wallcalendar/LICENSE.txt
 wallcalendar/wallcalendar-layouts.png
