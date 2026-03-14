@@ -10,7 +10,7 @@
 % LPPL LaTeX Public Project License
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{wallcalendar}[2026/03/08 v1.6.0 A wall calendar document class with custom layouts and support for internationalization.]
+\ProvidesClass{wallcalendar}[2026/03/14 v1.6.0 A wall calendar document class with custom layouts and support for internationalization.]
 
 % * Preliminary Declarations
 

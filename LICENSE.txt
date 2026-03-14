@@ -3,7 +3,7 @@ Wallcalendar Document Class
   https://ctan.org/pkg/wallcalendar
   https://github.com/profound-labs/wallcalendar/
 
-Copyright (c) Gambhiro Bhikkhu, 2020
+Copyright (c) Gambhiro Bhikkhu, 2026
 https://gambhiro.github.io
 
 LPPL LaTeX Public Project License

@@ -169,15 +169,29 @@ Useful option for debugging layout positioning.
 
 Set the compiler to `LuaLaTeX` in the project settings sidebar.
 
-Example using Photo and Notes layout, `wallcalendar v1.4`:
+The [Wall Calendar](https://www.overleaf.com/latex/templates/wall-calendar/yyvqfsbsmssm) in the Overleaf Template Gallery is the same as the 'portrait page layout' example repo below, and similar to the [doc/examples/cal-plain.tex](doc/examples/cal-plain.tex) example in this repo.
 
-- [Project](https://www.overleaf.com/read/hzjpfdmspwds)
+On overleaf.com, check Settings > Compiler > LuaLaTex and recent TeX Live year
+
+In case of compile time out on overleaf.com:
+
+- Re-compiling sometimes helps due to cached assets.
+- Comment out months and test with a single month only.
+
+Portrait page layouts:
+
+- [Overleaf project](https://www.overleaf.com/read/kjpcxcsmxkjc)
+- [Github repo](https://github.com/profound-labs/wallcalendar-portrait-layouts-overleaf)
+
+Photo and Notes layout:
+
+- [Overleaf project](https://www.overleaf.com/read/hzjpfdmspwds)
 - [Github repo](https://github.com/profound-labs/wallcalendar-photo-and-notes-overleaf)
 
-Example using single page layouts, `wallcalendar v1.4`:
+Compact year planner layout:
 
-- [Project](https://www.overleaf.com/read/kjpcxcsmxkjc)
-- [Github repo](https://github.com/profound-labs/wallcalendar-portrait-layouts-overleaf)
+- [Overleaf project](https://www.overleaf.com/read/fgcncdmpkmcy)
+- [Github repo](https://github.com/profound-labs/wallcalendar-compact-year-planner-overleaf)
 
 ## Installing
 
