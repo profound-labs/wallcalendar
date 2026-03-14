@@ -5,6 +5,6 @@ wallcalendar/wallcalendar-helpers.lua
 wallcalendar/wallcalendar.pdf
 wallcalendar/README.md
 wallcalendar/LICENSE.txt
-wallcalendar/wallcalendar-layouts.png
+wallcalendar/readme-assets/wallcalendar-layouts.png
 wallcalendar/i18n/
 wallcalendar/doc/
